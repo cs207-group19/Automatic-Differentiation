@@ -78,6 +78,7 @@ class Var(object):
 			val = np.power(self.val, n)
 			der = n * (self.val ** (n - 1)) * self.der
 		except ZeroDivisionError:
+			raise
 			val = 0
 			der = float('nan')
 		except Warning:
