@@ -1,4 +1,8 @@
-import numpy as np    
+import numpy as np   
+from math import log
+import warnings
+warnings.filterwarnings('error')
+
 
 class Var(object):
 	def __init__(self, a, der=1.0):
@@ -62,6 +66,41 @@ class Var(object):
 		val = np.cos(self.val)
 		der = -np.sin(self.val) * self.der
 		return Var(val, der)
+	
+	def tan(self):
+		val = np.tan(self.val)
+		der = 1/np.cos(self.val) ** 2 * self.der
+		return Var(val, der)
+
+
+	def pow(self, n):
+		try:
+			val = np.power(self.val, n)
+			der = n * (self.val ** (n - 1)) * self.der
+		except ZeroDivisionError:
+			val = 0
+			der = float('nan')
+		except Warning:
+			val = float('nan')
+			der = float('nan')
+		return Var(val, der)
+
+
+	def log(self, base):
+		if self.val == 0:
+			return float('inf')
+		elif self.val < 0 :
+			return float('nan')
+		else:
+			val = log(self.val, base) 
+			der = log(base)/self.val * self.der
+		return Var(val, der)
+
+	def exp(self):
+		val = np.exp(self.val) 
+		der = np.exp(self.val) * self.der
+		return Var(val, der)			
+
 
 # Expect value of 18.42, derivative of 6.0
 x1 = Var(np.pi / 2)
@@ -77,6 +116,44 @@ print (f2.val, f2.der)
 x3 = Var(3.0)
 f3 = x3 / 2
 print (f3.val, f3.der)
+
+
+# Expect value of 9.0, derivative of 12.0
+x4 = Var(np.pi/4)
+f4 = 3 * 2 * x4.tan() +  3
+print (f4.val, f4.der)
+
+
+# Expect value of 64.0, derivative of 48.0
+x5= Var(4.0)
+f5 = x5.pow(3)
+print (f5.val, f5.der)
+
+x5= Var(4.0)
+f5 = x5.pow(1/2)
+print (f5.val, f5.der) # sqrt 2.0 0.25
+
+x5= Var(-2)
+f5 = x5.pow(1/2)
+print (f5.val, f5.der) # nan nan
+
+
+# Expect value of 1.0, derivative of 0.23025850929940458
+x6 = Var(10)
+f6 = x6.log(10)
+print (f6.val, f6.der)
+
+x6 = Var(0)
+f6 = x6.log(2)
+print (f6) # inf
+
+
+# Expect value of 2.718281828459045, derivative of 2.718281828459045
+x7 = Var(1)
+f7 = x7.exp()
+print (f7.val, f7.der)
+
+
 
 # TODO: handle case where there are multiple inputs
 # (each Var should have self.grads = {} instead of 1 self.der)
