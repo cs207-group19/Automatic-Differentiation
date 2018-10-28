@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 import math
-#import sys
-#sys.path.append('../')
+import sys
+sys.path.append('../code/')
 import DeriveAlive_working_chen as da
 
 def test_DeriveAlive_results():

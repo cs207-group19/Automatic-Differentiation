@@ -4,21 +4,16 @@ import numpy as np
 np.seterr(all='raise')
 
 class Var(object):
-	def __init__(self, values, der = None):
+	def __init__(self, a, der=[1.0]):
 		"""
 		a: input as a list, transform it into np.array
 		"""
-		if isinstance(values, float) or isinstance(values, int):
-			values = [values]
-		if der is None:
-			der = np.ones_like(values)
-		elif isinstance(der, float) or isinstance(der, int):
+		if isinstance(a, float) or isinstance(a, int):
+			a = [a]
+		if isinstance(der, float) or isinstance(der, int):
 			der = [der]
-		self.val = np.array(values)
+		self.val = np.array(a)
 		self.der = np.array(der)
-
-	def __repr__(self):
-		return ('Var(%r, %r)' %(self.val, self.der))
 	
 	def __add__(self, other):
 		val = self.val
@@ -94,30 +89,18 @@ class Var(object):
 		return Var(val, der)
 
 	def arctan(self):
-		try: 
-			val = np.arctan(self.val)
-			der = 1/(1+(self.val)**2)
-		except FloatingPointError:
-			val = float('nan')
-			der = float('nan')
+		val = np.arctan(self.val)
+		der = 1/(1+np.linalg.norm(self.val)**2)
 		return Var(val, der)
  
 	def sinh(self):
-		try: 
-			val = np.sinh(self.val)
-			der = np.cosh(self.val)
-		except FloatingPointError:
-			val = float('nan')
-			der = float('nan')
+		val = np.sinh(self.val)
+		der = np.cosh(self.val)
 		return Var(val, der) 
 
 	def cosh(self):
-		try:
-			val = np.cosh(self.val)
-			der = np.sinh(self.val)
-		except FloatingPointError:
-			val = float('nan')
-			der = float('nan')
+		val = np.cosh(self.val)
+		der = np.sinh(self.val)
 		return Var(val, der)
 
 	def tanh(self):
@@ -126,20 +109,12 @@ class Var(object):
 		return Var(val, der)
 
 	def pow(self, n):
-		if n != 0:
-			if abs(n) >=1:
-				val = pow(self.val, n)
-				der = n * np.multiply((self.val ** (n - 1)), self.der)
-			else:
-				try:
-					val = np.copysign(np.abs(self.val) ** (n), self.val)
-					der = n * np.multiply(np.copysign(np.abs(self.val) ** (n-1), self.val), self.der)
-				except FloatingPointError:
-					val = float('nan')
-					der = float('nan')
-		else:
-			val = pow(self.val, n)
-			der = np.zeros_like(self.val)
+		try:
+			val = np.power(self.val, n)
+			der = n * np.multiply((self.val ** (n - 1)), self.der)
+		except FloatingPointError:
+			val = float('nan')
+			der = float('nan')
 		return Var(val, der)
 
 	def log(self, base):
