@@ -3,9 +3,5 @@ python:
     - "3.6"
 before_install:
     - pip install pytest pytest-cov
-    - pip install coveralls
 script:
-    - py.test
-after_success:
-    - coveralls
-
+    - pytest
