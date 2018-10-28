@@ -8,7 +8,7 @@ class Var(object):
 	def __init__(self, a, der=1.0):
 		self.val = a
 		self.der = der
-	
+		
 	def __add__(self, other):
 		val = self.val
 		der = self.der
