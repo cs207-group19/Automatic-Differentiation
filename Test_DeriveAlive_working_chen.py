@@ -3,7 +3,7 @@ import numpy as np
 import math
 #import sys
 #sys.path.append('../')
-import code.DeriveAlive_working_chen as da
+import DeriveAlive_working_chen as da
 
 def test_DeriveAlive_results():
 	# Expect value of 18.42, derivative of 6.0
