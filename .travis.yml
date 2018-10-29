@@ -4,7 +4,7 @@ python:
 before_install:
     before_install:
     - "pip install -U pip"
-  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
+    - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
     - pip install pytest pytest-cov
     - pip install coveralls
 script:
