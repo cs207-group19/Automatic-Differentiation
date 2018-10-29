@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../code/')
+
 import pytest
 import DeriveAlive as da
 import numpy as np
