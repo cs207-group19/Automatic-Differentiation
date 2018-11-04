@@ -94,12 +94,9 @@ class Var(object):
 		return Var(val, der)
 
 	def arctan(self):
-		try: 
-			val = np.arctan(self.val)
-			der = 1/(1+(self.val)**2)
-		except FloatingPointError:
-			val = float('nan')
-			der = float('nan')
+		val = np.arctan(self.val)
+		der = 1/(1+(self.val)**2)
+
 		return Var(val, der)
  
 	def sinh(self):
@@ -141,6 +138,25 @@ class Var(object):
 			val = pow(self.val, n)
 			der = np.zeros_like(self.val)
 		return Var(val, der)
+
+	def pow(self, a,b=1):
+		if a != 0:
+			if abs(a) >=abs(b):
+				if a % 2 == 0 and b % 2== 0:
+					val = pow(self.val, a/b)
+					der = n * np.multiply((self.val ** (n - 1)), self.der)
+			else:
+				try:
+					val = np.copysign(np.abs(self.val) ** (n), self.val)
+					der = n * np.multiply(np.copysign(np.abs(self.val) ** (n-1), self.val), self.der)
+				except FloatingPointError:
+					val = float('nan')
+					der = float('nan')
+		else:
+			val = pow(self.val, a,b)
+			der = np.zeros_like(self.val)
+		return Var(val, der)
+
 
 	def log(self, base):
 		values = map(lambda x: x > 0, self.val)

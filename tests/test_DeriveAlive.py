@@ -1,5 +1,5 @@
 import pytest
-import DeriveAlive as da
+import ..code.DeriveAlive as da
 import numpy as np
 import math
 

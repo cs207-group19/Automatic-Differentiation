@@ -60,17 +60,17 @@ FloatingPointError: invalid value encountered in arcsin
 # do we want to return the arcsin() for the values that have arcsin()  and Nan for those that dont have arcsin() 
 # or do we just wanna return nan as long as one value in the array doesn't have arcsin() ?
 
-v4.arccos()
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "/Users/chenshi/Dropbox/Harvard/courses/2018Fall/CS207/cs207-FinalProject/code/DeriveAlive_working_chen.py", line 92, in arccos
-    val = np.arccos(self.val)
-FloatingPointError: invalid value encountered in arccos
+#v4.arccos()
+#Traceback (most recent call last):
+#  File "<stdin>", line 1, in <module>
+ # File "/Users/chenshi/Dropbox/Harvard/courses/2018Fall/CS207/cs207-FinalProject/code/DeriveAlive_working_chen.py", line 92, in arccos
+#    val = np.arccos(self.val)
+#FloatingPointError: invalid value encountered in arccos
 # same thing for arccos(), 
 # and also same issue for POW when power is like 1/2, when we have v4 =da.Var([1,-1,4,-4]
 # since 1 and 4 will have 1/2 power, while the other two don't
 
-v4.arctan()
+#v4.arctan()
 # FIXED 
 # Var(array([ 0.78539816, -0.78539816,  1.32581766, -1.32581766]), array([0.02857143]))
 # I changed the line #der = 1/(1+np.linalg.norm(self.val)**2) to  der = 1/(1+(self.val)**2)
@@ -79,15 +79,14 @@ v4.arctan()
 
 
 ### 2.2 
- v = (v3.sin()*v1.cos()).tan()+ v2
- Error : 
- File "<stdin>", line 1, in <module>
-  File "/Users/chenshi/Dropbox/Harvard/courses/2018Fall/CS207/cs207-FinalProject/code/DeriveAlive_working_chen.py", line 28, in __add__
-    val += other.val
-ValueError: operands could not be broadcast together with shapes (3,) (4,) (3,) 
+ #v = (v3.sin()*v1.cos()).tan()+ v2
+ #Error : 
+#File "<stdin>", line 1, in <module>
+#    val += other.val
+#ValueError: operands could not be broadcast together with shapes (3,) (4,) (3,) 
 # Because v and v2 differ in length (Maybe Should consider this situation????)
 # Do we need to fix ??????!!!!!!!! since if they are the same length, it works gracefully :) 
-v = (v3.sin()*v1.cos()).tan()+ v3
+#v = (v3.sin()*v1.cos()).tan()+ v3
 #Var(array([ 1.48743956,  0.63402764, -0.0999693 ]), array([0.43600757, 0.44239478, 0.83140383]))
 
 
