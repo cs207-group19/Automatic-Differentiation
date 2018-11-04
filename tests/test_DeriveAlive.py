@@ -1,8 +1,8 @@
-#import sys
-#sys.path.append('../code/')
+import sys
+sys.path.append('../code/')
 
 import pytest
-import ..code.DeriveAlive as da
+import DeriveAlive as da
 import numpy as np
 import math
 
