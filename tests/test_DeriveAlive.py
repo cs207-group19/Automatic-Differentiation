@@ -1,5 +1,5 @@
-import sys
-sys.path.append('../code/')
+#import sys
+#sys.path.append('../code/')
 
 import pytest
 import ..code.DeriveAlive as da
