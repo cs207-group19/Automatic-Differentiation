@@ -1,5 +1,5 @@
-import sys
-sys.path.append('../mypkg/')
+i#mport sys
+#sys.path.append('../mypkg/')
 
 import pytest
 import DeriveAlive as da
