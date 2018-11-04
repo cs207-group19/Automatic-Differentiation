@@ -4,17 +4,22 @@ import numpy as np
 np.seterr(all='raise')
 
 class Var(object):
-	def __init__(self, a, der=[1.0]):
+	def __init__(self, values, der=None):
 		"""
 		a: input as a list, transform it into np.array
 		"""
-		if isinstance(a, float) or isinstance(a, int):
-			a = [a]
-		if isinstance(der, float) or isinstance(der, int):
+		if isinstance(values, float) or isinstance(values, int):
+			values = [values]
+		if der is None:
+			der = np.ones_like(values)
+		elif isinstance(der, float) or isinstance(der, int):
 			der = [der]
-		self.val = np.array(a)
+		self.val = np.array(values)
 		self.der = np.array(der)
 	
+	def __repr__(self):
+		return 'Var({}, {})'.format(self.val, self.der)
+
 	def __add__(self, other):
 		val = self.val
 		der = self.der
@@ -74,23 +79,33 @@ class Var(object):
 		return Var(val, der)
 	
 	def tan(self):
+		# Ensure that no values in self.val are of the form (pi/2 + k*pi)
+		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0, self.val)
+		if not all(values):
+			raise ValueError("Tangent not valid at pi/2, -pi/2.")
 		val = np.tan(self.val)
-		der = np.multiply(np.power(1/np.cos(self.val), 2), self.der)
+		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
 		return Var(val, der)
 
 	def arcsin(self):
+		values = map(lambda x: -1 <= x <= 1, self.val)
+		if not all(values):
+			raise ValueError("Range of arcsin is [-1, 1].")		
 		val = np.arcsin(self.val)
-		der = 1/np.sqrt(1-np.linalg.norm(self.val)**2)
+		der = 1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
 
 	def arccos(self):
+		values = map(lambda x: -1 <= x <= 1, self.val)
+		if not all(values):
+			raise ValueError("Range of arccos is [-1, 1].")	
 		val = np.arccos(self.val)
-		der = -1/np.sqrt(1-np.linalg.norm(self.val)**2)
+		der = -1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
 
 	def arctan(self):
 		val = np.arctan(self.val)
-		der = 1/(1+np.linalg.norm(self.val)**2)
+		der = 1 / (1 + (self.val) ** 2)
 		return Var(val, der)
  
 	def sinh(self):
@@ -109,12 +124,14 @@ class Var(object):
 		return Var(val, der)
 
 	def pow(self, n):
-		try:
-			val = np.power(self.val, n)
-			der = n * np.multiply((self.val ** (n - 1)), self.der)
-		except FloatingPointError:
-			val = float('nan')
-			der = float('nan')
+		values = map(lambda x: x >= 0, self.val)
+		if n % 1 != 0 and not all(values):
+			raise ValueError("Non-positive number raised to a fraction encountered in pow.")
+		elif n < 1 and 0 in self.val:
+			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
+
+		val = np.power(self.val, n)
+		der = n * np.multiply((self.val ** (n - 1)), self.der)
 		return Var(val, der)
 
 	def log(self, base):
