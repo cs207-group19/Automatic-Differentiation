@@ -83,4 +83,4 @@ def test_DeriveAlive_results():
 	assert f13.val == [64.0]
 	assert f13.der == [48.0]
 
-test_DeriveAlive_results()
+#test_DeriveAlive_results()
