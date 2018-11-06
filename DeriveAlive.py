@@ -80,8 +80,9 @@ class Var(object):
 	
 	def tan(self):
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
-		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0, self.val)
-		if abs(self.val) >= np.pi/2 and not all(values):
+		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0.0, self.val)
+		if any(values):
+		#if abs(self.val) >= np.pi/2 and any(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
 		val = np.tan(self.val)
 		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
