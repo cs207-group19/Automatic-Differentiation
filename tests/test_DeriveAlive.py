@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 #import sys
 #sys.path.append('../mypkg/')
+=======
+import sys
+sys.path.append('../DeriveAlive/')
+>>>>>>> 95bee015380d94e12f3476db254b3313a36e8d1e
 
 import pytest
 import DeriveAlive as da
@@ -37,7 +42,7 @@ def test_DeriveAlive_results():
 	assert np.round(f5.val, 2) == [64.0]
 	assert np.round(f5.der, 2) == [48.0]
 	
-	with np.testing.assert_raises(FloatingPointError):
+	with np.testing.assert_raises(ZeroDivisionError):
 		zero = da.Var(0)
 		f_zero = zero.pow(1 / 2)
 
@@ -46,10 +51,11 @@ def test_DeriveAlive_results():
 	assert np.round(f6.val, 2) == [2.0]
 	assert np.round(f6.der, 2) == [0.25]
 
-	x7 = da.Var(-2)
-	f7 = x7.pow(1 / 2)
-	assert np.round(f7.val, 2) == [float('nan')]
-	assert np.round(f7.der, 2) == [float('nan')]
+	with np.testing.assert_raises(ValueError):
+		x7 = da.Var(-2)
+		f7 = x7.pow(1 / 2)
+	#assert np.round(f7.val, 2) == [float('nan')]
+	#assert np.round(f7.der, 2) == [float('nan')]
 
 	# Expect value of 1.0, derivative of 0.23025850929940458
 	x8 = da.Var(10)
@@ -82,4 +88,4 @@ def test_DeriveAlive_results():
 	assert f13.val == [64.0]
 	assert f13.der == [48.0]
 
-# test_DeriveAlive_results()
+#test_DeriveAlive_results()
