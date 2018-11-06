@@ -41,7 +41,7 @@ def test_DeriveAlive_results():
 	f5 = x5.pow(3)
 	assert np.round(f5.val, 2) == [64.0]
 	assert np.round(f5.der, 2) == [48.0]
-	
+
 	with np.testing.assert_raises(ZeroDivisionError):
 		zero = da.Var(0)
 		f_zero = zero.pow(1 / 2)
@@ -88,4 +88,4 @@ def test_DeriveAlive_results():
 	assert f13.val == [64.0]
 	assert f13.der == [48.0]
 
-#test_DeriveAlive_results()
+# test_DeriveAlive_results()

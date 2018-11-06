@@ -3,10 +3,10 @@ import numpy as np
 # Change built-in warnings to exceptions when using numpy
 np.seterr(all='raise')
 
-class Var(object):
+class Var():
 	def __init__(self, values, der=None):
 		"""
-		a: input as a list, transform it into np.array
+		values: input as a list, transform it into np.array
 		"""
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
