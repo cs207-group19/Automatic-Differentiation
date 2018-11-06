@@ -37,7 +37,7 @@ def test_DeriveAlive_results():
 	assert np.round(f5.val, 2) == [64.0]
 	assert np.round(f5.der, 2) == [48.0]
 	
-	with np.testing.assert_raises(FloatingPointError):
+	with np.testing.assert_raises(ZeroDivisionError):
 		zero = da.Var(0)
 		f_zero = zero.pow(1 / 2)
 
