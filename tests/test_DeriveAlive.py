@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+#<<<<<<< HEAD
 #import sys
 #sys.path.append('../mypkg/')
-=======
+#=======
 import sys
 sys.path.append('../DeriveAlive/')
->>>>>>> 95bee015380d94e12f3476db254b3313a36e8d1e
+#>>>>>>> 95bee015380d94e12f3476db254b3313a36e8d1e
 
 import pytest
 import DeriveAlive as da
