@@ -78,6 +78,7 @@ class Var(object):
 		der = -np.sin(self.val) * self.der
 		return Var(val, der)
 	
+	"""
 	def tan(self):
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)
 		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0, self.val)
@@ -86,7 +87,7 @@ class Var(object):
 		val = np.tan(self.val)
 		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
 		return Var(val, der)
-
+    """
 	def arcsin(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):

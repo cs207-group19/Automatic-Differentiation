@@ -1,4 +1,4 @@
-i#mport sys
+#import sys
 #sys.path.append('../mypkg/')
 
 import pytest
