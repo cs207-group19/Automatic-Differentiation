@@ -1,4 +1,4 @@
-import numpy as np   
+import numpy as np
 
 # Change built-in warnings to exceptions when using numpy
 np.seterr(all='raise')
@@ -38,7 +38,7 @@ class Var(object):
 		der = self.der
 		try:            
 			val = val * other.val          
-			der = der * other.der
+			der = der * other.val + val * other.der
 		except AttributeError:
 			val = val * other
 			der = der * other
@@ -52,7 +52,7 @@ class Var(object):
 		der = self.der
 		try:
 			val = np.divide(val, other.val)
-			der = (np.multiply(other.val, self.der) - np.multiply(val, other.der)) / (other.val ** 2)
+			der = (np.multiply(other.val, der) - np.multiply(val, other.der)) / (other.val ** 2)
 		except AttributeError:
 			val = np.divide(val, other)
 			der = np.divide(der, other)
@@ -79,9 +79,9 @@ class Var(object):
 		return Var(val, der)
 	
 	def tan(self):
-		# Ensure that no values in self.val are of the form (pi/2 + k*pi)
+		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
 		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0, self.val)
-		if not all(values):
+		if abs(self.val) >= np.pi/2 and not all(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
 		val = np.tan(self.val)
 		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
@@ -146,4 +146,4 @@ class Var(object):
 	def exp(self):
 		val = np.exp(self.val) 
 		der = np.multiply(np.exp(self.val), self.der)
-		return Var(val, der)			
+		return Var(val, der)
