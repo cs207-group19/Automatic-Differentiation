@@ -46,10 +46,11 @@ def test_DeriveAlive_results():
 	assert np.round(f6.val, 2) == [2.0]
 	assert np.round(f6.der, 2) == [0.25]
 
-	x7 = da.Var(-2)
-	f7 = x7.pow(1 / 2)
-	assert np.round(f7.val, 2) == [float('nan')]
-	assert np.round(f7.der, 2) == [float('nan')]
+	with np.testing.assert_raises(ValueError):
+		x7 = da.Var(-2)
+		f7 = x7.pow(1 / 2)
+	#assert np.round(f7.val, 2) == [float('nan')]
+	#assert np.round(f7.der, 2) == [float('nan')]
 
 	# Expect value of 1.0, derivative of 0.23025850929940458
 	x8 = da.Var(10)
