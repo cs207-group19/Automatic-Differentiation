@@ -134,6 +134,23 @@ class Var():
 		val = np.power(self.val, n)
 		der = n * np.multiply((self.val ** (n - 1)), self.der)
 		return Var(val, der)
+    
+	def rpow(self, n):
+		if n == 0:
+			if self.val == 0:
+				val = 1
+				der = 0
+			if self.val > 0:
+				val = 0
+				der = 0
+			if self.val < 0:
+				raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
+		elif n < 0:
+			raise ValueError("Real numbers only, math domain error.")
+		else:
+			val = n ** self.val
+			der = n ** self.val * np.log(n)
+		return Var(val, der)
 
 	def log(self, base):
 		values = map(lambda x: x > 0, self.val)
