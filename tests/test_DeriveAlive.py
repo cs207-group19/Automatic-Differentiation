@@ -1,7 +1,8 @@
 # Test suite for DeriveAlive module
 
-# import sys
-# sys.path.append('../')
+# These lines included for local testing (do not include for Travis/Coverall)
+import sys
+sys.path.append('../')
 # print (sys.path) 
 
 import pytest
@@ -87,6 +88,13 @@ def test_DeriveAlive_scalar_functions():
 		with np.testing.assert_raises(ValueError):
 			z = da.Var(0)
 			f = abs(z)
+
+	def test_eq():
+		x = da.Var(3)
+		y = da.Var(3)
+		z = da.Var(5)
+		assert x == y
+		assert x != y
 
 	def test_div():
 		# Expect value of 1.5, derivative of 0.5
@@ -210,6 +218,7 @@ def test_DeriveAlive_scalar_functions():
 		assert f13.val == [64.0]
 		assert f13.der == [48.0]
 
+	# TODO: Implement rpow in future implementation (not required for Milestone 2)
 	def test_rpow():
 		pass
 
