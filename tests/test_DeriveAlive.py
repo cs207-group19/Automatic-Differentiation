@@ -95,6 +95,7 @@ def test_DeriveAlive_scalar_functions():
 		z = da.Var(5)
 		assert x == y
 		assert x != z
+		assert x != [3, 1]
 
 	def test_radd():
 		x = da.Var(5.0)
