@@ -85,6 +85,17 @@ class Var():
 		der = np.array([-1 if x < 0 else 1 for x in self.val])
 		return Var(val, der)
 
+	def __pow__(self, n):
+		values = map(lambda x: x >= 0, self.val)
+		if n % 1 != 0 and not all(values):
+			raise ValueError("Non-positive number raised to a fraction encountered in pow.")
+		elif n < 1 and 0 in self.val:
+			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
+
+		val = np.power(self.val, n)
+		der = n * np.multiply((self.val ** (n - 1)), self.der)
+		return Var(val, der)
+
 	def sin(self):
 		val = np.sin(self.val)
 		der = np.cos(self.val) * self.der
@@ -142,15 +153,7 @@ class Var():
 		return Var(val, der)
 
 	def pow(self, n):
-		values = map(lambda x: x >= 0, self.val)
-		if n % 1 != 0 and not all(values):
-			raise ValueError("Non-positive number raised to a fraction encountered in pow.")
-		elif n < 1 and 0 in self.val:
-			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
-
-		val = np.power(self.val, n)
-		der = n * np.multiply((self.val ** (n - 1)), self.der)
-		return Var(val, der)
+		return self.__pow__(n)
     
 	# def rpow(self, n):
 	# 	if n == 0:
