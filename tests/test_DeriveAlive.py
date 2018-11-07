@@ -94,7 +94,7 @@ def test_DeriveAlive_scalar_functions():
 		y = da.Var(3)
 		z = da.Var(5)
 		assert x == y
-		assert x != y
+		assert x != z
 
 	def test_div():
 		# Expect value of 1.5, derivative of 0.5
@@ -244,6 +244,7 @@ def test_DeriveAlive_scalar_functions():
 	# Run tests
 	test_neg()
 	test_abs()
+	test_eq()
 	test_div()
 	test_rdiv()
 	test_sin()
