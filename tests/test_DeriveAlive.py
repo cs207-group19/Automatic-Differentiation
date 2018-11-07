@@ -70,6 +70,24 @@ def test_DeriveAlive_scalar_functions():
 		assert f2.val == [-9.0]
 		assert f2.der == [-6.0]
 
+	def test_abs():
+		# Negative value
+		x = da.Var(-4.0)
+		f = abs(x)
+		assert f.val == [4.0]
+		assert f.der == [-1.0]
+
+		# Positive value
+		y = da.Var(3.0)
+		f = abs(y)
+		assert f.val == [3.0]
+		assert f.der == [1.0]
+
+		# Zero
+		with np.testing.assert_raises(ValueError):
+			z = da.Var(0)
+			f = abs(z)
+
 	def test_div():
 		# Expect value of 1.5, derivative of 0.5
 		x3 = da.Var(3.0)
@@ -216,6 +234,7 @@ def test_DeriveAlive_scalar_functions():
 
 	# Run tests
 	test_neg()
+	test_abs()
 	test_div()
 	test_rdiv()
 	test_sin()
