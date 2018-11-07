@@ -85,6 +85,13 @@ class Var():
 		der = np.array([-1 if x < 0 else 1 for x in self.val])
 		return Var(val, der)
 
+	def __eq__(self, other):
+		try:
+			return (np.array_equal(self.val, other.val) and 
+					np.array_equal(self.der, other.der))
+		except:
+			return False
+
 	def __pow__(self, n):
 		values = map(lambda x: x >= 0, self.val)
 		if n % 1 != 0 and not all(values):
