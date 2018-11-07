@@ -77,6 +77,14 @@ class Var():
 		der = -self.der
 		return Var(val, der)
 
+	# TODO: double check derivative of abs function
+	def __abs__(self):
+		val = abs(self.val)
+		if 0 in self.val:
+			raise ValueError("Absolute value is not differentiable at 0.")
+		der = np.array([-1 if x < 0 else 1 for x in self.val])
+		return Var(val, der)
+
 	def sin(self):
 		val = np.sin(self.val)
 		der = np.cos(self.val) * self.der
