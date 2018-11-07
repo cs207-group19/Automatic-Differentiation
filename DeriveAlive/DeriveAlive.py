@@ -80,7 +80,7 @@ class Var():
 	
 	def tan(self):
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
-		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0.0, self.val)
+		values = map(lambda x: ((x / np.pi) - 0.5) % 1 == 0.0, self.val)
 		if any(values):
 		#if abs(self.val) >= np.pi/2 and any(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
@@ -91,7 +91,7 @@ class Var():
 	def arcsin(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
-			raise ValueError("Range of arcsin is [-1, 1].")		
+			raise ValueError("Domain of arcsin is [-1, 1].")		
 		val = np.arcsin(self.val)
 		der = 1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
@@ -99,7 +99,7 @@ class Var():
 	def arccos(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
-			raise ValueError("Range of arccos is [-1, 1].")	
+			raise ValueError("Domain of arccos is [-1, 1].")	
 		val = np.arccos(self.val)
 		der = -1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
