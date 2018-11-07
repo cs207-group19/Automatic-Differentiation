@@ -100,12 +100,12 @@ def test_DeriveAlive_scalar_functions():
 	def test_radd():
 		x = da.Var(5.0)
 		f = 2 + x
-		assert f == Var(7.0, 1.0)
+		assert f == da.Var(7.0, 1.0)
 
 	def test_rmul():
 		x = da.Var(5.0)
 		f = 2 * x
-		assert f == Var(10, 2)
+		assert f == da.Var(10, 2)
 
 	def test_div():
 		# Expect value of 1.5, derivative of 0.5
@@ -256,6 +256,8 @@ def test_DeriveAlive_scalar_functions():
 	test_neg()
 	test_abs()
 	test_eq()
+	test_radd()
+	test_rmul()
 	test_div()
 	test_rdiv()
 	test_sin()
