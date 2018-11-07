@@ -68,6 +68,11 @@ class Var():
 			der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
 		return Var(val, der)
 
+	def __neg__(self):
+		val = -self.val
+		der = -self.der
+		return Var(val, der)
+
 	def sin(self):
 		val = np.sin(self.val)
 		der = np.cos(self.val) * self.der
