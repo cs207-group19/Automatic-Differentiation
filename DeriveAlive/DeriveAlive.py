@@ -1,3 +1,7 @@
+# Module for autodifferentiation
+# Harvard University, CS 207, Fall 2018
+# Authors: Chen Shi, Stephen Slater, Yue Sun
+
 import numpy as np
 
 # Change built-in warnings to exceptions when using numpy
