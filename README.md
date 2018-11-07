@@ -10,3 +10,5 @@ Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
 ### Group name: DeriveAlive
 
 ### Group members: Stephen Slater, Chen Shi, Yue Sun
+
+#### Note: See current project overview and documentation in docs/milestone2.pdf
