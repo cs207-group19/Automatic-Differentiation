@@ -25,11 +25,11 @@ class Var():
 		return 'Var({}, {})'.format(self.val, self.der)
 
 	def __add__(self, other):
-		val = self.val
-		der = self.der
+		val = float(self.val)
+		der = float(self.der)
 		try:
-			val += other.val
-			der += other.der
+			val += float(other.val)
+			der += float(other.der)
 		except AttributeError:
 			val += other
 		return Var(val, der)
@@ -162,22 +162,22 @@ class Var():
 	def pow(self, n):
 		return self.__pow__(n)
     
-	# def rpow(self, n):
-	# 	if n == 0:
-	# 		if self.val == 0:
-	# 			val = 1
-	# 			der = 0
-	# 		if self.val > 0:
-	# 			val = 0
-	# 			der = 0
-	# 		if self.val < 0:
-	# 			raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
-	# 	elif n < 0:
-	# 		raise ValueError("Real numbers only, math domain error.")
-	# 	else:
-	# 		val = n ** self.val
-	# 		der = n ** self.val * np.log(n)
-	# 	return Var(val, der)
+	def rpow(self, n):
+		if n == 0:
+			if self.val == 0:
+				val = 1
+				der = 0
+			if self.val > 0:
+				val = 0
+				der = 0
+			if self.val < 0:
+				raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
+		elif n < 0:
+			raise ValueError("Real numbers only, math domain error.")
+		else:
+			val = n ** self.val
+			der = n ** self.val * np.log(n)
+		return Var(val, der)
 
 	def log(self, base):
 		values = map(lambda x: x > 0, self.val)
