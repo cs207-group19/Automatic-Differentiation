@@ -85,6 +85,13 @@ class Var():
 		der = np.array([-1 if x < 0 else 1 for x in self.val])
 		return Var(val, der)
 
+	def __eq__(self, other):
+		try:
+			return (np.array_equal(self.val, other.val) and 
+					np.array_equal(self.der, other.der))
+		except:
+			return False
+
 	def sin(self):
 		val = np.sin(self.val)
 		der = np.cos(self.val) * self.der
