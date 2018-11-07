@@ -59,6 +59,17 @@ def test_DeriveAlive_scalar_functions():
 	multiplications, etc., so there are not tests explicitly for these methods.
 	'''
 
+	def test_neg():
+		x = da.Var(3.0)
+		f = -x
+		assert f.val == [-3.0]
+		assert f.der == [-1.0]
+
+		# Negate operator applied after the power
+		f2 = -x.pow(2)
+		assert f2.val == [-9.0]
+		assert f2.der == [-6.0]
+
 	def test_div():
 		# Expect value of 1.5, derivative of 0.5
 		x3 = da.Var(3.0)
@@ -204,6 +215,7 @@ def test_DeriveAlive_scalar_functions():
 
 
 	# Run tests
+	test_neg()
 	test_div()
 	test_rdiv()
 	test_sin()
