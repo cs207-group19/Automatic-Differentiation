@@ -20,7 +20,7 @@ class Var():
 			der = [der]
 		self.val = np.array(values)
 		self.der = np.array(der)
-	
+
 	def __repr__(self):
 		return 'Var({}, {})'.format(self.val, self.der)
 
@@ -33,15 +33,15 @@ class Var():
 		except AttributeError:
 			val += other
 		return Var(val, der)
-	
+
 	def __radd__(self, other):
 		return self.__add__(other)
-		
+
 	def __mul__(self, other):
 		val = self.val
 		der = self.der
-		try:            
-			val = val * other.val          
+		try:
+			val = val * other.val
 			der = der * other.val + val * other.der
 		except AttributeError:
 			val = val * other
@@ -112,7 +112,7 @@ class Var():
 		val = np.cos(self.val)
 		der = -np.sin(self.val) * self.der
 		return Var(val, der)
-	
+
 	def tan(self):
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
 		values = map(lambda x: ((x / np.pi) - 0.5) % 1 == 0.0, self.val)
@@ -143,11 +143,11 @@ class Var():
 		val = np.arctan(self.val)
 		der = 1 / (1 + (self.val) ** 2)
 		return Var(val, der)
- 
+
 	def sinh(self):
 		val = np.sinh(self.val)
 		der = np.cosh(self.val)
-		return Var(val, der) 
+		return Var(val, der)
 
 	def cosh(self):
 		val = np.cosh(self.val)
@@ -189,6 +189,6 @@ class Var():
 		return Var(val, der)
 
 	def exp(self):
-		val = np.exp(self.val) 
+		val = np.exp(self.val)
 		der = np.multiply(np.exp(self.val), self.der)
 		return Var(val, der)

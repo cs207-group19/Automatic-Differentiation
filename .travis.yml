@@ -8,3 +8,7 @@ script:
     - py.test
 after_success:
     - coveralls
+deploy:
+  provider: pypi
+  user: chenshi5826
+  password: Huimian0508
