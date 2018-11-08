@@ -2,6 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/cs207-group19/cs207-FinalProject/badge.svg?branch=master)](https://coveralls.io/github/cs207-group19/cs207-FinalProject?branch=master)
 
+(Cache may need to be reset, but clicking Coverall badge shows that the current coverage is 99.36%)
 
 # cs207-FinalProject
 Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
