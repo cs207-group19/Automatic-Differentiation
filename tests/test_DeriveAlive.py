@@ -3,9 +3,7 @@
 # These lines should be included for Travis/Coverall
 import sys
 sys.path.append('../')
-# print (sys.path) 
 
-import pytest
 import DeriveAlive.DeriveAlive as da
 import numpy as np
 import math
@@ -54,11 +52,7 @@ def test_DeriveAlive_Var():
 
 
 def test_DeriveAlive_scalar_functions():
-	'''Test scalar functions split up by operation type.
-
-	Note that most tests make use of elementary operations such as addition,
-	multiplications, etc., so there are not tests explicitly for these methods.
-	'''
+	'''Test scalar functions split up by operation type.'''
 
 	def test_neg():
 		x = da.Var(3.0)
@@ -97,29 +91,120 @@ def test_DeriveAlive_scalar_functions():
 		assert x != z
 		assert x != [3, 1]
 
+	def test_constant():
+		x = da.Var(5.0)
+		f = x
+		assert f == da.Var(5.0, 1.0)
+
+		f2 = da.Var(1)
+		assert f2 == da.Var(1, 1)
+
+	def test_add():
+		x = da.Var(2.0)
+		f = x + 2
+		assert f == da.Var(4.0, 1.0)
+
+		f2 = x + 2 + x + 3 + x + 2 + x
+		assert f2 == da.Var(15.0, 4.0)
+
+		f3 = x - 3 + x - x + 2 - x
+		assert f3 == da.Var(-1.0, 0.0)
+
+		# State not modified
+		assert x == da.Var(2.0, 1.0)
+
 	def test_radd():
 		x = da.Var(5.0)
 		f = 2 + x
 		assert f == da.Var(7.0, 1.0)
+
+		f2 = 3 + x + x + 5 + x
+		assert f2 == da.Var(23.0, 3.0)
+
+		f3 = 5 + x + (6 + x)
+		assert f3 == da.Var(21.0, 2.0)
+
+		# State not modified
+		assert x == da.Var(5.0, 1.0)
+
+	def test_sub():
+		x = da.Var(5.0)
+		f = x - 3
+		assert f == da.Var(2.0, 1.0)
+
+		f2 = x - x
+		assert f2 == da.Var(0.0, 0.0)
+
+		f3 = x - x - x - x
+		assert f3 == da.Var(-10.0, -2.0)
+
+		f4 = x - 4 - 3
+		assert f4 == da.Var(-2.0, 1.0)
+
+		# State not modified
+		assert x == da.Var(5.0, 1.0)
+
+	def test_rsub():
+		y = da.Var(3)
+		f = 4 - y
+		assert f == da.Var(1.0, -1.0)
+
+		f2 = 3 - y
+		assert f2 == da.Var(0.0, -1.0)
+
+		f3 = 4 - 3 - y - 2
+		assert f3 == da.Var(-4.0, -1.0)
+
+		# State not modified
+		assert y == da.Var(3.0, 1.0)
+
+	def test_mul():
+		x = da.Var(3.0)
+		f = x * 2
+		assert f == da.Var(6.0, 2)
+
+		f2 = x * 3 + x * 4 + x * x * x
+		assert f2 == da.Var(48.0, 34.0)
 
 	def test_rmul():
 		x = da.Var(5.0)
 		f = 2 * x
 		assert f == da.Var(10, 2)
 
-	def test_div():
+		x2 = da.Var(0.0)
+		f2 = 5 * x2
+		assert f2 == da.Var(0.0, 5.0)
+
+		# Derivative at x  is 24 * x + 4
+		f3 = 3 * x * 4 * x + 4 * x
+		assert f3 == da.Var(320.0, 124)
+
+	def test_truediv():
 		# Expect value of 1.5, derivative of 0.5
 		x = da.Var(3.0)
 		f = x / 2
 		assert np.round(f.val, 2) == [1.5]
 		assert np.round(f.der, 2) == [0.5]
 
-	def test_rdiv():
+		# Constant of 1 has derivative of 0
+		f2 = x / x
+		assert f2 == da.Var(1.0, 0.0)
+
+		f3 = (x / 2) * (1 / x)
+		assert f3 == da.Var(0.5, 0.0)
+
+	def test_rtruediv():
 		# Expect value of 0.5, derivative of -0.25
 		x = da.Var(2.0)
 		f = 1 / x
 		assert np.round(f.val, 2) == [0.5]
 		assert np.round(f.der, 2) == [-0.25]
+
+		f2 = 2 / (x * x)
+		assert f2 == da.Var(0.50, -0.50)
+
+		f3 = 2 / x / x
+		assert f3 == f2
 
 	def test_sin():
 		# Expect value of 18.42, derivative of 6.0
@@ -204,32 +289,64 @@ def test_DeriveAlive_scalar_functions():
 		assert np.round(f.der, 2) == [0.60]
 
 	def test_pow():
-		# Expect value of 64.0, derivative of 48.0
-		x = da.Var(4.0)
-		f = x.pow(3)
-		assert np.round(f.val, 2) == [64.0]
-		assert np.round(f.der, 2) == [48.0]
-	
-		# Divides by zero when computing derivative (0^{-1/2} term)
-		with np.testing.assert_raises(ZeroDivisionError):
-			zero = da.Var(0)
-			f_zero = zero.pow(1 / 2)
+		def method_version():
+			# Expect value of 64.0, derivative of 48.0
+			x = da.Var(4.0)
+			f = x.pow(3)
+			assert np.round(f.val, 2) == [64.0]
+			assert np.round(f.der, 2) == [48.0]
+			assert f == x * x * x
+		
+			# Divides by zero when computing derivative (0^{-1/2} term)
+			with np.testing.assert_raises(ZeroDivisionError):
+				zero = da.Var(0)
+				f_zero = zero.pow(1 / 2)
 
-		x2 = da.Var(4.0)
-		f2 = x2.pow(1 / 2)
-		assert np.round(f2.val, 2) == [2.0]
-		assert np.round(f2.der, 2) == [0.25]
+			x2 = da.Var(4.0)
+			f2 = x2.pow(1 / 2)
+			assert np.round(f2.val, 2) == [2.0]
+			assert np.round(f2.der, 2) == [0.25]
 
-		with np.testing.assert_raises(ValueError):
-			x3 = da.Var(-2)
-			f3 = x3.pow(1 / 2)
+			with np.testing.assert_raises(ValueError):
+				x3 = da.Var(-2)
+				f3 = x3.pow(1 / 2)
 
-		x4 = da.Var(4.0)
-		f4 = x4.pow(3)
-		assert f4.val == [64.0]
-		assert f4.der == [48.0]
+			x4 = da.Var(4.0)
+			f4 = x4.pow(3)
+			assert f4.val == [64.0]
+			assert f4.der == [48.0]
 
-	# TODO: Implement rpow in future implementation (not required for Milestone 2)
+		# Compute same tests using ** notation
+		def dunder_version():
+			# Expect value of 64.0, derivative of 48.0
+			x = da.Var(4.0)
+			f = x ** 3
+			assert np.round(f.val, 2) == [64.0]
+			assert np.round(f.der, 2) == [48.0]
+			assert f == x * x * x
+		
+			# Divides by zero when computing derivative (0^{-1/2} term)
+			with np.testing.assert_raises(ZeroDivisionError):
+				zero = da.Var(0)
+				f_zero = zero ** (1 / 2)
+
+			x2 = da.Var(4.0)
+			f2 = x2 ** (1 / 2)
+			assert np.round(f2.val, 2) == [2.0]
+			assert np.round(f2.der, 2) == [0.25]
+
+			with np.testing.assert_raises(ValueError):
+				x3 = da.Var(-2)
+				f3 = x3 ** (1 / 2)
+
+			x4 = da.Var(4.0)
+			f4 = x4 ** 3
+			assert f4.val == [64.0]
+			assert f4.der == [48.0]
+		
+		method_version()
+		dunder_version()
+
 	def test_rpow():
 		x = da.Var(4)
 		f = x.rpow(2)
@@ -272,15 +389,23 @@ def test_DeriveAlive_scalar_functions():
 		assert np.round(f.val, 2) == [2.72]
 		assert np.round(f.der, 2) == [2.72]
 
+		f2 = (2 * x).exp()
+		assert f2 == da.Var(np.exp(2), 2 * np.exp(2))
+
 
 	# Run tests
 	test_neg()
 	test_abs()
 	test_eq()
+	test_constant()
+	test_add()
 	test_radd()
+	test_sub()
+	test_rsub()
+	test_mul()
 	test_rmul()
-	test_div()
-	test_rdiv()
+	test_truediv()
+	test_rtruediv()
 	test_sin()
 	test_cos()
 	test_tan()
@@ -297,3 +422,4 @@ def test_DeriveAlive_scalar_functions():
 
 test_DeriveAlive_Var()
 test_DeriveAlive_scalar_functions()
+print ("All tests passed!")

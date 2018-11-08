@@ -8,9 +8,12 @@ import numpy as np
 np.seterr(all='raise')
 
 class Var():
+	'''Builds a Var object supporting custom operations implemented below.'''
 	def __init__(self, values, der=None):
 		"""
-		values: input as a list, transform it into np.array
+		Inputs:
+			values: int, float, list, or np.array -> transformed into into np.array
+			der: int, float, list, or np.array -> transformed into np.array
 		"""
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
@@ -18,48 +21,57 @@ class Var():
 			der = np.ones_like(values)
 		elif isinstance(der, float) or isinstance(der, int):
 			der = [der]
-		self.val = np.array(values)
-		self.der = np.array(der)
+		self.val = np.array(values, dtype=float)
+		self.der = np.array(der, dtype=float)
 
 	def __repr__(self):
 		return 'Var({}, {})'.format(self.val, self.der)
 
 	def __add__(self, other):
-		val = float(self.val)
-		der = float(self.der)
 		try:
-			val += float(other.val)
-			der += float(other.der)
+			val = self.val + other.val
+			der = self.der + other.der
 		except AttributeError:
-			val += other
+			val = self.val + other
+			der = self.der
 		return Var(val, der)
 
 	def __radd__(self, other):
-		return self.__add__(other)
+		# Maintain state of self and create new trace variable new_var
+		new_var = Var(self.val, self.der)
+		return new_var.__add__(other)
+
+	def __sub__(self, other):
+		if isinstance(other, int) or isinstance(other, float):
+			# Maintain state of self and create new trace variable new_var
+			new_var = Var(self.val, self.der)
+			return new_var.__add__(-other)
+		return (-other).__add__(self)
+
+	def __rsub__(self, other):
+		return (-self).__add__(float(other))
 
 	def __mul__(self, other):
-		val = self.val
-		der = self.der
 		try:
-			val = val * other.val
-			der = der * other.val + val * other.der
+			val = self.val * other.val
+			der = self.der * other.val + self.val * other.der
 		except AttributeError:
-			val = val * other
-			der = der * other
+			val = self.val * other
+			der = self.der * other
 		return Var(val, der)
 
 	def __rmul__(self, other):
-		return self.__mul__(other)
+		# Maintain state of self and create new trace variable new_var
+		new_var = Var(self.val, self.der)
+		return new_var.__mul__(other)
 
 	def __truediv__(self, other):
-		val = self.val
-		der = self.der
 		try:
-			val = np.divide(val, other.val)
-			der = (np.multiply(other.val, der) - np.multiply(val, other.der)) / (other.val ** 2)
+			val = np.divide(self.val, other.val)
+			der = (np.multiply(other.val, self.der) - np.multiply(self.val, other.der)) / (other.val ** 2)
 		except AttributeError:
-			val = np.divide(val, other)
-			der = np.divide(der, other)
+			val = np.divide(self.val, other)
+			der = np.divide(self.der, other)
 		return Var(val, der)
 
 	def __rtruediv__(self, other):
@@ -117,7 +129,6 @@ class Var():
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
 		values = map(lambda x: ((x / np.pi) - 0.5) % 1 == 0.0, self.val)
 		if any(values):
-		#if abs(self.val) >= np.pi/2 and any(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
 		val = np.tan(self.val)
 		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
@@ -160,7 +171,9 @@ class Var():
 		return Var(val, der)
 
 	def pow(self, n):
-		return self.__pow__(n)
+		# Maintain state of self and create new trace variable new_var
+		new_var = Var(self.val, self.der)
+		return new_var.__pow__(n)
     
 	def rpow(self, n):
 		if n == 0:
