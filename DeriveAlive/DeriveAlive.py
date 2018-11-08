@@ -114,13 +114,8 @@ class Var():
 		return Var(val, der)
 
 	def tan(self):
-<<<<<<< HEAD
-		# Ensure that no values in self.val are of the form (pi/2 + k*pi)
-		values = map(lambda x: ((x % np.pi) - 0.5) % 1 == 0.0, self.val)
-=======
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
 		values = map(lambda x: ((x / np.pi) - 0.5) % 1 == 0.0, self.val)
->>>>>>> 923daf2a12dfb40f1a6017c5bf32ddeb11a8499d
 		if any(values):
 		#if abs(self.val) >= np.pi/2 and any(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
@@ -131,11 +126,7 @@ class Var():
 	def arcsin(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
-<<<<<<< HEAD
-			raise ValueError("Range of arcsin is [-1, 1].")
-=======
 			raise ValueError("Domain of arcsin is [-1, 1].")		
->>>>>>> 923daf2a12dfb40f1a6017c5bf32ddeb11a8499d
 		val = np.arcsin(self.val)
 		der = 1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
@@ -143,11 +134,7 @@ class Var():
 	def arccos(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
-<<<<<<< HEAD
-			raise ValueError("Range of arccos is [-1, 1].")
-=======
 			raise ValueError("Domain of arccos is [-1, 1].")	
->>>>>>> 923daf2a12dfb40f1a6017c5bf32ddeb11a8499d
 		val = np.arccos(self.val)
 		der = -1 / np.sqrt(1 - (self.val ** 2))
 		return Var(val, der)
