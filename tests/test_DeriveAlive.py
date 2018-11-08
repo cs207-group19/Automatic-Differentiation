@@ -231,7 +231,29 @@ def test_DeriveAlive_scalar_functions():
 
 	# TODO: Implement rpow in future implementation (not required for Milestone 2)
 	def test_rpow():
-		pass
+		print("test rpow")
+		x = da.Var(4)
+		f = x.rpow(2)
+		assert f.val == [16.0]
+		assert np.round(f.der, 2) == [11.09]
+
+		with np.testing.assert_raises(ZeroDivisionError):
+			zero = da.Var(-1)
+			f_zero = zero.rpow(0)  
+			
+		x1 = da.Var(0)
+		f1 = x1.rpow(0)
+		assert f1.val == [1]
+		assert f1.der == [0]
+
+		x2 = da.Var(3)
+		f2 = x2.rpow(0)
+		assert f2.val == [0]
+		assert f2.der == [0]
+		
+		with np.testing.assert_raises(ValueError):
+			neg = da.Var(2)
+			f_neg = neg.rpow(-2) 
 
 	def test_log():
 		# Expect value of 1.0, derivative of 0.23025850929940458
