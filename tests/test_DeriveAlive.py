@@ -1,8 +1,8 @@
 # Test suite for DeriveAlive module
 
 # These lines included for local testing (do not include for Travis/Coverall)
-import sys
-sys.path.append('../')
+# import sys
+# sys.path.append('../')
 # print (sys.path) 
 
 import pytest
