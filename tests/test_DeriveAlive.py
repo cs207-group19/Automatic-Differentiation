@@ -44,6 +44,7 @@ def test_DeriveAlive_Var():
 		assert f.der == [17]
 		assert repr(f) == 'Var({}, {})'.format(f.val, f.der)
 
+	# Run tests within test_DeriveAliveVar
 	test_scalar_without_bracket()
 	test_scalar_with_bracket()
 	test_vector_input()
@@ -193,6 +194,9 @@ def test_DeriveAlive_scalar_functions():
 		f3 = (x / 2) * (1 / x)
 		assert f3 == da.Var(0.5, 0.0)
 
+		with np.testing.assert_raises(ZeroDivisionError):
+			f4 = x / 0
+
 	def test_rtruediv():
 		# Expect value of 0.5, derivative of -0.25
 		x = da.Var(2.0)
@@ -205,6 +209,13 @@ def test_DeriveAlive_scalar_functions():
 
 		f3 = 2 / x / x
 		assert f3 == f2
+
+		with np.testing.assert_raises(ZeroDivisionError):
+			zero = da.Var(0)
+			f4 = 2 / zero
+
+		f5 = 0 / x
+		assert f5 == da.Var(0.0, 0.0)
 
 	def test_sin():
 		# Expect value of 18.42, derivative of 6.0
@@ -392,8 +403,7 @@ def test_DeriveAlive_scalar_functions():
 		f2 = (2 * x).exp()
 		assert f2 == da.Var(np.exp(2), 2 * np.exp(2))
 
-
-	# Run tests
+	# Run tests within test_DeriveAlive_scalar_functions()
 	test_neg()
 	test_abs()
 	test_eq()
@@ -420,6 +430,8 @@ def test_DeriveAlive_scalar_functions():
 	test_log()
 	test_exp()
 
-test_DeriveAlive_Var()
-test_DeriveAlive_scalar_functions()
-print ("All tests passed!")
+
+# Without pytest, user can run these tests manualy
+# test_DeriveAlive_Var()
+# test_DeriveAlive_scalar_functions()
+# print ("All tests passed!")

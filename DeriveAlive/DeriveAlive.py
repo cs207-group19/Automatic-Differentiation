@@ -66,6 +66,11 @@ class Var():
 		return new_var.__mul__(other)
 
 	def __truediv__(self, other):
+		# Check for ZeroDivisionError at start rather than nesting exception block
+		if (other == 0 or 
+			not (isinstance(other, float) or isinstance(other, int)) and other.val == 0):
+			raise ZeroDivisionError
+
 		try:
 			val = np.divide(self.val, other.val)
 			der = (np.multiply(other.val, self.der) - np.multiply(self.val, other.der)) / (other.val ** 2)
@@ -75,13 +80,14 @@ class Var():
 		return Var(val, der)
 
 	def __rtruediv__(self, other):
-		'''Note: self contains denominator; other contains numerator'''
-		try:
-			val = np.divide(other.val, self.val)
-			der = (np.multiply(self.val, other.der) - np.multiply(other.val, self.der)) / (np.linalg.norm(self.val) ** 2)
-		except AttributeError:
-			val = np.divide(other, self.val)
-			der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
+		'''Note: self contains denominator (Var); other contains numerator'''
+		# Check for ZeroDivisionError at start rather than nesting exception block
+		if (self == 0 or 
+			not (isinstance(self, float) or isinstance(self, int)) and self.val == 0):
+			raise ZeroDivisionError
+			
+		val = np.divide(other, self.val)
+		der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
 		return Var(val, der)
 
 	def __neg__(self):
