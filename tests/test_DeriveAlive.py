@@ -1,8 +1,8 @@
 # Test suite for DeriveAlive module
 
-# These lines included for local testing (do not include for Travis/Coverall)
-# import sys
-# sys.path.append('../')
+# These lines should be included for Travis/Coverall
+import sys
+sys.path.append('../')
 # print (sys.path) 
 
 import pytest
@@ -231,7 +231,6 @@ def test_DeriveAlive_scalar_functions():
 
 	# TODO: Implement rpow in future implementation (not required for Milestone 2)
 	def test_rpow():
-		print("test rpow")
 		x = da.Var(4)
 		f = x.rpow(2)
 		assert f.val == [16.0]
