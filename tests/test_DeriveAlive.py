@@ -431,7 +431,26 @@ def test_DeriveAlive_scalar_functions():
 	test_exp()
 
 
-# Without pytest, user can run these tests manualy
-# test_DeriveAlive_Var()
-# test_DeriveAlive_scalar_functions()
-# print ("All tests passed!")
+def test_DeriveAlive_Vec():
+	'''Test constructor of Vec class to ensure proper variable initializations.'''	
+
+	def test_vector_input():
+		x = da.Var(2, [1, 0])
+		y = da.Var(3, [0, 1])
+		f = da.Vec([x ** 2, y ** 2, x * y])
+		print (f)
+
+	test_vector_input()
+
+
+def test_DeriveAlive_vector_functions():
+	'''Test vector functions split up by operation type.'''
+	pass
+
+
+# Without pytest, user can run these tests manually
+test_DeriveAlive_Var()
+test_DeriveAlive_Vec()
+test_DeriveAlive_scalar_functions()
+test_DeriveAlive_vector_functions()
+print ("All tests passed!")

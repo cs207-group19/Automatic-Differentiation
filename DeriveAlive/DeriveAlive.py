@@ -26,6 +26,13 @@ class Var():
 
 	def __repr__(self):
 		return 'Var({}, {})'.format(self.val, self.der)
+		# final_val = 0.0
+		# final_der = np.zeros(len(self.der))
+		# for variable in self:
+		# 	final_val += variable.val
+		# 	final_der += variable.der
+		# return 'Var({}, {})'.format(final_val, final_der)
+		# return self.val, self.der
 
 	def __add__(self, other):
 		try:
@@ -211,3 +218,22 @@ class Var():
 		val = np.exp(self.val)
 		der = np.multiply(np.exp(self.val), self.der)
 		return Var(val, der)
+
+
+class Vec(object):
+	def __init__(self, output):
+		self.length = len(output)
+		self.output = output
+
+	def __repr__(self):
+		values = []
+		derivatives = []
+		for x in self.output:
+			values.append(x.val)
+			derivatives.append(x.der)
+
+		values = np.hstack((values))
+		derivatives = np.vstack((derivatives))
+
+		return 'Values:\n{},\nJacobian:\n{}'.format(values, derivatives)
+
