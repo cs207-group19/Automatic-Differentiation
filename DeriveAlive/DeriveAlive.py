@@ -7,7 +7,7 @@ import numpy as np
 # Change built-in warnings to exceptions when using numpy
 np.seterr(all='raise')
 
-class Var():
+class Var(object):
 	'''Builds a Var object supporting custom operations implemented below.'''
 	def __init__(self, values, der=None):
 		"""
@@ -18,21 +18,16 @@ class Var():
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
 		if der is None:
-			der = np.ones_like(values)
+			der = [1]
 		elif isinstance(der, float) or isinstance(der, int):
 			der = [der]
 		self.val = np.array(values, dtype=float)
 		self.der = np.array(der, dtype=float)
 
 	def __repr__(self):
-		return 'Var({}, {})'.format(self.val, self.der)
-		# final_val = 0.0
-		# final_der = np.zeros(len(self.der))
-		# for variable in self:
-		# 	final_val += variable.val
-		# 	final_der += variable.der
-		# return 'Var({}, {})'.format(final_val, final_der)
-		# return self.val, self.der
+		if len(self.val) == 1 and len(self.der) == 1:
+			return 'Var({}, {})'.format(self.val, self.der)
+		return 'Values:\n{},\nJacobian:\n{}'.format(self.val, self.der)
 
 	def __add__(self, other):
 		try:
@@ -73,14 +68,19 @@ class Var():
 		return new_var.__mul__(other)
 
 	def __truediv__(self, other):
-		# Check for ZeroDivisionError at start rather than nesting exception block
-		if (other == 0 or 
-			not (isinstance(other, float) or isinstance(other, int)) and other.val == 0):
+		other_is_scalar = isinstance(other, float) or isinstance(other, int)
+
+		if (other_is_scalar and other == 0) or (not other_is_scalar and 0 in other.val):
 			raise ZeroDivisionError
 
 		try:
 			val = np.divide(self.val, other.val)
-			der = (np.multiply(other.val, self.der) - np.multiply(self.val, other.der)) / (other.val ** 2)
+			self_val = np.expand_dims(self.val, 1) if len(other.der) > 1 else self.val
+			other_val = np.expand_dims(other.val, 1) if len(other.der) > 1 else other.val
+
+			num = (np.multiply(other_val, self.der) - np.multiply(self_val, other.der))
+			denom = other_val ** 2 if len(other.der) > 1 else other.val ** 2
+			der = np.divide(num, denom)
 		except AttributeError:
 			val = np.divide(self.val, other)
 			der = np.divide(self.der, other)
@@ -90,7 +90,7 @@ class Var():
 		'''Note: self contains denominator (Var); other contains numerator'''
 		# Check for ZeroDivisionError at start rather than nesting exception block
 		if (self == 0 or 
-			not (isinstance(self, float) or isinstance(self, int)) and self.val == 0):
+			not (isinstance(self, float) or isinstance(self, int)) and not all(self.val)):
 			raise ZeroDivisionError
 			
 		val = np.divide(other, self.val)
@@ -115,7 +115,33 @@ class Var():
 			return (np.array_equal(self.val, other.val) and 
 					np.array_equal(self.der, other.der))
 		except:
+			# Compare scalar Vars with derivative 1 to scalars
+			if len(self.val) == 1 and self.der == [1.]:
+				return self.val == other
 			return False
+
+	def __ne__(self, other):
+		return not self.__eq__(other)
+
+	def __lt__(self, other):
+		# Numpy internally checks if the dimensions of self and other match
+		try:
+			return self.val < other.val
+		except:
+			return self.val < other
+
+	def __le__(self, other):
+		return self.__lt__(other) or self.__eq__(other)
+
+	def __gt__(self, other):
+		# return self.__le__(other)
+		try:
+			return self.val > other.val
+		except:
+			return self.val > other
+
+	def __ge__(self, other):
+		return self.__gt__(other) or self.__eq__(other)
 
 	def __pow__(self, n):
 		values = map(lambda x: x >= 0, self.val)
@@ -220,17 +246,32 @@ class Var():
 		return Var(val, der)
 
 
-class Vec(object):
+class Vec(Var):
 	def __init__(self, output):
-		self.length = len(output)
 		self.output = output
+		values = []
+		derivatives = []
+		for x in self.output:
+			try:
+				values.append(x.val)
+				derivatives.append(x.der)
+			except:
+				values.append(x)
+				derivatives.append(0)
+
+		self.val = np.hstack((values))
+		self.der = np.vstack((derivatives))
 
 	def __repr__(self):
 		values = []
 		derivatives = []
 		for x in self.output:
-			values.append(x.val)
-			derivatives.append(x.der)
+			try:
+				values.append(x.val)
+				derivatives.append(x.der)
+			except:
+				values.append(x)
+				derivatives.append(0)
 
 		values = np.hstack((values))
 		derivatives = np.vstack((derivatives))

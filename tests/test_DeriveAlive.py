@@ -23,12 +23,12 @@ def test_DeriveAlive_Var():
 		assert type(x.val) == np.ndarray
 		assert x.der == [1]
 
-	def test_vector_input():
-		x = da.Var([1, 2, 3])
-		np.testing.assert_array_equal(x.val, [1, 2, 3])
-		assert type(x.val) == np.ndarray
-		np.testing.assert_array_equal(x.der, [1, 1, 1])
-		assert type(x.der) == np.ndarray
+	# def test_vector_input():
+	# 	x = da.Var([1, 2, 3])
+	# 	np.testing.assert_array_equal(x.val, [1, 2, 3])
+	# 	assert type(x.val) == np.ndarray
+	# 	np.testing.assert_array_equal(x.der, [1, 1, 1])
+	# 	assert type(x.der) == np.ndarray
 
 	def test_with_preset_der():
 		der = 3.5
@@ -47,9 +47,102 @@ def test_DeriveAlive_Var():
 	# Run tests within test_DeriveAliveVar
 	test_scalar_without_bracket()
 	test_scalar_with_bracket()
-	test_vector_input()
+	# test_vector_input()
 	test_with_preset_der()
 	test_repr()
+
+
+def test_DeriveAlive_comparisons():
+	def test_eq():
+		x = da.Var(3)
+		y = da.Var(3)
+		z = da.Var(5)
+
+		# Ensure that dunder method is called appropriately
+		assert x.__eq__(y)
+		assert x == y
+		assert not (x == z)
+
+		f = 2 * x + x / 3
+		g = (3 * x) / 9 + x * 2
+		assert f.__eq__(g)
+		assert f == g
+
+		# Vector comparisons
+		a = da.Vec([1, 2, 3])
+
+	def test_ne():
+		x = da.Var(3)
+		z = da.Var(5)
+
+		# Ensure that dunder method is called appropriately
+		assert x.__ne__(z)
+		assert x != z
+
+		f = 2 * x + x / 4
+		g = x / 3 + x * 2
+		assert f.__ne__(g)
+		assert f != g
+
+		# TODO: Vector comparisons
+
+	def test_lt():
+		x = da.Var(3)
+		z = da.Var(5)
+		assert x < z
+		assert x < 4
+		assert not (x < 3)
+		assert not (x < 2)
+		assert 2 < x
+		assert not (z < x)
+
+		# TODO: Vector comparisons
+
+	def test_le():
+		# Scalar comparisons
+		x = da.Var(3)
+		z = da.Var(5)
+		assert x <= z
+		assert x <= 4
+		assert x <= 3
+		assert not (x <= 2)	
+		assert 2 <= x
+		assert 3 <= x
+		assert not (z <= x)
+
+		# TODO: Vector comparisons
+
+	def test_gt():
+		x = da.Var(3)
+		z = da.Var(5)
+		assert z > x
+		assert z > 4
+		assert not (x > 3)
+		assert x > 2
+		assert not (2 > x)
+		assert not (x > z)
+
+		# TODO: Vector comparisons
+
+	def test_ge():
+		x = da.Var(3)
+		z = da.Var(5)
+		assert z >= x
+		assert 4 >= x
+		assert 3 >= x
+		assert not (2 >= x)
+		assert x >= 2
+		assert x >= 3
+		assert not (x >= z)
+
+		# TODO: Vector comparisons
+
+	test_eq()
+	test_ne()
+	test_lt()
+	test_le()
+	test_gt()
+	test_ge()
 
 
 def test_DeriveAlive_scalar_functions():
@@ -83,14 +176,6 @@ def test_DeriveAlive_scalar_functions():
 		with np.testing.assert_raises(ValueError):
 			z = da.Var(0)
 			f = abs(z)
-
-	def test_eq():
-		x = da.Var(3)
-		y = da.Var(3)
-		z = da.Var(5)
-		assert x == y
-		assert x != z
-		assert x != [3, 1]
 
 	def test_constant():
 		x = da.Var(5.0)
@@ -406,7 +491,6 @@ def test_DeriveAlive_scalar_functions():
 	# Run tests within test_DeriveAlive_scalar_functions()
 	test_neg()
 	test_abs()
-	test_eq()
 	test_constant()
 	test_add()
 	test_radd()
@@ -438,19 +522,29 @@ def test_DeriveAlive_Vec():
 		x = da.Var(2, [1, 0])
 		y = da.Var(3, [0, 1])
 		f = da.Vec([x ** 2, y ** 2, x * y])
-		print (f)
 
 	test_vector_input()
 
 
 def test_DeriveAlive_vector_functions():
 	'''Test vector functions split up by operation type.'''
-	pass
+	
+	def test_truediv():
+		print ("Vector division test case:")
+		print ("x = 2\ny = 3\nz = [x**2, y**2, x*y]\nw = [x, y, x]\nz/w = [x, y, y]\n")
+		x = da.Var(2, [1, 0])
+		y = da.Var(3, [0, 1])
+		z = da.Vec([x ** 2, y ** 2, x * y])
+		w = da.Vec([x, y, x])
+		print ("x:\n{}\n\ny:\n{}\n\nz:\n{}\n\nw:\n{}\n\nz / w:\n{}".format(x, y, z, w, z / w))
+
+	test_truediv()
 
 
 # Without pytest, user can run these tests manually
 test_DeriveAlive_Var()
 test_DeriveAlive_Vec()
 test_DeriveAlive_scalar_functions()
+test_DeriveAlive_comparisons()
 test_DeriveAlive_vector_functions()
 print ("All tests passed!")
