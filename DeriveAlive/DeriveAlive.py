@@ -17,22 +17,68 @@ class Var(object):
 		"""
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
-		if der is None:
-			der = [1]
-		elif isinstance(der, float) or isinstance(der, int):
-			der = [der]
-		self.val = np.array(values, dtype=float)
-		self.der = np.array(der, dtype=float)
+		if len(values) == 1:
+			if der is None:
+				der = [1]
+			elif isinstance(der, float) or isinstance(der, int):
+				der = [der]
+
+			self.val = np.array(values)
+			self.der = np.array(der)
+		else:
+			all_non_Vars = len(list(filter(lambda x: isinstance(x, Var), values))) == 0
+			if all_non_Vars:
+				self.val = np.array(values)
+				self.der = np.array(der)
+			else:
+				# self.values is a vector that contains a Var object at initialization
+				max_num_vars = max([
+					len(x.der[0]) if isinstance(x, Var) and len(x.der.shape) > 1 else
+					(len(x.der) if isinstance(x, Var) and len(x.der.shape) == 1 else 0) for x in values])
+				new_values = []
+				new_derivatives = []
+				for x in values:
+					try:
+						new_values.append(x.val)
+						new_derivatives.append(x.der)
+					except:
+						new_values.append(x)
+						new_derivatives.append(np.zeros(max_num_vars))
+
+				self.val = np.hstack((new_values))
+				self.der = np.vstack((new_derivatives))
+
+		# Convert values of -0.0 to 0.0 in derivative
+		if len(self.der.shape):
+			shape = self.der.shape
+			der_vals = self.der.flatten()
+			for i, der_val in enumerate(der_vals):
+				if der_val == -0.0:
+					der_vals[i] = 0.0
+			self.der = np.reshape(der_vals, shape)
 
 	def __repr__(self):
-		if len(self.val) == 1 and len(self.der) == 1:
+		if len(self.val) == 1:
 			return 'Var({}, {})'.format(self.val, self.der)
 		return 'Values:\n{},\nJacobian:\n{}'.format(self.val, self.der)
 
 	def __add__(self, other):
 		try:
 			val = self.val + other.val
-			der = self.der + other.der
+
+			# Handle case when self.der or other.der contains None 
+			# i.e. self or other is a vector of scalars, not of Vars
+			len_self_der_shape = len(self.der.shape)
+			len_other_der_shape = len(other.der.shape)
+
+			if not len_self_der_shape and len_other_der_shape:
+				der = other.der
+			elif len_self_der_shape and not len_other_der_shape:
+				der = self.der
+			elif not len_self_der_shape and not len_other_der_shape:
+				der = None
+			else:
+				der = self.der + other.der
 		except AttributeError:
 			val = self.val + other
 			der = self.der
@@ -54,36 +100,89 @@ class Var(object):
 		return (-self).__add__(float(other))
 
 	def __mul__(self, other):
+		# Check if self.der is an array containing None
+		len_self_der_shape = len(self.der.shape)
+
 		try:
-			val = self.val * other.val
-			der = self.der * other.val + self.val * other.der
+			len_other_der_shape = len(other.der.shape)
+			self_val = np.expand_dims(self.val, 1) if len(other.der.shape) > 1 else self.val
+			other_val = np.expand_dims(other.val, 1) if len(self.der.shape) > 1 else other.val
+			val = np.multiply(self.val, other.val)
+			
+			# Handle case when self.der or other.der contains None 
+			# i.e. self or other is a vector of scalars, not of Vars
+			if not len_self_der_shape and len_other_der_shape:
+				der = np.multiply(self_val, other.der)
+			elif len_self_der_shape and not len_other_der_shape:
+				der = np.multiply(other_val, self.der)
+			elif not len_self_der_shape and not len_other_der_shape:
+				der = None
+			else:
+				der = np.multiply(other_val, self.der) + np.multiply(self_val, other.der)
 		except AttributeError:
 			val = self.val * other
-			der = self.der * other
+			if isinstance(other, float) or isinstance(other, int) or np.array_equal(self.der.shape, other.shape):
+				der = self.der * other if len_self_der_shape else None
+
+			# other is a numpy array or da.Var of scalars, not of Vars
+			else:
+				other_val = np.expand_dims(other, 1) if len_self_der_shape > len(other.shape) else other
+				der = self.der * other_val if len_self_der_shape else None
 		return Var(val, der)
 
 	def __rmul__(self, other):
 		# Maintain state of self and create new trace variable new_var
+		# print ("inside rmul, self is {}, other is {}".format(self, other))
 		new_var = Var(self.val, self.der)
 		return new_var.__mul__(other)
 
 	def __truediv__(self, other):
+		# Handle case when self.der or other.der is None
 		other_is_scalar = isinstance(other, float) or isinstance(other, int)
+		other_is_numpy = isinstance(other, np.ndarray)
+		len_self_der_shape = len(self.der.shape)
 
-		if (other_is_scalar and other == 0) or (not other_is_scalar and 0 in other.val):
+		if (other_is_scalar and other == 0) or (other_is_numpy and 0 in other) or (
+			not (other_is_scalar or other_is_numpy) and 0 in other.val):
 			raise ZeroDivisionError
 
 		try:
+			is_vec = len(self.val) > 1
+			len_other_der_shape = len(other.der.shape)
 			val = np.divide(self.val, other.val)
-			self_val = np.expand_dims(self.val, 1) if len(other.der) > 1 else self.val
-			other_val = np.expand_dims(other.val, 1) if len(other.der) > 1 else other.val
+			self_val = np.expand_dims(self.val, 1) if len_other_der_shape > 1 else self.val
+			other_val = np.expand_dims(other.val, 1) if len_self_der_shape > 1 else other.val
 
-			num = (np.multiply(other_val, self.der) - np.multiply(self_val, other.der))
-			denom = other_val ** 2 if len(other.der) > 1 else other.val ** 2
-			der = np.divide(num, denom)
+			# Handle case when self.der or other.der contains None 
+			# i.e. self or other is a vector of scalars, not of Vars
+			if not len_self_der_shape and len_other_der_shape:
+				num = -np.multiply(self_val, other.der)
+			elif len_self_der_shape and not len_other_der_shape:
+				num = np.multiply(other_val, self.der)
+			elif not len_self_der_shape and not len_other_der_shape:
+				num = None
+			else:
+				num = np.multiply(other_val, self.der) - np.multiply(self_val, other.der)
+
+			if num is not None:
+				denom = other_val ** 2 if len(num.shape) > 1 else other.val ** 2
+				if len(num.shape) > len(denom.shape):
+					denom = np.expand_dims(denom, 1)
+
+				der = np.divide(num, denom)
+			else:
+				der = None
+
 		except AttributeError:
 			val = np.divide(self.val, other)
-			der = np.divide(self.der, other)
+			if isinstance(other, float) or isinstance(other, int) or np.array_equal(self.der.shape, other.shape):
+				der = np.divide(self.der, other) if len_self_der_shape else None
+
+			# other is a numpy array or da.Var of scalars, not of Vars
+			else:
+				other_val = np.expand_dims(other, 1) if len_self_der_shape > len(other.shape) else other
+				der = np.divide(self.der, other_val) if len_self_der_shape else None
+
 		return Var(val, der)
 
 	def __rtruediv__(self, other):
@@ -94,12 +193,15 @@ class Var(object):
 			raise ZeroDivisionError
 			
 		val = np.divide(other, self.val)
-		der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
+		if len(self.der.shape):
+			der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
+		else:
+			der = None
 		return Var(val, der)
 
 	def __neg__(self):
 		val = -self.val
-		der = -self.der
+		der = -self.der if len(self.der.shape) else None
 		return Var(val, der)
 
 	# TODO: double check derivative of abs function
@@ -244,37 +346,3 @@ class Var(object):
 		val = np.exp(self.val)
 		der = np.multiply(np.exp(self.val), self.der)
 		return Var(val, der)
-
-
-class Vec(Var):
-	def __init__(self, output):
-		self.output = output
-		values = []
-		derivatives = []
-		for x in self.output:
-			try:
-				values.append(x.val)
-				derivatives.append(x.der)
-			except:
-				values.append(x)
-				derivatives.append(0)
-
-		self.val = np.hstack((values))
-		self.der = np.vstack((derivatives))
-
-	def __repr__(self):
-		values = []
-		derivatives = []
-		for x in self.output:
-			try:
-				values.append(x.val)
-				derivatives.append(x.der)
-			except:
-				values.append(x)
-				derivatives.append(0)
-
-		values = np.hstack((values))
-		derivatives = np.vstack((derivatives))
-
-		return 'Values:\n{},\nJacobian:\n{}'.format(values, derivatives)
-
