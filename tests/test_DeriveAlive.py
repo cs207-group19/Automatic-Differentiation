@@ -472,11 +472,11 @@ def test_DeriveAlive_scalar_functions():
 			f_neg = (-2) ** neg
 
 	def test_log():
-		# Expect value of 1.0, derivative of 0.23025850929940458
+		# Expect value of 1.0, derivative of 0.04342944819032518
 		x = da.Var(10)
 		f = x.log(10)
 		assert np.round(f.val, 2) == [1.0]
-		assert np.round(f.der, 2) == [0.23]
+		assert np.round(f.der, 4) == [0.0434]
 
 		with np.testing.assert_raises(ValueError):
 			x2 = da.Var(0)

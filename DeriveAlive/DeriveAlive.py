@@ -132,7 +132,6 @@ class Var(object):
 
 	def __rmul__(self, other):
 		# Maintain state of self and create new trace variable new_var
-		# print ("inside rmul, self is {}, other is {}".format(self, other))
 		new_var = Var(self.val, self.der)
 		return new_var.__mul__(other)
 
@@ -188,15 +187,30 @@ class Var(object):
 	def __rtruediv__(self, other):
 		'''Note: self contains denominator (Var); other contains numerator'''
 		# Check for ZeroDivisionError at start rather than nesting exception block
+		if isinstance(other, np.ndarray):
+			other = Var(other)
+
 		if (self == 0 or 
 			not (isinstance(self, float) or isinstance(self, int)) and not all(self.val)):
 			raise ZeroDivisionError
 			
 		val = np.divide(other, self.val)
-		if len(self.der.shape):
-			der = (-np.multiply(other, self.der)) / (np.linalg.norm(self.val) ** 2)
+
+		if isinstance(other, float) or isinstance(other, int):
+			if len(self.der.shape):
+				num = (-np.multiply(other, self.der))
+				self_val = np.expand_dims(self.val, 1) if len(num.shape) > len(self.val.shape) else self.val
+				der = num / (self_val ** 2)
+			else:
+				der = None
+
+		# other is a numpy array or da.Var of scalars, not of Vars
 		else:
-			der = None
+			other_val = np.expand_dims(other, 1) if len(self.der.shape) > len(other.shape) else other
+			num = (-np.multiply(other_val, self.der))
+			self_val = np.expand_dims(self.val, 1) if len(num.shape) > len(self.val.shape) else self.val
+			der = num / (self_val ** 2) 
+
 		return Var(val, der)
 
 	def __neg__(self):
@@ -253,7 +267,8 @@ class Var(object):
 			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
 
 		val = np.power(self.val, n)
-		der = n * np.multiply((self.val ** (n - 1)), self.der)
+		self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
+		der = n * np.multiply((self_val ** (n - 1)), self.der)
 		return Var(val, der)
 
 	def __rpow__(self, n):
@@ -275,12 +290,22 @@ class Var(object):
 
 	def sin(self):
 		val = np.sin(self.val)
-		der = np.cos(self.val) * self.der
+		if len(self.der.shape):
+			to_multiply = np.cos(self.val)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
 		return Var(val, der)
 
 	def cos(self):
 		val = np.cos(self.val)
-		der = -np.sin(self.val) * self.der
+		if len(self.der.shape):
+			to_multiply = -np.sin(self.val)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
 		return Var(val, der)
 
 	def tan(self):
@@ -289,7 +314,12 @@ class Var(object):
 		if any(values):
 			raise ValueError("Tangent not valid at pi/2, -pi/2.")
 		val = np.tan(self.val)
-		der = np.multiply(np.power(1 / np.cos(self.val), 2), self.der)
+		if len(self.der.shape):
+			to_multiply = np.power(1 / np.cos(self.val), 2)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = np.multiply(to_multiply, self.der)
+		else:
+			der = None
 		return Var(val, der)
 
 	def arcsin(self):
@@ -332,17 +362,32 @@ class Var(object):
 		# Maintain state of self and create new trace variable new_var
 		new_var = Var(self.val, self.der)
 		return new_var.__pow__(n)
-    
+ 
+	def sqrt(self):
+		# Maintain state of self and create new trace variable new_var
+		new_var = Var(self.val, self.der)
+		return new_var.__pow__(0.5)
+
 	def log(self, base):
 		values = map(lambda x: x > 0, self.val)
 		if not all(values):
 			raise ValueError("Non-positive number encountered in log.")
 		else:
-			val = np.math.log(self.val, base)
-			der = np.multiply(np.divide(np.log(base), self.val), self.der)
+			val = np.array([np.math.log(v, base) for v in self.val])
+			if len(self.der.shape):
+				to_multiply = 1 / np.multiply(np.log(base), self.val)
+				to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+				der = np.multiply(to_multiply, self.der)
+			else:
+				der = None
 		return Var(val, der)
 
 	def exp(self):
 		val = np.exp(self.val)
-		der = np.multiply(np.exp(self.val), self.der)
+		if len(self.der.shape):
+			to_multiply = np.exp(self.val)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = np.multiply(to_multiply, self.der)
+		else:
+			der = None
 		return Var(val, der)
