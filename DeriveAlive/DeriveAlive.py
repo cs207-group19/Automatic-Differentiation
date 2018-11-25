@@ -12,7 +12,7 @@ class Var(object):
 	def __init__(self, values, der=None):
 		"""
 		Inputs:
-			values: int, float, list, or np.array -> transformed into into np.array
+			values: int, float, list, or np.array -> transformed into np.array
 			der: int, float, list, or np.array -> transformed into np.array
 		"""
 		if isinstance(values, float) or isinstance(values, int):
@@ -223,7 +223,8 @@ class Var(object):
 		val = abs(self.val)
 		if 0 in self.val:
 			raise ValueError("Absolute value is not differentiable at 0.")
-		der = np.array([-1 if x < 0 else 1 for x in self.val])
+		#der = np.array([-1 if x < 0 else 1 for x in self.val])
+		der = abs(self.der)
 		return Var(val, der)
 
 	def __eq__(self, other):
