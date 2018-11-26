@@ -233,7 +233,8 @@ class Var(object):
 					np.array_equal(self.der, other.der))
 		except:
 			# Compare scalar Vars with derivative 1 to scalars
-			if len(self.val) == 1 and self.der == [1.]:
+			#if len(self.val) == 1 and self.der == [1.]:
+			if len(self.val) == 1 and np.array_equal(self.der, [1.]):
 				return self.val == other
 			return False
 
@@ -328,36 +329,77 @@ class Var(object):
 		if not all(values):
 			raise ValueError("Domain of arcsin is [-1, 1].")		
 		val = np.arcsin(self.val)
-		der = 1 / np.sqrt(1 - (self.val ** 2))
-		return Var(val, der)
+		if len(self.der.shape):
+			if self.val == 1:
+				to_multiply = np.nan
+			elif self.val == -1:
+				to_multiply = np.nan
+			else:
+				to_multiply = 1 / np.sqrt(1 - (self.val ** 2))
+				to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
+		return Var(val, der)	
 
 	def arccos(self):
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
 			raise ValueError("Domain of arccos is [-1, 1].")	
 		val = np.arccos(self.val)
-		der = -1 / np.sqrt(1 - (self.val ** 2))
+		if len(self.der.shape):
+			if self.val == 1:
+				to_multiply = np.nan
+			elif self.val == -1:
+				to_multiply = np.nan
+			else:
+				to_multiply = -1 / np.sqrt(1 - (self.val ** 2))
+				to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
 		return Var(val, der)
 
 	def arctan(self):
 		val = np.arctan(self.val)
-		der = 1 / (1 + (self.val) ** 2)
-		return Var(val, der)
+		if len(self.der.shape):
+			to_multiply = 1 / (1 + (self.val) ** 2)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
+		return Var(val, der)		
 
 	def sinh(self):
 		val = np.sinh(self.val)
-		der = np.cosh(self.val)
-		return Var(val, der)
+		if len(self.der.shape):
+			to_multiply = np.cosh(self.val)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
+		return Var(val, der)	
 
 	def cosh(self):
 		val = np.cosh(self.val)
-		der = np.sinh(self.val)
-		return Var(val, der)
+		if len(self.der.shape):
+			to_multiply = np.sinh(self.val)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
+		return Var(val, der)	
+
 
 	def tanh(self):
 		val = np.tanh(self.val)
-		der = 1 / np.power(np.cosh(self.val), 2)
-		return Var(val, der)
+		if len(self.der.shape):
+			to_multiply = 1 / np.power(np.cosh(self.val), 2)
+			to_multiply = np.expand_dims(to_multiply, 1) if len(self.der.shape) > len(to_multiply.shape) else to_multiply
+			der = to_multiply * self.der
+		else:
+			der = None
+		return Var(val, der)	
 
 	def pow(self, n):
 		# Maintain state of self and create new trace variable new_var
