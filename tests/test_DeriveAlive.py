@@ -4,7 +4,7 @@
 import sys
 sys.path.append('../')
 
-import DeriveAlive as da
+import DeriveAlive.DeriveAlive as da
 import numpy as np
 import math
 
