@@ -9,7 +9,7 @@ np.seterr(all='raise')
 
 class Var(object):
 	'''Builds a Var object supporting custom operations implemented below.'''
-	def __init__(self, values, der=None):
+	def __init__(self, values, der=[1]):
 		"""
 		Inputs:
 			values: int, float, list, or np.array -> transformed into np.array
@@ -18,9 +18,7 @@ class Var(object):
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
 		if len(values) == 1:
-			if der is None:
-				der = [1]
-			elif isinstance(der, float) or isinstance(der, int):
+			if isinstance(der, float) or isinstance(der, int):
 				der = [der]
 
 			self.val = np.array(values)
@@ -237,7 +235,6 @@ class Var(object):
 					np.array_equal(self.der, other.der))
 		except:
 			# Compare scalar Vars with derivative 1 to scalars
-			#if len(self.val) == 1 and self.der == [1.]:
 			if len(self.val) == 1 and np.array_equal(self.der, [1.]):
 				return self.val == other
 			return False
@@ -273,25 +270,43 @@ class Var(object):
 			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
 
 		val = np.power(self.val, n)
-		self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
-		der = n * np.multiply((self_val ** (n - 1)), self.der)
+		if len(self.der.shape):
+			self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
+			der = n * np.multiply((self_val ** (n - 1)), self.der)
+		else:
+			der = None
 		return Var(val, der)
 
 	def __rpow__(self, n):
 		if n == 0:
-			if self.val == 0:
-				val = 1
-				der = 0
-			if self.val > 0:
-				val = 0
-				der = 0
-			if self.val < 0:
-				raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
+			if len(self.val) == 1:
+				if self.val == 0:
+					val = 1
+					der = 0
+				elif self.val > 0:
+					val = 0
+					der = 0
+				elif self.val < 0:
+					raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
+			else:
+				val = np.zeros((self.val.shape))
+				der = np.zeros((self.der.shape))
+				for i, val_i in enumerate(self.val):
+					if val_i == 0:
+						val[i] = 1
+					elif val_i > 0:
+						val[i] = 0
+					elif val_i < 0:
+						raise ZeroDivisionError("0.0 cannot be raised to a negative power.")
 		elif n < 0:
 			raise ValueError("Real numbers only, math domain error.")
 		else:
 			val = n ** self.val
-			der = n ** self.val * np.log(n)
+			if len(self.der.shape):
+				der = np.expand_dims(n ** self.val * np.log(n), 1) if len(self.der.shape) > 1 else n ** self.val * np.log(n)
+			else:
+				der = None
+
 		return Var(val, der)
 
 	def sin(self):
