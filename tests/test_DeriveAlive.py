@@ -883,17 +883,16 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = x + y+ z
+		f = x + y + z
 		f1 = 2 ** f
 		np.testing.assert_array_equal(f1.val, np.array([64.]))
-		np.testing.assert_array_equal(np.round(f1.der,2), np.array([44.36]))
-
+		np.testing.assert_array_equal(np.round(f1.der,2), np.array([44.36, 44.36, 44.36]))
 
 	def test_sqrt():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = x + y+ z
+		f = x + y + z
 		f1 = f.sqrt()
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([2.45]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([0.2, 0.2, 0.2]))
@@ -1057,18 +1056,11 @@ def test_DeriveAlive_vector_functions_1_to_n():
 		np.testing.assert_array_equal(f.der, np.array([[405.],
                                                        [ 27.],
                                                        [ 12.]]))
-
 		ff = 2 * f1 * 5 * x
-		print("x.val", x.val)
-		print("x.der", x.der)
-		print("f1.val", f1.val)
-		print("f1.der", f1.der)
-		print("ff.val", ff.val)
-		print("ff.der", ff.der)
 		np.testing.assert_array_equal(ff.val, np.array([810., 270.,  90.]))
 		np.testing.assert_array_equal(ff.der,np.array([[1080.],
                                                        [ 270.],
-                                                       [ 120.]]))
+                                                       [ 60.]]))
 
 	def test_rmul():
 		x = da.Var(3.0, [1])
@@ -1084,7 +1076,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 		np.testing.assert_array_equal(ff.val, np.array([810., 270.,  90.]))
 		np.testing.assert_array_equal(ff.der, np.array([[1080.],
                                                         [ 270.],
-                                                        [ 120.]]))
+                                                        [ 60.]]))
 
 	def test_truediv():
 		x = da.Var(3.0, [1])
@@ -1329,8 +1321,8 @@ def test_DeriveAlive_vector_functions_1_to_n():
 	test_radd()
 	test_sub()
 	test_rsub()
-	# test_mul()
-	# test_rmul()
+	test_mul()
+	test_rmul()
 	test_truediv()
 	test_rtruediv()
 	test_sin()
@@ -1343,7 +1335,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 	test_cosh()
 	test_tanh()
 	test_pow()
-	# test_rpow()
+	test_rpow()
 	test_sqrt()
 	test_log()
 	test_exp()
@@ -1705,7 +1697,9 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		f = da.Var([2*x, y-1, z**2])
 		f1 = 2 ** f
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([64., 1., 16.]))
-		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[44.36],  [0.69], [11.09]]))
+		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[88.72, 0, 0], 
+																	[0, 0.69, 0], 
+																	[0, 0, 44.36]]))
 
 	def test_sqrt():
 		x = da.Var(3.0, [1, 0, 0])

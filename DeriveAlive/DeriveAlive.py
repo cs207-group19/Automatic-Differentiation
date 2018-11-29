@@ -116,7 +116,22 @@ class Var(object):
 			elif not len_self_der_shape and not len_other_der_shape:
 				der = None
 			else:
-				der = np.multiply(other_val, self.der) + np.multiply(self_val, other.der)
+				p1 = np.multiply(other_val, self.der) 
+				p2 = np.multiply(self_val, other.der)
+
+				len_p1_shape = len(p1.shape)
+				len_p2_shape = len(p2.shape)
+				if len_p1_shape > len_p2_shape:
+					if len_p1_shape == 2 and p1.shape[1] > 1:
+						p2 = np.tile(p2, (p1.shape[0], 1))
+					else:
+						p2 = np.expand_dims(p2, 1)
+				if len_p2_shape > len_p1_shape:
+					if len_p2_shape == 2 and p2.shape[1] > 1:
+						p1 = np.tile(p1, (p2.shape[1], 1))
+					else:
+						p1 = np.expand_dims(p1, 1)
+				der = p1 + p2
 		except AttributeError:
 			val = self.val * other
 			if isinstance(other, float) or isinstance(other, int) or np.array_equal(self.der.shape, other.shape):
@@ -303,7 +318,7 @@ class Var(object):
 		else:
 			val = n ** self.val
 			if len(self.der.shape):
-				der = np.expand_dims(n ** self.val * np.log(n), 1) if len(self.der.shape) > 1 else n ** self.val * np.log(n)
+				der = np.expand_dims(n ** self.val * np.log(n), 1) * self.der if len(self.der.shape) > 1 else n ** self.val * np.log(n) * self.der
 			else:
 				der = None
 
