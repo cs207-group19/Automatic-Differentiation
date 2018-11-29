@@ -239,9 +239,10 @@ class Var(object):
 		#der = np.array([-1 if x < 0 else 1 for x in self.val])
 		#der = abs(self.der)
 		der_copy = np.copy(self.der)
-		for i, val_i in enumerate(self.val):
-			if val_i < 0:
-				der_copy[i] = -1 * der_copy[i]
+		if len(der_copy.shape):
+			for i, val_i in enumerate(self.val):
+				if val_i < 0:
+					der_copy[i] = -1 * der_copy[i]
 		return Var(val, der_copy)
 
 	def __eq__(self, other):
