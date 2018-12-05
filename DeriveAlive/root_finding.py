@@ -16,6 +16,8 @@ def f(var):
 def NewtonRoot(f, x0, tol=1e-7, iters=1000):
 	is_vec_input = len(x0.val) > 1
 
+	print ("inside NewtonRoot, init guess is:\n{}".format(x0))
+
 	# Run Newton's root-finding method
 	x = x0
 	
@@ -62,17 +64,38 @@ def SteepestDescent(f, x0, tol=1e-7, iters=1000):
 # y = da.Var(1, [0, 1])
 # init_guess = da.Var([x, y])
 
-# def z(vec):
-# 	h = vec ** 2
-
-# 	x = vec.val[0]
-# 	y = vec.val[1]
-# 	return da.Var(x ** 2 + y ** 2, [vec.der[:, 0] + vec.der[:, 1]])
-
-# print (NewtonRoot(z, init_guess))
+# h = vec ** 2
+# x = vec.val[0]
+# y = vec.val[1]
+# return da.Var(x ** 2 + y ** 2, [vec.der[:, 0] + vec.der[:, 1]])
 
 
+def r2_to_r2():
+	init_guess = da.Var([1, 2], [1, 1])
+
+	def z(vec):
+		return vec ** 2
+
+	print ("\n\nTRYING R2 -> R2 CASE. EXPECT ROOT AT (0, 0) FOR Z(X, Y) = [X**2, Y**2].\n")
+	print (NewtonRoot(z, init_guess))
 
 
+def r2_to_r1():
+	# init_guess = da.Var([1, 2], [1, 1])
+	x = vec.val[0]
+	y = vec.val[1]
+	init_guess = [x, y]
+
+	def z(vec):
+		return da.Var(vec.val[0] + vec.val[1], [vec.der[0] + vec.der[1]])
+
+	def z(vec):
+		return vec[0] + vec[1]
+		return x + y
+
+	print ("\n\nTRYING R2 -> R1 CASE. EXPECT ROOT AT (0, 0) FOR Z(X, Y) = X + Y.\n")
+	print (NewtonRoot(z, init_guess))
 
 
+# r2_to_r2()
+r2_to_r1()
