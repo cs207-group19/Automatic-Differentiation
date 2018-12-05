@@ -2,7 +2,7 @@
 # Harvard University, CS 207, Fall 2018
 # Authors: Chen Shi, Stephen Slater, Yue Sun
 
-import DeriveAlive as da
+import DeriveAlive.DeriveAlive as da
 import numpy as np
 
 # User-defined variable
