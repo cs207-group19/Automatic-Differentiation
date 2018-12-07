@@ -19,7 +19,8 @@ setuptools.setup(
        'packaging==18.0',
        'pyparsing==2.2.2',
        'scipy==1.1.0',
-       'six>=1.11.0'
+       'six>=1.11.0',
+       'matplotlib>=3.0.1'
         ],
                  classifiers=[
                               "Programming Language :: Python :: 3",
