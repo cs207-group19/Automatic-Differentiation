@@ -12,9 +12,6 @@ def _get_unit_vec(length, pos):
 	return arr
 
 def _NewtonRootVector(f, var_list, iters=2000, tol=1e-10, der_shift=1):
-	# print ("\n\n\nNew function")
-	# print ("init guess: {}".format(var_list))
-
 	# Number of variables
 	m = len(var_list)
 	vars_path = []
