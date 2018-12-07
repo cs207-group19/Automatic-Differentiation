@@ -3,6 +3,8 @@ sys.path.append('../..')
 
 import DeriveAlive.DeriveAlive as da # This path is subject to change
 import numpy as np
+
+# Comment out for testing on Travis CI
 import matplotlib.pyplot as plt
 
 # Calculate the coefficients of the quadratic functions
