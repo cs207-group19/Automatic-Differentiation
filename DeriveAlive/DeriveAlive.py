@@ -280,18 +280,24 @@ class Var(object):
 
 	def __pow__(self, n):
 		values = map(lambda x: x >= 0, self.val)
-		if n % 1 != 0 and not all(values):
-			raise ValueError("Non-positive number raised to a fraction encountered in pow.")
-		elif n < 1 and 0 in self.val:
-			raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
+		if isinstance(n, float) or isinstance(n, int):
+			if n % 1 != 0 and not all(values):
+				raise ValueError("Non-positive number raised to a fraction encountered in pow.")
+			elif n < 1 and 0 in self.val:
+				raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
+		
+			val = np.power(self.val, n)
 
-		val = np.power(self.val, n)
-		if len(self.der.shape):
-			self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
-			der = n * np.multiply((self_val ** (n - 1)), self.der)
+			if len(self.der.shape):
+				self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
+				der = n * np.multiply((self_val ** (n - 1)), self.der)
+			else:
+				der = None
+
+			return Var(val, der)
 		else:
-			der = None
-		return Var(val, der)
+			raise ValueError("Cannot compute x^y when both x and y are Vars. Please reformat equation to use " \
+							 "rpow of scalar to power of vector, or use pow for a vector to a power of scalar.")
 
 	def __rpow__(self, n):
 		if n == 0:

@@ -28,13 +28,6 @@ def test_DeriveAlive_Var():
 		y = da.Var(3, [0, 1])
 		f = da.Var([x ** 2, y ** 2, x * y])
 
-	# def test_vector_input():
-	# 	x = da.Var([1, 2, 3])
-	# 	np.testing.assert_array_equal(x.val, [1, 2, 3])
-	# 	assert type(x.val) == np.ndarray
-	# 	np.testing.assert_array_equal(x.der, [1, 1, 1])
-	# 	assert type(x.der) == np.ndarray
-
 	def test_with_preset_der():
 		der = 3.5
 		x = da.Var(2, der)
@@ -1476,15 +1469,15 @@ def test_DeriveAlive_vector_functions_m_to_n():
                                                        [ 330.,    0.,   90.]]))
 
 	def test_truediv():
-		print ("Vector division test case:")
-		print ("x = 2\ny = 3\nz = [x**2, y**2, x*y]\nw = [x, y, x]\nz/w = [x, y, y]\n")
+		# print ("Vector division test case:")
+		# print ("x = 2\ny = 3\nz = [x**2, y**2, x*y]\nw = [x, y, x]\nz/w = [x, y, y]\n")
 		x = da.Var(2, [1, 0])
 		y = da.Var(3, [0, 1])
 		z = da.Var([x ** 2, y ** 2, x * y])
 		w = da.Var([x, y, x])
 		s = z / w
-		print ("Now using Var version:")
-		print ("z:\n{}\n\nw:\n{}\n\nz / w:\n{}".format(z, w, s))
+		# print ("Now using Var version:")
+		# print ("z:\n{}\n\nw:\n{}\n\nz / w:\n{}".format(z, w, s))
 
 		np.testing.assert_array_equal(s.val, np.array([2, 3, 3]))
 		np.testing.assert_array_equal(s.der, np.array([[1, 0], [0, 1], [0, 1]]))
