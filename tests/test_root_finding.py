@@ -10,10 +10,12 @@ import DeriveAlive.DeriveAlive as da
 import numpy as np
 
 # Comment out for testing on Travis CI
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
-def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_points=50, threedim=False):
+def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_points=50, 
+				 threedim=False, fourdim=False, gd=False):
 	if x_lims:
 		x_min, x_max = x_lims
 		x_range = np.linspace(x_min, x_max, num_points)
@@ -36,20 +38,59 @@ def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_poin
 		ys = np.array([y for _, y in x_path])
 		fs = np.array([z[0] for z in f_path])
 		xn, yn = np.round(xs[-1], 4), np.round(ys[-1], 4)
-		print ("xs:\n{}\nys:\n{}\nfs:\n{}\n".format(xs, ys, fs))
+
+		# For Gradient Descent, plot surface
+		if gd:
+			X, Y = np.meshgrid(x_range, x_range)
+			zs = np.array([f([x, y]) for x, y in zip(np.ravel(X), np.ravel(Y))])
+			Z = zs.reshape(X.shape)
+			# plt.contour(X, Y, Z)
+			ax.plot_surface(X, Y, Z, color='0.5', alpha=0.5)
+			ax.set_title('Finding minimum of {}'.format(f_string))
+		else:
+			ax.set_title('Finding root(s) of {}'.format(f_string))
+
 		ax.plot(xs, ys, fs, 'b-o', label='path')
-		ax.scatter(xs[0], ys[0], fs[0], c='red', marker='o', label='start: {}'.format((xs[0], ys[0])))
-		ax.scatter(xs[-1], ys[-1], fs[-1], c='green', marker='o', label='end: {}'.format((xn, yn)))
+		ax.scatter(xs[0], ys[0], fs[0], c='red', marker='o', linewidth=6, label='start: {}'.format((xs[0], ys[0])))
+		ax.scatter(xs[-1], ys[-1], fs[-1], c='green', marker='o', linewidth=6, label='end: {}'.format((xn, yn)))
 		ax.set_xlabel('x')
 		ax.set_ylabel('y')
 		ax.set_zlabel('f(x, y)')
 		ax.legend(loc=6)
+		plt.show()
+
+	elif fourdim:
+		# 4D plot
+		cm_type = cm.RdYlGn_r  # cm.PiYG  # m.tab20c  # cm.twilight  # cm.nipy_spectral
+		fig = plt.figure(figsize=(10, 6))
+		ax = fig.add_subplot(111, projection='3d')
+		xs, ys, zs = x_path[:, 0], x_path[:, 1], x_path[:, 2]
+		fs = f_path
+		xn, yn, zn = np.round(x_path[-1], 4)
+		ax.scatter(xs, ys, zs, c=fs, cmap=cm_type)
+		ax.plot3D(xs, ys, zs, '-')
+		ax.scatter(xs[0], ys[0], zs[0], c='red', marker='o', linewidth=6, label='start: {}'.format((xs[0], ys[0], zs[0])))
+		ax.scatter(xs[-1], ys[-1], zs[-1], c='green', marker='o', linewidth=6, label='end: {}'.format((xn, yn, zn)))
+
+		# ax.scatter(x, y, z, c=c, cmap=cm.nipy_spectral)  # cm.PiYG_r)  # plt.hot())
+		m = cm.ScalarMappable(cmap=cm_type)  # PiYG_r)
+		m.set_array(fs)
+		cbar = plt.colorbar(m)
+		ax.set_xlabel('x')
+		ax.set_ylabel('y')
+		ax.set_zlabel('z')
+		ax.legend(loc=(0,0))
 		ax.set_title('Finding root(s) of {}'.format(f_string))
 		plt.show()
 
 	else:
 		plt.figure()
-		plt.plot(x_range, np.zeros(num_points), '0.7')
+		if gd:
+			plt.title('Finding minimum of {}'.format(f_string))
+		else:
+			plt.plot(x_range, np.zeros(num_points), '0.7')
+			plt.title('Finding root(s) of {}'.format(f_string))
+
 		plt.plot(x_range, f(x_range), 'k-', label=r'${}$'.format(f_string))
 		plt.plot(x_path, f_path, 'b-o', label='path')
 		plt.plot(x0, f0, 'ro', label='start: {}'.format(x0))
@@ -62,11 +103,10 @@ def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_poin
 			plt.ylim(y_min, y_max)
 		plt.xlabel('x')
 		plt.ylabel('f(x)')
-		plt.title('Finding root(s) of {}'.format(f_string))
 		plt.legend()
 		plt.show()
 
-def test_r1_to_r1():
+def test_NewtonRoot_r1_to_r1():
 	'''Integration tests for scalar to scalar functions.'''
 
 	def case_1():
@@ -192,10 +232,10 @@ def test_r1_to_r1():
 	case_4()
 	case_5()
 	case_6()
-	print ("All scalar to scalar tests passed!")
+	print ("All Newton root scalar to scalar tests passed!")
 
 
-def test_r2_to_r1():
+def test_NewtonRoot_rm_to_r1():
 	'''Integration tests for Newton root finding for functions of vectors to scalars.'''
 
 	def case_1():
@@ -294,7 +334,6 @@ def test_r2_to_r1():
 			der_y = 8 * yn - (2 * (xn ** 2))
 			assert np.allclose(solution.der, [der_x, der_y])
 		
-
 	def case_5():
 		
 		def f(variables):
@@ -325,13 +364,252 @@ def test_r2_to_r1():
 			der = [2 * (xn - 1), 2 * (yn + 1)]
 			assert np.allclose(solution.der, der)				
 
+	def case_6():
+		'''Find the roots of a function from R^3 to R^1.'''
+
+		def f(variables):
+			x, y, z = variables
+			return x ** 2 + y ** 2 + z ** 2
+
+		f_string = 'f(x, y, z) = x^2 + y^2 + z^2'
+
+		for x_val, y_val, z_val in [[1, -2, 5], [20, 15, -5]]:
+			x0 = da.Var(x_val, [1, 0, 0])
+			y0 = da.Var(y_val, [0, 1, 0])
+			z0 = da.Var(z_val, [0, 0, 1])
+			init_vars = [x0, y0, z0]
+			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
+			m = len(solution.val)
+			xn, yn, zn = solution.val
+
+			concat = np.reshape(np.concatenate(xyz_path), [-1, m])
+			f_path = np.concatenate(f_path)
+			# plot_results(f, concat, f_path, f_string, fourdim=True)
+
+			root = [0, 0, 0]
+			assert np.allclose(solution.val, root)
+
+			# dfdx = 2x
+			# dfdy = 2y
+			# dfdz = 2z
+			der = [2 * xn, 2 * yn, 2 * zn]
+			assert np.allclose(solution.der, der)	
+
+	def case_7():
+		'''Find the roots of a more complicated function from R^3 to R^1.'''
+
+		def f(variables):
+			x, y, z = variables
+			# return np.exp(x + (y + 1.5) ** 2 + (z - 2) ** 2 - 3)
+			return (x + y + z) ** 2 - 3
+
+		# f_string = 'f(x, y, z) = exp(x + (y + 1.5)^2 + (z - 2)^2 - 3)'
+		f_string = 'f(x, y, z) = (x + y + z)^2 - 3'
+
+		for x_val, y_val, z_val in [[1, -2, 5], [20, 15, -5]]:
+			# print ("starting from [{}, {}, {}]".format(x_val, y_val, z_val))
+			x0 = da.Var(x_val, [1, 0, 0])
+			y0 = da.Var(y_val, [0, 1, 0])
+			z0 = da.Var(z_val, [0, 0, 1])
+			init_vars = [x0, y0, z0]
+			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
+			m = len(solution.val)
+			xn, yn, zn = solution.val
+			# print ("Solution:\n{}".format(solution))
+			# print ("Evaluated solution:\n{}".format(f([xn, yn, zn])))
+
+			concat = np.reshape(np.concatenate(xyz_path), [-1, m])
+			f_path = np.concatenate(f_path)
+			# plot_results(f, concat, f_path, f_string, fourdim=True)
+
+			# root: z = -y -z +- sqrt(3)
+			root_1 = -yn - zn - np.sqrt(3)
+			root_2 = -yn - zn + np.sqrt(3)
+			assert (np.allclose(xn, root_1) or np.allclose(xn, root_2))
+
+			# dfdx = 2(x + y + z)
+			# dfdy = 2(x + y + z)
+			# dfdz = 2(x + y + z)
+			value = 2 * (xn + yn + zn)
+			der = [value, value, value]
+			assert np.allclose(solution.der, der)	
+
+	def case_8():
+		'''Find the roots of a more complicated function from R^3 to R^1.'''
+
+		def f(variables):
+			x, y, z = variables
+			return x ** (y ** 2) - z ** 2
+
+		f_string = 'f(x, y, z) = x^(y^2) - z^2'
+
+		for x_val, y_val, z_val in [[1, -2, 5], [2, 4, -5]]:
+			# print ("starting from [{}, {}, {}]".format(x_val, y_val, z_val))
+			x0 = da.Var(x_val, [1, 0, 0])
+			y0 = da.Var(y_val, [0, 1, 0])
+			z0 = da.Var(z_val, [0, 0, 1])
+			init_vars = [x0, y0, z0]
+			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
+			m = len(solution.val)
+			xn, yn, zn = solution.val
+			# print ("Solution:\n{}".format(solution))
+			# print ("Evaluated solution:\n{}".format(f([xn, yn, zn])))
+
+			concat = np.reshape(np.concatenate(xyz_path), [-1, m])
+			f_path = np.concatenate(f_path)
+			# plot_results(f, concat, f_path, f_string, fourdim=True)
+
+			# root: x = +- (zn^2)^(1 / (yn^2))
+			root_1 = (zn ** 2) ** (1 / (yn ** 2))
+			root_2 = -root_1
+			assert (np.allclose(xn, root_1) or np.allclose(xn, root_2))
+
+			# dfdx = y^2 * x^{y^2 - 1}
+			# dfdy = 2yx^{y^2} * log(x)
+			# dfdz = -2z
+			der = [yn ** 2 * (xn ** ((yn ** 2) - 1)), 
+				   2 * yn * (xn ** (yn ** 2)) * np.log(xn), 
+				   -2 * zn]
+
+			# TODO: add check for derivative once __pow__ is updated.
+			# assert np.allclose(solution.der, der)			
 
 	case_1()
 	case_2()
 	case_3()
 	case_4()
 	case_5()
-	print ("All vector to scalar cases passed!")
+	case_6()
+	case_7()
+	# case_8()
+	print ("All Newton root vector to scalar cases passed!")
+
+
+def test_GradientDescent():
+	'''Test gradient descent optimization method to find local minima.'''
+
+	def case_1():
+		'''Simple quadratic function with minimum at x = 0.'''
+
+		def f(x):
+			return x ** 2
+
+		f_string = 'f(x) = x^2'
+
+		for x_val in [-4, -2, 0, 2, 4]:
+			x0 = da.Var(x_val)
+			solution, x_path, f_path = rf.GradientDescent(f, x0)
+			# print ("Solution:\n{}".format(solution))
+
+			# plot_results(f, x_path, f_path, f_string, show_zero=False)
+
+			assert np.allclose(solution.val, [0])
+			assert np.allclose(solution.der, [0])
+
+	def case_2():
+
+		def f(x):
+			return (x - 1) ** 2 + 3
+
+		f_string = 'f(x) = (x - 1)^2 + 3'
+
+		for x_val in [-3, -1, 1, 3, 5]:
+			x0 = da.Var(x_val)
+			solution, x_path, f_path = rf.GradientDescent(f, x0)
+			# print ("Solution:\n{}".format(solution))
+
+			# plot_results(f, x_path, f_path, f_string, gd=True)
+
+			assert np.allclose(solution.val, [1])
+			assert np.allclose(solution.der, [0])
+
+
+	def case_3():
+
+		def f(x):
+			return np.sin(x)
+
+		f_string = 'f(x) = sin(x)'
+
+		for x_val in [-3, -1, 1, 3]:
+			x0 = da.Var(x_val)
+			solution, x_path, f_path = rf.GradientDescent(f, x0)
+			# print ("Solution:\n{}".format(solution))
+
+			# plot_results(f, x_path, f_path, f_string, gd=True)
+
+			multiple_of_three_halves_pi = (solution.val  % (2 * np.pi))
+			np.testing.assert_array_almost_equal(multiple_of_three_halves_pi, 1.5 * np.pi)				
+			np.testing.assert_array_almost_equal(solution.der, [0])
+
+
+	def case_4():
+		'''Minimize Rosenbrock function: f(x, y) = 100(y - x^2)^2 + (1 - x)^2.
+
+		The global minimum is 0 when (x, y) = (1, 1).
+		'''
+
+		def f(variables):
+			x, y = variables
+			return 4 * (y - (x ** 2)) ** 2 + (1 - x) ** 2
+
+		f_string = 'f(x, y) = 4(y - x^2)^2 + (1 - x)^2'
+
+		for x_val, y_val in [[2., 3.], [-2., 5.]]:
+			x0 = da.Var(x_val, [1, 0])
+			y0 = da.Var(y_val, [0, 1])
+			init_vars = [x0, y0]
+			solution, xy_path, f_path = rf.GradientDescent(f, init_vars)
+			xn, yn = solution.val
+			# print ("Solution:\n{}".format(solution))
+
+			# plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, gd=True)
+
+			minimum = [1, 1]
+			assert np.allclose([xn, yn], minimum)
+
+			# dfdx = 2(200x^3 - 200xy + x - 1)
+			# dfdy = 200(y - x^2)
+			der_x = 2 * (8 * (xn ** 3) - 8 * xn * yn + xn - 1)
+			der_y = 8 * (yn - (xn ** 2))
+			assert np.allclose(solution.der, [der_x, der_y])
+
+	def case_5():
+		'''Minimize bowl function: f(x, y) = x^2 + y^2 + 2.
+
+		The global minimum is 2 when (x, y) = (0, 0).
+		'''
+
+		def f(variables):
+			x, y = variables
+			return x ** 2 + y ** 2 + 2
+
+		f_string = 'f(x, y) = x^2 + y^2 + 2'
+
+		for x_val, y_val in [[2., 3.], [-2., 5.]]:
+			x0 = da.Var(x_val, [1, 0])
+			y0 = da.Var(y_val, [0, 1])
+			init_vars = [x0, y0]
+			solution, xy_path, f_path = rf.GradientDescent(f, init_vars)
+			xn, yn = solution.val
+			# print ("Solution:\n{}".format(solution))
+
+			# plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, gd=True)
+
+			minimum = [0, 0]
+			assert np.allclose([xn, yn], minimum)
+
+			der = [0, 0]
+			assert np.allclose(solution.der, der)
+	
+
+	case_1()
+	case_2()
+	case_3()
+	case_4()
+	case_5()
+	print ("All gradient descent tests passed!")
+
 
 	# #def F(x):
 	# #        return da.Var(
@@ -376,9 +654,10 @@ def test_r2_to_r1():
 # 	print ("\n\nTRYING R2 -> R2 CASE. EXPECT ROOT AT (0, 0) FOR Z(X, Y) = [X**2, Y**2].\n")
 # 	print (rf.NewtonRoot(z, init_guess))
 
-
-test_r1_to_r1()
-test_r2_to_r1()
+print ("Testing root finding and optimization suite.")
+test_NewtonRoot_r1_to_r1()
+test_NewtonRoot_rm_to_r1()
 # test_r2_to_r2()
+test_GradientDescent()
 print ("All tests passed!")
 
