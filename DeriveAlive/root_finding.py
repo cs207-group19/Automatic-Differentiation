@@ -82,7 +82,7 @@ def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
 		x = x - step
 
 		# Avoid using abs(step) in case guess is at 0, because derivative is not continuous
-		cond = np.linalg.norm(step.val) if is_vec_input else -1 * step if step < 0 else step
+		cond = np.linalg.norm(step.val) if is_vec_input else -step if step < 0 else step
 		
 		# If step size is below tolerance, no need to continue
 		if cond < tol:
@@ -94,9 +94,63 @@ def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
 	return da.Var(x.val, g.der), x_path, g_path
 
 
-def NewtonOptimization(f, x0, tol=1e-7, iters=1000):
+def NewtonOptimization(f, x0, tol=1e-7, iters=2000):
 	pass
 
 
-def SteepestDescent(f, x0, tol=1e-7, iters=1000):
-	pass
+def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
+	m = len(var_list)
+	vars_path = []
+	g_path = []
+
+	for i in range(iters):
+		g = f(var_list)
+		values = np.array([x_i.val for x_i in var_list])
+		values_flat = np.reshape(values, [-1])
+		vars_path.append(values_flat)
+		g_path.append(g.val)
+
+		# Take step in direction of steepest descent
+		step = eta * g.der
+		values_flat = values_flat - step
+		# values_flat = np.reshape(values, [-1])
+		var_list = [da.Var(v_i, _get_unit_vec(m, i)) for i, v_i in enumerate(values_flat)]
+
+		# If step size is below tolerance, no need to continue
+		cond = np.linalg.norm(step)
+		if cond < tol:
+			# print ("Reached tol in {} iterations".format(i))
+			break
+	else:
+		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+	
+	return da.Var(values_flat, g.der), vars_path, g_path
+
+
+
+def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
+	is_vec_input = isinstance(x, list)
+	if is_vec_input:
+		return _GradientDescentVector(f, x)
+
+	x_path = []
+	g_path = []
+	for i in range(iters):
+		g = f(x)
+		x_path.append(x.val)
+		g_path.append(g.val)
+
+		step = da.Var(eta * g.der, None)
+		# print ("step:\n{}".format(step))
+		x = x - step
+		# print ("new x:\n{}".format(x))
+
+		# If step size is below tolerance, no need to continue
+		cond = -step if step < 0 else step
+		if cond < tol:
+			break
+
+	else:
+		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+
+	return da.Var(x.val, g.der), x_path, g_path
