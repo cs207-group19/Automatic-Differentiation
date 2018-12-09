@@ -8,13 +8,59 @@ import numpy as np
 np.seterr(all='raise')
 
 class Var(object):
-	'''Builds a Var object supporting custom operations implemented below.'''
+	"""
+	Creates a Var class supporting custom operations for Automatic Differentiation (AD).
+
+	Attributes
+	==========
+	val : numpy.ndarray
+	      The value of user defined function(s) F evaluated at x.
+
+	der : numpy.ndarray
+	      The corresponding derivative, gradient, or Jacobian of user defined
+	      functions(s).
+	 """
 	def __init__(self, values, der=[1]):
 		"""
-		Inputs:
-			values: int, float, list, or np.array -> transformed into np.array
-			der: int, float, list, or np.array -> transformed into np.array
-		"""
+	    INPUTS
+	    =======
+	    val : int, float, list, or np.array
+	          The value of user defined function(s) F evaluated at x.
+
+	    der : int, float, list, or np.array
+	          The corresponding derivative, gradient, or Jacobian of user defined
+	          functions(s).
+	    
+	    NOTES
+	    =====
+	    PRE: 
+	         - val: int, float, list, or np.array
+	         - der: int, float, list, or np.array
+	    POST:
+	         - val: np.array
+	         - der: np.array
+
+	    EXAMPLES
+	    =========
+	    #input a constant
+	    >>> da.Var(3.0, None) 
+	    Var([3.], None)
+
+	    #input a scalar
+	    >>> da.Var(3.0) 
+	    Var([3.], [1])
+
+	    #input a vector with two elements
+	    >>> x = da.Var(3.0, [1, 0])
+	    >>> y = da.Var(3.0, [1, 0])
+	    >>> z = da.Var([x, y])
+	    >>> z
+	    Values:
+	    [3. 3.],
+	    Jacobian:
+	    [[1 0]
+	     [1 0]]
+	    """
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
 		if len(values) == 1:
@@ -56,11 +102,75 @@ class Var(object):
 			self.der = np.reshape(der_vals, shape)
 
 	def __repr__(self):
+		"""
+	    Prints self in the form of Var([val], [der]) when self is a scalar or constant;
+	    Prints self in the form of Values([val]) Jacobian([der]) when self is a vector;
+	    
+	    Returns
+        =======
+        x: Var object with val if x is a constant
+           Var object with val and der if x is a scalar
+           Var object with val and der if x is a vector
+        
+	    Examples
+	    ========
+	    #input a constant
+	    >>> x = da.Var(3.0, None) 
+	    >>> print(x)
+	    Var([3.], None)
+
+	    #input a scalar
+	    >>> x = da.Var(3.0) 
+	    >>> print(x)
+	    Var([3.], [1])
+
+	    #input a vector with two elements
+	    >>> x = da.Var(3.0, [1, 0])
+	    >>> y = da.Var(3.0, [1, 0])
+	    >>> z = da.Var([x, y])
+	    >>> print(z)
+	    Values:
+	    [3. 3.],
+	    Jacobian:
+	    [[1 0]
+	     [1 0]]
+	    """
+	    
 		if len(self.val) == 1:
 			return 'Var({}, {})'.format(self.val, self.der)
 		return 'Values:\n{},\nJacobian:\n{}'.format(self.val, self.der)
 
 	def __add__(self, other):
+		""" 
+		Returns the addition of self and other
+        
+        Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+        ======== 
+        z: Var object that is the sum of self and other
+        
+        Examples
+        ======== 
+        >>> z = da.Var(3, None) + 2
+        >>> print(z)
+        Var([5], None)
+
+        >>> z = da.Var(3) + da.Var(4)
+        >>> print(z)
+        Var([7], [2])
+
+        >>> z = da.Var(3) + 2
+        >>> print(z)
+        Var([5], [1])
+        
+        >>> z = da.Var(3,[1, 0]) + da.Var(4, [0, 1])
+        >>> print(z)
+        Var([7], [1 1])
+        """
 		try:
 			val = self.val + other.val
 
@@ -83,11 +193,63 @@ class Var(object):
 		return Var(val, der)
 
 	def __radd__(self, other):
+		"""
+		Returns the addition of other to self
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+        ======== 
+        z: Var object that is the sum of othe and self
+		
+		Examples
+        ======== 
+        >>> z = 2 + da.Var(3, None)
+        >>> print(z)
+        Var([5], None)
+
+		>>> z = 2 + da.Var(3)
+        >>> print(z)
+        Var([5], [1])
+		"""
 		# Maintain state of self and create new trace variable new_var
 		new_var = Var(self.val, self.der)
 		return new_var.__add__(other)
 
 	def __sub__(self, other):
+		"""
+		Returns the substraction of self and other
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+        ========
+        z: Var object that is the difference between self and other
+        
+        Examples
+        ======== 
+        >>> z = da.Var(3, None) - 2
+        >>> print(z)
+        Var([1], None)
+
+        >>> z = da.Var(3) - 2
+        >>> print(z)
+        Var([1], [1])
+        
+        >>> z = da.Var(3) - da.Var(4)
+        >>> print(z)
+        Var([-1], [0])
+        
+        >>> z = da.Var(3, [1, 0]) - da.Var(4, [0, 1])
+        >>> print(z)
+        Var([-1], [ 1 -1])
+        """
 		if isinstance(other, int) or isinstance(other, float):
 			# Maintain state of self and create new trace variable new_var
 			new_var = Var(self.val, self.der)
@@ -95,9 +257,63 @@ class Var(object):
 		return (-other).__add__(self)
 
 	def __rsub__(self, other):
+		"""
+		Returns the substraction of other and self
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+        ========
+        z: Var object that is the difference between other and self
+        
+        Examples
+        ======== 
+        >>> z = 2.1 - da.Var(3, None)
+        >>> print(z)
+        Var([-0.9], None)
+
+        >>> z = 2 - da.Var(3)
+        >>> print(z)
+        Var([-1.], [-1])       
+        """
 		return (-self).__add__(float(other))
 
 	def __mul__(self, other):
+		""" 
+		Returns the product of self and other
+        
+        Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+
+        Returns
+        ========== 
+        z: Var object that is the product of self and other
+        
+        Examples
+        ========= 
+        >>> x = da.Var(3.0, None)
+        >>> y = da.Var(2.0, None)
+        >>> z = x * y
+        >>> print(z)
+        Var([6.], None)
+
+        >>> x = da.Var(3.0)
+        >>> y = da.Var(2.0)
+        >>> z = x * y
+        >>> print(z)
+        Var([6.], [5.])
+
+        >>> x = da.Var(3.0, [1, 0])
+        >>> y = da.Var(2, [0, 1])
+        >>> z = x * y
+        >>> print(z)
+        Var([6.], [2. 3.])
+        """
 		# Check if self.der is an array containing None
 		len_self_der_shape = len(self.der.shape)
 
@@ -144,11 +360,63 @@ class Var(object):
 		return Var(val, der)
 
 	def __rmul__(self, other):
+		""" 
+		Returns the product of other and self
+        
+        Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+
+        Returns
+        ======= 
+        z: Var object that is the product of other and self
+        
+        Examples
+        ========= 
+        >>> x = da.Var(5.0)
+        >>> z = 2 * x
+        >>> print(z)
+        Var([10.], [2])
+
+        >>> x = da.Var(3.0, [1, 0, 0])
+        >>> y = da.Var(1.0, [0, 1, 0])
+        >>> w = da.Var(2.0, [0, 0, 1])
+        >>> z = x + y ** 2 + x * w
+        >>> print(z)
+        Var([10.], [3. 2. 3.])
+        """
 		# Maintain state of self and create new trace variable new_var
 		new_var = Var(self.val, self.der)
 		return new_var.__mul__(other)
 
 	def __truediv__(self, other):
+		""" 
+		Returns the division of self and other
+        
+        Parameters
+        ========= 
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+         =======  
+        z: Var object that is the division of self and other
+        
+        Examples
+        ========  
+        >>> x = da.Var(3.0)
+        >>> z = x / 2
+        >>> print(z)
+        Var([1.5], [0.5])
+
+        >>> x = da.Var(3.0, [1, 0, 0])
+        >>> y = da.Var(1.0, [0, 1, 0])
+        >>> w = da.Var(2.0, [0, 0, 1])
+        >>> z = (x + y ** 2 + x * w)/2
+        >>> print(z)
+        Var([5.], [1.5 1.  1.5])
+        """
 		# Handle case when self.der or other.der is None
 		other_is_scalar = isinstance(other, float) or isinstance(other, int)
 		other_is_numpy = isinstance(other, np.ndarray)
@@ -198,6 +466,37 @@ class Var(object):
 		return Var(val, der)
 
 	def __rtruediv__(self, other):
+		""" 
+		Returns the division of other and self
+        
+        Parameters
+        ==========
+        self: Var object
+        other: Var object, float, or int
+        
+        Returns
+        ======= 
+        z: Var object that is the division of self and other
+        
+        Examples
+        ========   
+        >>> x = da.Var(2.0)
+        >>> z = 1 / x
+        >>> print(f)
+        Var([0.5], [-0.25])
+
+        >>> x = da.Var(3.0)
+        >>> a = da.Var([ 1., x, x, 4.])
+        >>> z = 3 / a
+        >>> print(z)
+        Values:
+        [3.   1.   1.   0.75],
+        Jacobian:
+        [[ 0.        ]
+        [-0.33333333]
+        [-0.33333333]
+        [ 0.        ]]
+        """
 		'''Note: self contains denominator (Var); other contains numerator'''
 		# Check for ZeroDivisionError at start rather than nesting exception block
 		if isinstance(other, np.ndarray):
@@ -227,12 +526,47 @@ class Var(object):
 		return Var(val, der)
 
 	def __neg__(self):
+		""" 
+		Returns negation of self
+
+		Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ======= 
+        z: Var object with val = -self.val, der = -self.der
+
+        Examples
+        ======== 
+        >>> x = da.Var(3.0)
+        >>> z = -x
+        >>> print(z)
+        Var([-3.], [-1])
+        """
 		val = -self.val
 		der = -self.der if len(self.der.shape) else None
 		return Var(val, der)
 
-	# TODO: double check derivative of abs function
 	def __abs__(self):
+		""" 
+		Returns the absolute value of self
+
+		Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ======= 
+        z: Var object with val = abs(self.val), der = -self.der
+
+        Examples
+        ======== 
+        >>> x = da.Var(-4.0)
+        >> z = abs(x)
+        >>> print(z)
+        Var([4.], [-1])
+        """
 		val = abs(self.val)
 		if 0 in self.val:
 			raise ValueError("Absolute value is not differentiable at 0.")
@@ -246,6 +580,25 @@ class Var(object):
 		return Var(val, der_copy)
 
 	def __eq__(self, other):
+		""" 
+		Check self and other is equal
+		
+		Parameters
+        ==========
+        self: Var object
+        other: Var object
+        
+        Returns
+        ======= 
+        Boolean: True if self == other, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> y = da.Var(3)
+        >>> x == y
+        True
+        """
 		try:
 			return (np.array_equal(self.val, other.val) and 
 					np.array_equal(self.der, other.der))
@@ -256,9 +609,51 @@ class Var(object):
 			return False
 
 	def __ne__(self, other):
+		""" 
+		Check self and other is not equal
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object
+        
+        Returns
+        ======= 
+        Boolean: True if self != other, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> y = da.Var(5)
+        >>> x != y
+        True
+        """
 		return not self.__eq__(other)
 
 	def __lt__(self, other):
+		""" 
+		Check whether the value self is less than other 
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, int, float
+        
+        Returns
+        ======= 
+        Boolean: True if self.val < other.val, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> x < 4
+        array([True])
+
+        >>> x = da.Var(3)
+        >>> y = da.Var(5)
+        >>> x < y
+        array([True])
+        """
 		# Numpy internally checks if the dimensions of self and other match
 		try:
 			return self.val < other.val
@@ -266,19 +661,109 @@ class Var(object):
 			return self.val < other
 
 	def __le__(self, other):
+		""" 
+		Check whether the value self is less than or equal to other 
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, int, float
+        
+        Returns
+        ======= 
+        Boolean: True if self.val <= other.val, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> x <= 3
+        array([True])
+        """
 		return self.__lt__(other) or self.__eq__(other)
 
 	def __gt__(self, other):
-		# return self.__le__(other)
+		""" 
+		Check whether the value self is greater than other 
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, int, float
+        
+        Returns
+        ======= 
+        Boolean: True if self.val > other.val, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> x > 2
+        array([True])
+
+        >>> x = da.Var(3)
+        >>> y = da.Var(1)
+        >>> x > y
+        array([True])
+        """
 		try:
 			return self.val > other.val
 		except:
 			return self.val > other
 
 	def __ge__(self, other):
+		""" 
+		Check whether the value self is larger than or equal to other 
+
+		Parameters
+        ==========
+        self: Var object
+        other: Var object, int, float
+        
+        Returns
+        ======= 
+        Boolean: True if self.val >= other.val, otherwise False
+
+        Examples
+        ======== 
+        >>> x = da.Var(3)
+        >>> x >= 3
+        array([True])
+        """
 		return self.__gt__(other) or self.__eq__(other)
 
 	def __pow__(self, n):
+		""" 
+		Return power calculation of Var object in the form of Var object ** 2
+
+        Parameters
+        ==========
+        self: Var object
+        n: real number
+        
+        Returns
+        =======
+        z: Var object that is self raised to the power n
+        
+        Examples
+        ========= 
+        >>> x = da.Var(4)
+        >>> z = x ** 2
+        >>> print(z)
+        Var([16], [8])
+
+        >>> x = da.Var(3.0, [1, 0, 0])
+		>>> y = da.Var(1.0, [0, 1, 0])
+		>>> z = da.Var(2.0, [0, 0, 1])
+		>>> f = da.Var([2 * x, y - 1, z ** 2])
+		>>> z = f.pow(2)
+		>>> print(z)
+		Values:
+		[36.  0. 16.],
+		Jacobian:
+		[[24.  0.  0.]
+ 		 [ 0.  0.  0.]
+ 		 [ 0.  0. 32.]]
+        """
 		values = map(lambda x: x >= 0, self.val)
 		if isinstance(n, float) or isinstance(n, int):
 			if n % 1 != 0 and not all(values):
@@ -300,6 +785,25 @@ class Var(object):
 							 "rpow of scalar to power of vector, or use pow for a vector to a power of scalar.")
 
 	def __rpow__(self, n):
+		""" 
+		Return power calculation of n to the power Var object in the form of n ** Var
+
+        Parameters
+        ==========
+        self: Var object
+        n: real number
+        
+        Returns
+        =======
+        z: Var object that is n raised to the power self Var object
+        
+        Examples
+        ========= 
+        >>> x = da.Var(4)
+        >>> z = 2 ** x
+        >>> print(z)
+        Var([16], [11.09035489])
+        """
 		if n == 0:
 			if len(self.val) == 1:
 				if self.val == 0:
@@ -332,6 +836,26 @@ class Var(object):
 		return Var(val, der)
 
 	def sin(self):
+		""" 
+		Returns the sine of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: sine of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(np.pi / 2, [1, 0])
+        >>> y = da.Var(0, [0, 1])
+        >>> z = 3 * np.sin(x) + 2 * np.sin(y)
+        >>> print(z)
+        Var([3.], [1.8369702e-16 2.0000000e+00])
+        """
 		val = np.sin(self.val)
 		if len(self.der.shape):
 			to_multiply = np.cos(self.val)
@@ -342,6 +866,26 @@ class Var(object):
 		return Var(val, der)
 
 	def cos(self):
+		""" 
+		Returns the cosine of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: cosine of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(np.pi / 2, [1, 0])
+        >>> y = da.Var(0, [0, 1])
+        >>> z = 3 * np.cos(x) + 2 * np.cos(y)
+        >>> print(z)
+        Var([2.], [-3.  0.])
+        """
 		val = np.cos(self.val)
 		if len(self.der.shape):
 			to_multiply = -np.sin(self.val)
@@ -352,6 +896,26 @@ class Var(object):
 		return Var(val, der)
 
 	def tan(self):
+		""" 
+		Returns the tangent of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: tangent of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(np.pi / 4, [1, 0])
+        >>> y = da.Var(np.pi / 3, [0, 1])
+        >>> z = 3 * np.tan(x) + 2 * np.tan(y) 
+        >>> print(z)
+        Var([6.46410162], [6. 8.])
+        """
 		# Ensure that no values in self.val are of the form (pi/2 + k*pi)        
 		values = map(lambda x: ((x / np.pi) - 0.5) % 1 == 0.0, self.val)
 		if any(values):
@@ -366,6 +930,26 @@ class Var(object):
 		return Var(val, der)
 
 	def arcsin(self):
+		""" 
+		Returns the arcsine of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: arcsine of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(0, [1, 0])
+		>>> y = da.Var(0, [0, 1])
+		>>> z = 3 * np.arcsin(x) + 2 * np.arcsin(y)
+		>>> print(z)
+		Var([0.], [3. 2.])
+        """
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
 			raise ValueError("Domain of arcsin is [-1, 1].")		
@@ -384,6 +968,26 @@ class Var(object):
 		return Var(val, der)	
 
 	def arccos(self):
+		""" 
+		Returns the arccosine of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: arccosine of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(0, [1, 0])
+		>>> y = da.Var(0.5, [0, 1])
+		>>> z = 3 * np.arccos(x) + 2 * np.arccos(y)
+		>>> print(z)
+		Var([6.80678408], [-3.         -2.30940108])
+        """
 		values = map(lambda x: -1 <= x <= 1, self.val)
 		if not all(values):
 			raise ValueError("Domain of arccos is [-1, 1].")	
@@ -402,6 +1006,26 @@ class Var(object):
 		return Var(val, der)
 
 	def arctan(self):
+		""" 
+		Returns the arctan of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: arctan of self
+        
+        Examples
+        ========= 
+        >>> import numpy as np
+        >>> x = da.Var(0.5, [1, 0])
+		>>> y = da.Var(np.pi/2, [0, 1])
+		>>> z = 3 * np.arctan(x) + 2 * np.arctan(y)
+		>>> print(z)
+		Var([3.39871247], [2.4        0.57680088])
+        """		
 		val = np.arctan(self.val)
 		if len(self.der.shape):
 			to_multiply = 1 / (1 + (self.val) ** 2)
@@ -412,6 +1036,25 @@ class Var(object):
 		return Var(val, der)		
 
 	def sinh(self):
+		""" 
+		Returns the sinh of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: sinh of self
+        
+        Examples
+        ========= 
+        >>> x = da.Var(-1, [1, 0])
+        >>> y = da.Var(0, [0, 1])
+        >>> z = 3 * np.sinh(x) + 2 * np.sinh(y)
+        >>> print(z)
+        Var([-3.52560358], [4.6292419 2.       ])
+        """		
 		val = np.sinh(self.val)
 		if len(self.der.shape):
 			to_multiply = np.cosh(self.val)
@@ -422,6 +1065,25 @@ class Var(object):
 		return Var(val, der)	
 
 	def cosh(self):
+		""" 
+		Returns the cosh of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: cosh of self
+        
+        Examples
+        ========= 
+        >>> x = da.Var(-1, [1, 0])
+        >>> y = da.Var(0, [0, 1])
+        >>> z = 3 * np.cosh(x) + 2 * np.cosh(y)
+        >>> print(z)
+        Var([6.6292419], [-3.52560358  0.        ])
+        """		
 		val = np.cosh(self.val)
 		if len(self.der.shape):
 			to_multiply = np.sinh(self.val)
@@ -431,8 +1093,26 @@ class Var(object):
 			der = None
 		return Var(val, der)	
 
-
 	def tanh(self):
+		""" 
+		Returns the tanh of Var object
+        
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        ========= 
+        z: tanh of self
+        
+        Examples
+        ========= 
+        >>> x = da.Var(-1, [1, 0])
+		>>> y = da.Var(0, [0, 1])
+		>>> z = 3 * np.tanh(x) + 2 * np.tanh(y)
+		>>> print(z)
+		Var([-2.28478247], [1.25992302 2.        ])
+        """				
 		val = np.tanh(self.val)
 		if len(self.der.shape):
 			to_multiply = 1 / np.power(np.cosh(self.val), 2)
@@ -443,16 +1123,76 @@ class Var(object):
 		return Var(val, der)	
 
 	def pow(self, n):
+		""" 
+		Return power calculation of self to the power n in the form of self.pow(n)
+
+        Parameters
+        ==========
+        self: Var object
+        n: real number
+        
+        Returns
+        =======
+        z: Var object that is self raised to the power n
+        
+        Examples
+        ========= 
+        >>> x = da.Var(4)
+        >>> z = x.pow(2)
+        >>> print(z)
+        Var([16], [8])
+        """
 		# Maintain state of self and create new trace variable new_var
 		new_var = Var(self.val, self.der)
 		return new_var.__pow__(n)
  
 	def sqrt(self):
+		""" 
+		Return squred root of self 
+
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        =======
+        z: Var object that is self raised to the power n
+        
+        Examples
+        ========= 
+        >>> x = da.Var(4)
+        >>> z = np.sqrt(x)
+        >>> print(z)
+        Var([2.], [0.25])
+        """
 		# Maintain state of self and create new trace variable new_var
 		new_var = Var(self.val, self.der)
 		return new_var.__pow__(0.5)
 
 	def log(self, base):
+		""" 
+		Return the log base of self 
+
+        Parameters
+        ==========
+        self: Var object
+        base: int
+        
+        Returns
+        =======
+        z: Var object that is log base of self 
+
+        NOTES
+        ======
+        Use as Var.log(base) with customer defined base 
+
+        Examples
+        ========= 
+        >>> x = da.Var(10)
+		>>> z =  x.log(10)
+		>>> print(z)
+		Var([1.], [0.04342945])
+        """
 		values = map(lambda x: x > 0, self.val)
 		if not all(values):
 			raise ValueError("Non-positive number encountered in log.")
@@ -467,6 +1207,24 @@ class Var(object):
 		return Var(val, der)
 
 	def exp(self):
+		""" 
+		Return the exponetial of self 
+
+        Parameters
+        ==========
+        self: Var object
+        
+        Returns
+        =======
+        z: Var object that is the exponetial of self 
+
+        Examples
+        ========= 
+        >>> x = da.Var(1)
+		>>> z = np.exp(x)
+	 	>>> print(z)
+		Var([2.71828183], [2.71828183])
+        """
 		val = np.exp(self.val)
 		if len(self.der.shape):
 			to_multiply = np.exp(self.val)
