@@ -61,6 +61,21 @@ def quad_spline_coeff(f, xMin, xMax, nIntervals):
     
     return y, A, coeffs, ks
 
+# Get the positions of the spline points
+def spline_points(f, coeffs, ks, nSplinePoints):
+    
+    spline_points = []
+
+    for i in range(len(ks)-1):
+        a = coeffs[3*i]
+        b = coeffs[3*i+1]
+        c = coeffs[3*i+2]
+        sx = np.linspace(ks[i].val, ks[i+1].val, nSplinePoints)
+        sy = a*(sx**2) + b*sx + c
+        spline_points.append([sx, sy])
+
+    return spline_points
+
 # Plot the spline and the orignal function
 def quad_spline_plot(f, coeffs, ks, nSplinePoints):
     
@@ -91,12 +106,12 @@ def quad_spline_plot(f, coeffs, ks, nSplinePoints):
     box = ax.get_position()
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    return fig, spline_points
+    return fig
 
 # Calculate spline squared error
-def spline_squared_error(f, spline_points):
+def spline_error(f, spline_points):
     
-    squared_error = 0
+    error = 0
     for spline_point in spline_points:
         xs = spline_point[0]
         original_ys = []
@@ -104,6 +119,6 @@ def spline_squared_error(f, spline_points):
             original_y = f(da.Var(x)).val
             original_ys.append(original_y)
         
-        squared_error += sum((np.hstack(original_ys) - spline_point[1])**2)
+        error += abs(sum((np.hstack(original_ys) - spline_point[1])) / len(spline_point[0])) ** 1
     
-    return squared_error
+    return error / len(spline_points)
