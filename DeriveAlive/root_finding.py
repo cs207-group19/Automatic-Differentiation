@@ -48,6 +48,11 @@ def _NewtonRootVector(f, var_list, iters=2000, tol=1e-10, der_shift=1):
 			break
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		g = f(var_list)
+		values = np.array([x_i.val for x_i in var_list])
+		values_flat = np.reshape(values, [-1])
+		vars_path.append(values_flat)
+		g_path.append(g.val)
 	
 	return da.Var(values_flat, g.der), vars_path, g_path
 
@@ -90,6 +95,9 @@ def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
 			break
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		g = f(x)
+		x_path.append(x.val)
+		g_path.append(g.val)
 
 	return da.Var(x.val, g.der), x_path, g_path
 
@@ -104,7 +112,9 @@ def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 	g_path = []
 
 	for i in range(iters):
+		# print ("\niter {}".format(i))
 		g = f(var_list)
+		# print ("g:\n{}".format(g))
 		values = np.array([x_i.val for x_i in var_list])
 		values_flat = np.reshape(values, [-1])
 		vars_path.append(values_flat)
@@ -123,6 +133,11 @@ def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 			break
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		g = f(var_list)
+		values = np.array([x_i.val for x_i in var_list])
+		values_flat = np.reshape(values, [-1])
+		vars_path.append(values_flat)
+		g_path.append(g.val)
 	
 	return da.Var(values_flat, g.der), vars_path, g_path
 
@@ -131,7 +146,7 @@ def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
 	is_vec_input = isinstance(x, list)
 	if is_vec_input:
-		return _GradientDescentVector(f, x)
+		return _GradientDescentVector(f, x, iters=iters, eta=eta)
 
 	x_path = []
 	g_path = []
@@ -152,5 +167,8 @@ def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
 
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		g = f(x)
+		x_path.append(x.val)
+		g_path.append(g.val)
 
 	return da.Var(x.val, g.der), x_path, g_path
