@@ -80,7 +80,17 @@ def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_poin
 		ax.set_ylabel('y')
 		ax.set_zlabel('z')
 		ax.legend(loc=(0,0))
-		ax.set_title('Finding root(s) of {}'.format(f_string))
+		if gd:
+			ax.set_title('Minimizing loss function {}'.format(f_string))
+		else:
+			ax.set_title('Finding root(s) of {}'.format(f_string))
+		plt.show()
+
+		plt.figure()
+		plt.plot(f_path, label='f(w0, w1, w2)')
+		plt.title('Loss function vs. number of iterations')
+		plt.xlabel('Iterations')
+		plt.ylabel('Loss function')
 		plt.show()
 
 	else:
@@ -602,12 +612,113 @@ def test_GradientDescent():
 			der = [0, 0]
 			assert np.allclose(solution.der, der)
 	
+	def case_6():
+		'''Minimize cost function of ML regression demo.'''
+
+		def generate_loss_function(num_features, dataset):
+			sizes = [] #living area
+			bedrooms = [] #number of bedrooms
+			prices = [] #price
+
+			with open(dataset, "r") as data_file:
+				houses = data_file.readlines()
+				
+				for house in houses:
+					nums = house.split(",")
+					sizes.append(float(nums[0]))
+					bedrooms.append(float(nums[1]))
+					prices.append(float(nums[2]) / 1000)
+
+				sizes = np.array(sizes)
+				bedrooms = np.array(bedrooms)
+				prices = np.array(prices)
+
+			# Number of data points
+			m = len(sizes)
+
+			# Mean squared error
+			def f(variables):
+				w0, w1, w2 = variables
+				array = [(w0 + w1 * sizes[i] + w2 * bedrooms[i] - prices[i]) ** 2 for i in range(m)]
+				return (1 / (2 * m)) * sum(array)
+
+			return f 
+
+		f = generate_loss_function(2, "normalized.txt")
+
+		# def f(variables):
+		# 	w0, w1, w2 = variables
+		# 	return (1 / 8) * ((w0 + 1600 * w1 + 3 * w2 - 330) ** 2 + (
+		# 					  (w0 + 2400 * w1 + 3 * w2 - 369) ** 2 + (
+		# 					  (w0 + 1416 * w1 + 2 * w2 - 232) ** 2 + (
+		# 					  (w0 + 3000 * w1 + 4 * w2 - 540) ** 2))))
+
+		f_string = 'f(w0, w1, w2) = ...'
+		for w0_val, w1_val, w2_val in [[0., 0., 0.]]:
+			w0 = da.Var(w0_val, [1, 0, 0])
+			w1 = da.Var(w1_val, [0, 1, 0])
+			w2 = da.Var(w2_val, [0, 0, 1])
+			init_vars = [w0, w1, w2]
+			m = len(init_vars)
+			solution, w_path, f_path = rf.GradientDescent(f, init_vars, iters=1000, eta=.01)
+			w0n, w1n, w2n = solution.val
+			# print ("Solution: {}".format(solution))
+			# print ("Loss function: {}".format(f_path[-1]))
+			# print ("w path is {}".format(w_path))
+			concat = np.reshape(np.concatenate(w_path), [-1, m])
+			# print ("concat w path is:\n{}".format(w_path))
+			f_path = np.concatenate(f_path)
+
+			# plot_results(f, concat, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True, gd=True)
+
+	def case_7():
+		'''Minimize Easom's function.'''
+
+		def f(variables):
+			x, y = variables
+			return -np.cos(x) * np.cos(y) * np.exp(-((x - np.pi) ** 2 + (y - np.pi) ** 2))
+
+		f_string = 'f(x, y) = -cos(x)cos(y)exp(-((x-pi)^2 + (y-pi)^2))'
+
+		for x_val, y_val in [[1.5, 1.75]]:
+			x0 = da.Var(x_val, [1, 0])
+			y0 = da.Var(y_val, [0, 1])
+			init_vars = [x0, y0]
+			solution, xy_path, f_path = rf.GradientDescent(f, init_vars, iters=50000, eta=0.3)
+
+			# print ("Solution: {}".format(solution))
+			# print ("Function value: {}".format(f_path[-1]))
+
+			# plot_results(f, xy_path, f_path, f_string, threedim=True, gd=True)
+
+	def case_8():
+		'''Minimize Himmelblau's function.'''
+
+		def f(variables):
+			x, y = variables
+			return (x ** 2 + y - 11) ** 2 + (x + y ** 2 - 7) ** 2
+
+		f_string = 'f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2'
+
+		for x_val, y_val in [[5, 5]]:
+			x0 = da.Var(x_val, [1, 0])
+			y0 = da.Var(y_val, [0, 1])
+			init_vars = [x0, y0]
+			solution, xy_path, f_path = rf.GradientDescent(f, init_vars, iters=10000, eta=0.01)
+
+			# print ("Solution: {}".format(solution))
+			# print ("Function value: {}".format(f_path[-1]))
+
+			# plot_results(f, xy_path, f_path, f_string, threedim=True, gd=True)
 
 	case_1()
 	case_2()
 	case_3()
 	case_4()
 	case_5()
+	case_6()
+	case_7()
+	case_8()
 	print ("All gradient descent tests passed!")
 
 
