@@ -45,7 +45,7 @@ def test_DeriveAlive_Var():
 	# Run tests within test_DeriveAliveVar
 	test_scalar_without_bracket()
 	test_scalar_with_bracket()
-	# test_vector_input()
+	test_vector_input()
 	test_with_preset_der()
 	test_repr()
 
@@ -66,8 +66,6 @@ def test_DeriveAlive_comparisons():
 		assert f.__eq__(g)
 		assert f == g
 
-		# TODO: Vector comparisons
-
 	def test_ne():
 		x = da.Var(3)
 		z = da.Var(5)
@@ -81,8 +79,6 @@ def test_DeriveAlive_comparisons():
 		assert f.__ne__(g)
 		assert f != g
 
-		# TODO: Vector comparisons
-
 	def test_lt():
 		x = da.Var(3)
 		z = da.Var(5)
@@ -92,8 +88,6 @@ def test_DeriveAlive_comparisons():
 		assert not (x < 2)
 		assert 2 < x
 		assert not (z < x)
-
-		# TODO: Vector comparisons
 
 	def test_le():
 		# Scalar comparisons
@@ -107,8 +101,6 @@ def test_DeriveAlive_comparisons():
 		assert 3 <= x
 		assert not (z <= x)
 
-		# TODO: Vector comparisons
-
 	def test_gt():
 		x = da.Var(3)
 		z = da.Var(5)
@@ -118,8 +110,6 @@ def test_DeriveAlive_comparisons():
 		assert x > 2
 		assert not (2 > x)
 		assert not (x > z)
-
-		# TODO: Vector comparisons
 
 	def test_ge():
 		x = da.Var(3)
@@ -131,8 +121,6 @@ def test_DeriveAlive_comparisons():
 		assert x >= 2
 		assert x >= 3
 		assert not (x >= z)
-
-		# TODO: Vector comparisons
 
 	test_eq()
 	test_ne()
@@ -152,7 +140,7 @@ def test_DeriveAlive_scalar_functions():
 		assert f.der == [-1.0]
 
 		# Negate operator applied after the power
-		f2 = -x.pow(2)
+		f2 = -x ** 2
 		assert f2.val == [-9.0]
 		assert f2.der == [-6.0]
 
@@ -162,7 +150,6 @@ def test_DeriveAlive_scalar_functions():
 		f = abs(x)
 		assert f.val == [4.0]
 		assert f.der == [-1.0]
-		#assert f.der == [1.0]
 
 		# Positive value
 		y = da.Var(3.0)
@@ -256,7 +243,7 @@ def test_DeriveAlive_scalar_functions():
 		f2 = 5 * x2
 		assert f2 == da.Var(0.0, 5.0)
 
-		# Derivative at x  is 24 * x + 4
+		# Derivative at x is 24 * x + 4
 		f3 = 3 * x * 4 * x + 4 * x
 		assert f3 == da.Var(320.0, 124)
 
@@ -300,87 +287,89 @@ def test_DeriveAlive_scalar_functions():
 	def test_sin():
 		# Expect value of 18.42, derivative of 6.0
 		x = da.Var(np.pi / 2)
-		f = 3 * 2 * x.sin() + 2 * x + 4 * x + 3
+		f = 3 * 2 * np.sin(x) + 2 * x + 4 * x + 3
 		assert np.round(f.val, 2) == [18.42]
 		assert np.round(f.der, 2) == [6.0]
 
 		x2 = da.Var(np.pi)
-		f2 = 3 * x2.sin() +  3
+		f2 = 3 * np.sin(x2) +  3
 		assert np.round(f2.val, 2) == [3.0]
 		assert f2.der == [-3.0]
 
 	def test_cos():
 		# Expect value of -10pi, derivative of 0.0 (because of -sin(pi))
 		x = da.Var(np.pi)
-		f = 5 * x.cos()+ x.cos() * 5
+		f = 5 * np.cos(x)+ np.cos(x) * 5
 		assert f.val == [-10]
 		assert abs(f.der) <= 1e-14
 
 	def test_tan():
 		# Expect value of 9.0, derivative of 12.0
 		x = da.Var(np.pi / 4)
-		f = 3 * 2 * x.tan() + 3
+		f = 3 * 2 * np.tan(x) + 3
 		assert np.round(f.val, 2) == [9.0]
 		assert np.round(f.der, 2) == [12.0]
 
 		x2 = da.Var(np.pi / 4)
-		f2 = 3 * 2 * x2.tan() + 3
+		f2 = 3 * 2 * np.tan(x2) + 3
 		assert f2.val == 9.0
 		assert np.round(f2.der, 2) == [12.0]
 
 		# Tangent is undefined for multiples of pi/2 >= pi/2
 		with np.testing.assert_raises(ValueError):
 			x3 = da.Var(3 * np.pi / 2)
-			f3 = x3.tan()
+			f3 = np.tan(x3)
 
 	def test_arcsin():
 		x = da.Var(0)
-		f = x.arcsin()
+		f = np.arcsin(x)
 		assert f.val == [0.0]
 		assert f.der == [1.0]
 
 		# Domain of arcsin(x) is -1 <= x <= 1
 		with np.testing.assert_raises(ValueError):
 			x = da.Var(-1.01)
-			x.arcsin()
+			np.arcsin(x)
 
 	def test_arccos():
 		x = da.Var(0)
-		f = x.arccos()
+		f = np.arccos(x)
 		assert f.val == [np.pi / 2]
 		assert f.der == [-1.0]
 
 		# Domain of arccos(x) is -1 <= x <= 1
 		with np.testing.assert_raises(ValueError):
 			x = da.Var(1.01)
-			x.arccos()
+			np.arccos(x)
 
 	def test_arctan():
 		x = da.Var(0.5)
-		f = x.arctan()
+		f = np.arctan(x)
 		assert np.round(f.val, 2) == [0.46]
 		assert f.der == [0.8]
 
 	def test_sinh():
 		x = da.Var(-1.0)
-		f = x.sinh()
+		f = np.sinh(x)
 		assert np.round(f.val, 2) == [-1.18]
 		assert np.round(f.der, 2) == [1.54]
 
 	def test_cosh():
 		x = da.Var(0.5)
-		f = x.cosh()
+		f = np.cosh(x)
 		assert np.round(f.val, 2) == [1.13]
 		assert np.round(f.der, 2) == [0.52]
 
 	def test_tanh():
 		x = da.Var(0.75)
-		f = x.tanh()
+		f = np.tanh(x)
 		assert np.round(f.val, 2) == [0.64]
 		assert np.round(f.der, 2) == [0.60]
 
 	def test_pow():
 		def method_version():
+			'''This is for .pow() method check'''
+
 			# Expect value of 64.0, derivative of 48.0
 			x = da.Var(4.0)
 			f = x.pow(3)
@@ -407,8 +396,10 @@ def test_DeriveAlive_scalar_functions():
 			assert f4.val == [64.0]
 			assert f4.der == [48.0]
 
-		# Compute same tests using ** notation
+		
 		def dunder_version():
+			'''Compute same tests using ** notation'''
+
 			# Expect value of 64.0, derivative of 48.0
 			x = da.Var(4.0)
 			f = x ** 3
@@ -464,12 +455,12 @@ def test_DeriveAlive_scalar_functions():
 
 	def test_sqrt():
 		x = da.Var(16)
-		f = x.sqrt()
+		f = np.sqrt(x)
 		assert f == da.Var(4, 1 / 8)
 
 		y = da.Var(0)
 		with np.testing.assert_raises(ZeroDivisionError):
-			g = y.sqrt()
+			g = np.sqrt(y)
 
 	def test_log():
 		# Expect value of 1.0, derivative of 0.04342944819032518
@@ -485,11 +476,11 @@ def test_DeriveAlive_scalar_functions():
 	def test_exp():
 		# Expect value of 2.718281828459045, derivative of 2.718281828459045
 		x = da.Var(1)
-		f = x.exp()
+		f = np.exp(x)
 		assert np.round(f.val, 2) == [2.72]
 		assert np.round(f.der, 2) == [2.72]
 
-		f2 = (2 * x).exp()
+		f2 = np.exp(2 * x)
 		assert f2 == da.Var(np.exp(2), 2 * np.exp(2))
 
 	# Run tests within test_DeriveAlive_scalar_functions()
@@ -607,8 +598,7 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		f = x ** 3 + y ** 3 + x * z	
 		f1 = abs(f)
 		np.testing.assert_array_equal(f1.val, np.array([22.]))
-		#np.testing.assert_array_equal(f1.der, np.array([25.,  3.,  3.])) ## array([-25.,   3.,  -3.])??
-
+		
 	def test_constant():
 		x = da.Var(3.0, None)
 		y = da.Var(1.0, None)
@@ -734,96 +724,97 @@ def test_DeriveAlive_vector_functions_m_to_1():
 	def test_sin():
 		x = da.Var(np.pi / 2, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = 3 * x.sin() + 2 * y.sin()
+		f = 3 * np.sin(x) + 2 * np.sin(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([3.]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([0., 2.]))
 
 	def test_cos():
 		x = da.Var(np.pi / 2, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = 3 * x.cos() + 2 * y.cos()
+		f = 3 * np.cos(x) + 2 * np.cos(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([2.]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([-3., 0.]))
 
 	def test_tan():
 		x = da.Var(np.pi / 4, [1, 0])
 		y = da.Var(np.pi / 3, [0, 1])
-		f = 3 * x.tan() + 2 * y.tan() 
+		f = 3 * np.tan(x) + 2 * np.tan(y) 
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([6.46]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([6., 8.]))
 
 		with np.testing.assert_raises(ValueError):
 			z = da.Var(3 * np.pi / 2)
-			f1 = z.tan() + x.tan()
+			f1 = np.tan(z) + np.tan(x)
 
 	def test_arcsin():
 		x = da.Var(0, [1, 0])
-		y = da.Var(0.5, [0, 1])
-		f = 3 * x.arcsin() + 2 * y.arcsin()
-		np.testing.assert_array_equal(np.round(f.val,2), np.array([1.05]))
-		np.testing.assert_array_equal(np.round(f.der,2), np.array([3., 2.31]))
+		y = da.Var(0, [0, 1])
+		f = 3 * np.arcsin(x) + 2 * np.arcsin(y)
+		np.testing.assert_array_equal(np.round(f.val,2), np.array([0]))
+		np.testing.assert_array_equal(np.round(f.der,2), np.array([3., 2]))
 		
 		# test on the boundary -1 and 1
 		z1 = da.Var(1, [1, 0])
 		z2 = da.Var(-1, [0, 1])
-		f_z = 3 * z1.arcsin() + 2 * z2.arcsin()
+		f_z = 3 * np.arcsin(z1) + 2 * np.arcsin(z2)
 		np.testing.assert_array_equal(np.round(f_z.val,2), np.array([1.57]))
 		np.testing.assert_array_equal(np.round(f_z.der,2), np.array([np.nan, np.nan]))
 
         # test out of range [-1, 1]
 		with np.testing.assert_raises(ValueError):
 			x = da.Var(-1.01, [1, 0])
-			f = 3 * x.arcsin() + 2 * y.arcsin()
+			f = 3 * np.arcsin(x) + 2 * np.arcsin(y)
 
 	def test_arccos():
 		x = da.Var(0, [1, 0])
 		y = da.Var(0.5, [0, 1])
-		f = 3 * x.arccos() + 2 * y.arccos()
+		f = 3 * np.arccos(x) + 2 * np.arccos(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([6.81]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([-3., -2.31]))
 
 		# test on the boundary -1 and 1
 		z1 = da.Var(1, [1, 0])
 		z2 = da.Var(-1, [0, 1])
-		f_z = 3 * z1.arccos() + 2 * z2.arccos()
+		f_z = 3 * np.arccos(z1) + 2 * np.arccos(z2)
 		np.testing.assert_array_equal(np.round(f_z.val,2), np.array([6.28]))
 		np.testing.assert_array_equal(np.round(f_z.der,2), np.array([np.nan, np.nan]))
 
         # test out of range [-1, 1]
 		with np.testing.assert_raises(ValueError):
 			x = da.Var(1.01, [1, 0])
-			f = 3 * x.arccos() + 2 * y.arccos()
+			f = 3 * np.arccos(x) + 2 * np.arccos(y)
 
 	def test_arctan():
 		x = da.Var(0.5, [1, 0])
 		y = da.Var(np.pi/2, [0, 1])
-		f = 3 * x.arctan() + 2 * y.arctan()
+		f = 3 * np.arctan(x) + 2 * np.arctan(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([3.4]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([2.4, 0.58]))
 
 	def test_sinh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = 3 * x.sinh() + 2 * y.sinh()
+		f = 3 * np.sinh(x) + 2 * np.sinh(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([-3.53]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([4.63, 2.]))
 
 	def test_cosh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = 3 * x.cosh() + 2 * y.cosh()
+		f = 3 * np.cosh(x) + 2 * np.cosh(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([6.63]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([-3.53, 0.]))
 
 	def test_tanh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = 3 * x.tanh() + 2 * y.tanh()
+		f = 3 * np.tanh(x) + 2 * np.tanh(y)
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([-2.28]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([1.26, 2.]))
 
 	def test_pow():
 		def method_version():
+			'''test .pow() method'''
 			x = da.Var(3.0, [1, 0, 0])
 			y = da.Var(1.0, [0, 1, 0])
 			z = da.Var(2.0, [0, 0, 1])
@@ -838,7 +829,7 @@ def test_DeriveAlive_vector_functions_m_to_1():
 				f_zero = f2.pow(1 / 2)	
 
 			with np.testing.assert_raises(ValueError):	
-				f3 = x - y - x*z
+				f3 = x - y - x * z
 				f_negative = f3.pow(1 / 2)
 
 				f4 = -f3
@@ -886,12 +877,12 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
 		f = x + y + z
-		f1 = f.sqrt()
+		f1 = np.sqrt(f)
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([2.45]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([0.2, 0.2, 0.2]))
 
 		with np.testing.assert_raises(ZeroDivisionError):
-			f2 = x - 2*y - z
+			f2 = x - 2 * y - z
 			f2_1 = 0 ** f2	
 
 		with np.testing.assert_raises(ValueError):
@@ -906,7 +897,7 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = x + y+ z
+		f = x + y + z
 		f1 = f.log(10)
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([0.78]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([0.07, 0.07, 0.07]))
@@ -920,7 +911,7 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
 		f = x + y + z
-		f1 = f.exp()
+		f1 = np.exp(f)
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([20.09]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([20.09, 20.09, 20.09]))
 
@@ -1123,7 +1114,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_sin():
 		x = da.Var(np.pi / 2, [1])
-		f = da.Var([x.sin(), x.sin()+1, x.sin()**2])
+		f = da.Var([np.sin(x), np.sin(x) + 1, np.sin(x) ** 2])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([ 1., 2., 1.]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[ 0.],
                                                                     [ 0.],
@@ -1131,7 +1122,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_cos():
 		x = da.Var(np.pi / 2, [ 1.])
-		f = da.Var([x.cos()+1, x.cos(), x.cos()**2])
+		f = da.Var([np.cos(x) + 1, np.cos(x), np.cos(x) ** 2])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([ 1., 0., 0.]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[-1.],
                                                                     [-1.],
@@ -1139,7 +1130,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_tan():
 		x = da.Var(np.pi / 3, [1])
-		f = da.Var([x.tan()+1, x.tan(), x.tan()**2])
+		f = da.Var([np.tan(x) + 1, np.tan(x), np.tan(x) ** 2])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([ 2.73, 1.73, 3. ]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[ 4.],
                                                                     [ 4.],
@@ -1147,7 +1138,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_arcsin():
 		x = da.Var(1, [1])
-		f = da.Var([x.arcsin(), x.arcsin()+1, x.arcsin()**2])
+		f = da.Var([np.arcsin(x), np.arcsin(x) + 1, np.arcsin(x) ** 2])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([1.57, 2.57, 2.47]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[np.nan],
                                                                     [np.nan],
@@ -1155,14 +1146,14 @@ def test_DeriveAlive_vector_functions_1_to_n():
 		
 		# test on the boundary -1 and 1
 		z1 = da.Var(-1, [1])
-		f_z = da.Var([z1.arcsin()+z1.arcsin(), z1.arcsin()**2+1])
+		f_z = da.Var([np.arcsin(z1) + np.arcsin(z1), np.arcsin(z1) ** 2 + 1])
 		np.testing.assert_array_equal(np.round(f_z.val, 2), np.array([-3.14, 3.47]))
 		np.testing.assert_array_equal(np.round(f_z.der, 2), np.array([[np.nan],
                                                                       [np.nan]]))
 
 	def test_arccos(): 
 		x = da.Var(1, [1])
-		f = da.Var([x.arccos(), x.arccos()+1, x.arccos()**2])  
+		f = da.Var([np.arccos(x), np.arccos(x) + 1, np.arccos(x) ** 2])  
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([ 0., 1., 0.]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[np.nan],
                                                                     [np.nan],
@@ -1170,43 +1161,44 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
     	# test on the boundary -1 and 1
 		z1 = da.Var(-1, [1])
-		f_z = da.Var([z1.arccos()+z1.arccos(), z1.arccos()**2+1])
+		f_z = da.Var([np.arccos(z1) + np.arccos(z1), np.arccos(z1) ** 2 + 1])
 		np.testing.assert_array_equal(np.round(f_z.val, 2), np.array([ 6.28, 10.87]))
 		np.testing.assert_array_equal(np.round(f_z.der, 2), np.array([[np.nan],
                                                                      [np.nan]]))
 
 	def test_arctan():
 		x = da.Var(0.5, [1])
-		f = da.Var([3 * x.arctan(), 2 * x.arctan()])
+		f = da.Var([3 * np.arctan(x), 2 * np.arctan(x)])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([1.39, 0.93]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[2.4],
                                                                     [1.6]]))
 
 	def test_sinh():
 		x = da.Var(-1, [1])
-		f = da.Var([3 * x.sinh(), 2 * x.sinh()])
+		f = da.Var([3 * np.sinh(x), 2 * np.sinh(x)])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([-3.53, -2.35]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[4.63],
                                                                     [3.09]]))
 
 	def test_cosh():
 		x = da.Var(-1, [1])
-		f = da.Var([3 * x.cosh(), 2 * x.cosh()])
+		f = da.Var([3 * np.cosh(x), 2 * np.cosh(x)])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([4.63, 3.09]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[-3.53],
                                                                     [-2.35]]))
 
 	def test_tanh():
 		x = da.Var(-1, [1])
-		f = da.Var([3 * x.tanh(), 2 * x.tanh()])
+		f = da.Var([3 * np.tanh(x), 2 * np.tanh(x)])
 		np.testing.assert_array_equal(np.round(f.val, 2), np.array([-2.28, -1.52]))
 		np.testing.assert_array_equal(np.round(f.der, 2), np.array([[1.26],
                                                                     [0.84]]))
 
 	def test_pow():
 		def method_version():
+			'''test the .pow() method'''
 			x = da.Var(3.0, [1])
-			f = da.Var([2*x, x-3, x**2])
+			f = da.Var([2 * x, x - 3, x ** 2])
 			f1 = f.pow(2)
 			np.testing.assert_array_equal(f1.val, np.array([ 36.,  0., 81.]))
 			np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[ 24.],
@@ -1218,7 +1210,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 				f_zero = f.pow(1 / 2)
 
 			with np.testing.assert_raises(ValueError):	
-				f3 = da.Var([2*x, x+1, -x**2])
+				f3 = da.Var([2 * x, x + 1, -x ** 2])
 				f_negative = f3.pow(1 / 2)
 
 			f4 = abs(f3)
@@ -1231,7 +1223,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
         # Compute same tests using ** notation
 		def dunder_version():
 			x = da.Var(3.0, [1])
-			f = da.Var([2*x, x-3, x**2])
+			f = da.Var([2 * x, x - 3, x ** 2])
 			f1 = f.pow(2)
 			np.testing.assert_array_equal(f1.val, np.array([ 36.,  0., 81.]))
 			np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[ 24.],
@@ -1242,7 +1234,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 				f_zero = f ** (1 / 2)	
 
 			with np.testing.assert_raises(ValueError):	
-				f3 = da.Var([2*x, x+1, -x**2])
+				f3 = da.Var([2 * x, x + 1, -x ** 2])
 				f_negative = f3 ** (1 / 2)
 
 			f4 = abs(f3)
@@ -1257,7 +1249,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_rpow():
 		x = da.Var(3.0, [1])
-		f = da.Var([2*x, x-1, x**2])
+		f = da.Var([2 * x, x - 1, x ** 2])
 		f1 = 2 ** f
 		np.testing.assert_array_equal(np.round(f1.val, 2), np.array([64., 4., 512.]))
 		np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[  88.72],
@@ -1266,27 +1258,23 @@ def test_DeriveAlive_vector_functions_1_to_n():
 
 	def test_sqrt(): 
 		x = da.Var(3.0, [1])
-		f = da.Var([2*x, x+1, x**2])
-		f1 = f.sqrt()
+		f = da.Var([2 * x, x + 1, x ** 2])
+		f1 = np.sqrt(f)
 		np.testing.assert_array_equal(np.round(f1.val, 2), np.array([2.45, 2., 3.  ]))
 		np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[0.41],
                                                                      [0.25],
                                                                      [ 1. ]]))
-		f2 = da.Var([2*x, x+1, -x**2])
-		#with np.testing.assert_raises(ZeroDivisionError):
-			#f2_1 = 0 ** f2	
+		f2 = da.Var([2 * x, x + 1, -x ** 2])
+		with np.testing.assert_raises(ZeroDivisionError):
+			f2_1 = 0 ** f2	
 
 		with np.testing.assert_raises(ValueError):
 			f2_2 = (-2) ** f2		
 
-		#f3 = da.Var([2*x, y-1, -z**2])
-		#f3_1 = 0 ** f3
-		#np.testing.assert_array_equal(f3_1.val, np.array([1.]))
-		#np.testing.assert_array_equal(f3_1.der, np.array([0.]))
 
 	def test_log():
 		x = da.Var(3.0, [1])
-		f = da.Var([2*x, x+1, x**2])
+		f = da.Var([2 * x, x + 1, x ** 2])
 		f1 = f.log(10)
 		np.testing.assert_array_equal(np.round(f1.val, 2), np.array([ 0.78, 0.6 , 0.95]))
 		np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[0.14],
@@ -1294,13 +1282,13 @@ def test_DeriveAlive_vector_functions_1_to_n():
                                                                      [0.29]]))
 
 		with np.testing.assert_raises(ValueError):
-			f2 = da.Var([2*x, x-3, x**2])
+			f2 = da.Var([2 * x, x - 3, x ** 2])
 			f3 = f2.log(2)
 
 	def test_exp():
 		x = da.Var(3.0, [1])
-		f = da.Var([2*x, x+1, x**2])
-		f1 = f.exp()
+		f = da.Var([2 * x, x + 1, x ** 2])
+		f1 = np.exp(f)
 		np.testing.assert_array_equal(np.round(f1.val, 2), np.array([ 403.43,   54.60,  8103.08 ]))
 		np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[  806.86],
                                                                      [   54.60],
@@ -1469,15 +1457,11 @@ def test_DeriveAlive_vector_functions_m_to_n():
                                                        [ 330.,    0.,   90.]]))
 
 	def test_truediv():
-		# print ("Vector division test case:")
-		# print ("x = 2\ny = 3\nz = [x**2, y**2, x*y]\nw = [x, y, x]\nz/w = [x, y, y]\n")
 		x = da.Var(2, [1, 0])
 		y = da.Var(3, [0, 1])
 		z = da.Var([x ** 2, y ** 2, x * y])
 		w = da.Var([x, y, x])
 		s = z / w
-		# print ("Now using Var version:")
-		# print ("z:\n{}\n\nw:\n{}\n\nz / w:\n{}".format(z, w, s))
 
 		np.testing.assert_array_equal(s.val, np.array([2, 3, 3]))
 		np.testing.assert_array_equal(s.der, np.array([[1, 0], [0, 1], [0, 1]]))
@@ -1498,18 +1482,18 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		with np.testing.assert_raises(ZeroDivisionError):
 			f = z / has_zero
 
-		# # Expect value of 1.5, derivative of 0.5
-		# x = da.Var(3.0)
-		# f = x / 2
-		# assert np.round(f.val, 2) == [1.5]
-		# assert np.round(f.der, 2) == [0.5]
+		# Expect value of 1.5, derivative of 0.5
+		x = da.Var(3.0)
+		f = x / 2
+		assert np.round(f.val, 2) == [1.5]
+		assert np.round(f.der, 2) == [0.5]
 
-		# # Constant of 1 has derivative of 0
-		# f2 = x / x
-		# assert f2 == da.Var(1.0, 0.0)
+		# Constant of 1 has derivative of 0
+		f2 = x / x
+		assert f2 == da.Var(1.0, 0.0)
 
-		# f3 = (x / 2) * (1 / x)
-		# assert f3 == da.Var(0.5, 0.0)
+		f3 = (x / 2) * (1 / x)
+		assert f3 == da.Var(0.5, 0.0)
 
 	def test_rtruediv():
 		x = da.Var(2, [1, 0])
@@ -1534,7 +1518,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(np.pi / 2, [1, 0, 0])
 		y = da.Var(0, [0, 1, 0])
 		z = da.Var(np.pi / 3, [0, 0, 1])
-		f = da.Var([x.sin(), y.sin()+1, z.sin()**2])
+		f = da.Var([np.sin(x), np.sin(y) + 1, np.sin(z) ** 2])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([1., 1., 0.75]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[0.  , 0.  , 0.  ],
                                                                    [0.  , 1.  , 0.  ],
@@ -1544,7 +1528,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(np.pi / 2, [1, 0, 0])
 		y = da.Var(0, [0, 1, 0])
 		z = da.Var(np.pi / 6, [0, 0, 1])
-		f = da.Var([x.cos()+1, y.cos(), z.cos()**2])
+		f = da.Var([np.cos(x) + 1, np.cos(y), np.cos(z) ** 2])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([1., 1., 0.75]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[-1.  , 0.  , 0.  ],
                                                                    [0.  , 0.  , 0.  ],
@@ -1554,7 +1538,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(np.pi / 3, [1, 0, 0])
 		y = da.Var(0, [0, 1, 0])
 		z = da.Var(np.pi / 4, [0, 0, 1])
-		f = da.Var([x.tan()+1, y.tan(), z.tan()**2])
+		f = da.Var([np.tan(x) + 1, np.tan(y), np.tan(z) ** 2])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([2.73, 0., 1. ]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[4., 0., 0.],
                                                                    [0., 1., 0.],
@@ -1564,7 +1548,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(1, [1, 0, 0])
 		y = da.Var(0, [0, 1, 0])
 		z = da.Var(np.pi / 4, [0, 0, 1])
-		f = da.Var([x.arcsin(), y.arcsin()+1, z.arcsin()**2])
+		f = da.Var([np.arcsin(x), np.arcsin(y) + 1, np.arcsin(z) ** 2])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([1.57, 1., 0.82]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[np.nan, np.nan  , np.nan],
                                                                    [0.  , 1.  , 0.  ],
@@ -1573,7 +1557,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		# test on the boundary -1 and 1
 		z1 = da.Var(1, [1, 0])
 		z2 = da.Var(-1, [0, 1])
-		f_z = da.Var([z1.arcsin()+z2.arcsin(), z2.arcsin()**2+1])
+		f_z = da.Var([np.arcsin(z1) + np.arcsin(z2), np.arcsin(z2) ** 2 + 1])
 		np.testing.assert_array_equal(np.round(f_z.val,2), np.array([0.  , 3.47]))
 		np.testing.assert_array_equal(np.round(f_z.der,2), np.array([[np.nan, np.nan],
                                                                      [np.nan, np.nan]]))
@@ -1582,7 +1566,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(1, [1, 0, 0])
 		y = da.Var(0, [0, 1, 0])
 		z = da.Var(np.pi / 4, [0, 0, 1]) 
-		f = da.Var([x.arccos(), y.arccos()+1, z.arccos()**2])   
+		f = da.Var([np.arccos(x), np.arccos(y) + 1, np.arccos(z) ** 2])   
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([0.  , 2.57, 0.45]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[np.nan, np.nan  , np.nan],
                                                                    [ 0.  , -1.  ,  0.  ],
@@ -1591,7 +1575,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
     	# test on the boundary -1 and 1
 		z1 = da.Var(1, [1, 0])
 		z2 = da.Var(-1, [0, 1])
-		f_z = da.Var([z1.arccos()+z2.arccos(), z2.arccos()**2+1])
+		f_z = da.Var([np.arccos(z1) + np.arccos(z2), np.arccos(z2) ** 2 + 1])
 		np.testing.assert_array_equal(np.round(f_z.val,2), np.array([3.14, 10.87]))
 		np.testing.assert_array_equal(np.round(f_z.der,2), np.array([[np.nan, np.nan],
                                                                      [np.nan, np.nan]]))
@@ -1599,7 +1583,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 	def test_arctan():
 		x = da.Var(0.5, [1, 0])
 		y = da.Var(np.pi/2, [0, 1])
-		f = da.Var([3 * x.arctan(), 2 * y.arctan()])
+		f = da.Var([3 * np.arctan(x), 2 * np.arctan(y)])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([1.39, 2.01]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[2.4 , 0.  ],
                                                                    [0.  , 0.58]]))
@@ -1607,14 +1591,14 @@ def test_DeriveAlive_vector_functions_m_to_n():
 	def test_sinh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = da.Var([3 * x.sinh(), 2 * y.sinh()])
+		f = da.Var([3 * np.sinh(x), 2 * np.sinh(y)])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([-3.53,  0.]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[4.63, 0.  ],
                                                                    [0.  , 2.  ]]))
 	def test_cosh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = da.Var([3 * x.cosh(), 2 * y.cosh()])
+		f = da.Var([3 * np.cosh(x), 2 * np.cosh(y)])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([4.63, 2.]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[-3.53,  0.  ],
                                                                    [ 0.  ,  0.  ]]))
@@ -1622,17 +1606,18 @@ def test_DeriveAlive_vector_functions_m_to_n():
 	def test_tanh():
 		x = da.Var(-1, [1, 0])
 		y = da.Var(0, [0, 1])
-		f = da.Var([3 * x.tanh(), 2 * y.tanh()])
+		f = da.Var([3 * np.tanh(x), 2 * np.tanh(y)])
 		np.testing.assert_array_equal(np.round(f.val,2), np.array([-2.28,  0.  ]))
 		np.testing.assert_array_equal(np.round(f.der,2), np.array([[1.26, 0.  ],
                                                                    [0.  , 2.  ]]))
 
 	def test_pow():
 		def method_version():
+			'''test .pow() method'''
 			x = da.Var(3.0, [1, 0, 0])
 			y = da.Var(1.0, [0, 1, 0])
 			z = da.Var(2.0, [0, 0, 1])
-			f = da.Var([2*x, y-1, z**2])
+			f = da.Var([2 * x, y - 1, z ** 2])
 			f1 = f.pow(2)
 			np.testing.assert_array_equal(f1.val, np.array([36.,  0., 16.]))
 			np.testing.assert_array_equal(np.round(f1.der,2), np.array([[24.,  0.,  0.]
@@ -1644,7 +1629,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 				f_zero = f.pow(1 / 2)	
 
 			with np.testing.assert_raises(ValueError):	
-				f3 = da.Var([2*x, y+1, -z**2])
+				f3 = da.Var([2 * x, y + 1, -z ** 2])
 				f_negative = f3.pow(1 / 2)
 
 				f4 = abs(f3)
@@ -1659,7 +1644,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 			x = da.Var(3.0, [1, 0, 0])
 			y = da.Var(1.0, [0, 1, 0])
 			z = da.Var(2.0, [0, 0, 1])
-			f = da.Var([2*x, y-1, z**2])
+			f = da.Var([2 * x, y - 1, z ** 2])
 			f1 = f ** 2
 			np.testing.assert_array_equal(f1.val, np.array([36.,  0., 16.]))
 			np.testing.assert_array_equal(np.round(f1.der,2), np.array([[24.,  0.,  0.]
@@ -1670,7 +1655,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 				f_zero = f ** (1 / 2)	
 
 			with np.testing.assert_raises(ValueError):	
-				f3 = da.Var([2*x, y+1, -z**2])
+				f3 = da.Var([2 * x, y + 1, -z ** 2])
 				f_negative = f3 ** (1 / 2)
 
 				f4 = abs(f3)
@@ -1687,7 +1672,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = da.Var([2*x, y-1, z**2])
+		f = da.Var([2 * x, y - 1, z ** 2])
 		f1 = 2 ** f
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([64., 1., 16.]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[88.72, 0, 0], 
@@ -1699,12 +1684,12 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
 		f = da.Var([2 * x, y + 1, z ** 2])
-		f1 = f.sqrt()
+		f1 = np.sqrt(f)
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([2.45, 1.41, 2.  ]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[0.41, 0.  , 0.  ],
                                                                     [0.  , 0.35, 0.  ],
                                                                     [0.  , 0.  , 1.  ]]))
-		f2 = da.Var([2*x, y-1, z ** 2])
+		f2 = da.Var([2 * x, y - 1, z ** 2])
 
 		# Raise 0 to powers of 6, 0, 4
 		f2_1 = 0 ** f2
@@ -1725,7 +1710,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = da.Var([2*x, y+1, z**2])
+		f = da.Var([2 * x, y + 1, z ** 2])
 		f1 = f.log(10)
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([0.78, 0.3 , 0.6 ]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[0.14, 0.  , 0.  ],
@@ -1733,14 +1718,14 @@ def test_DeriveAlive_vector_functions_m_to_n():
                                                                     [0.  , 0.  , 0.43]]))
 
 		with np.testing.assert_raises(ValueError):
-			f2 = da.Var([2*x, y-1, z**2])
+			f2 = da.Var([2 * x, y - 1, z ** 2])
 			f3 = f2.log(2)
 
 	def test_exp():
 		x = da.Var(3.0, [1, 0, 0])
 		y = da.Var(1.0, [0, 1, 0])
 		z = da.Var(2.0, [0, 0, 1])
-		f = da.Var([2*x, y+1, z**2])
+		f = da.Var([2 * x, y + 1, z ** 2])
 		f1 = f.exp()
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([403.43,   7.39,  54.6 ]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([[806.86,   0.  ,   0.  ],
