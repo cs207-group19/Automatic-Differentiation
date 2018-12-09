@@ -146,14 +146,6 @@ Each input variable is a node, and each subsequent operation of the
 execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).
 
-.. figure:: images/computationgraph.png
-   :alt: Sample computational graph for
-   :math:`f\left(x\right) = x - \exp\left(-2\sin^{2}\left(4x\right)\right).`
-   :width: 50.0%
-
-   Sample computational graph for
-   :math:`f\left(x\right) = x - \exp\left(-2\sin^{2}\left(4x\right)\right).`
-
 As we execute :math:`f(x)` in the “forward mode", we can propagate not
 only the sequential evaluations of operations in the graph given
 previous nodes, but also the derivatives using the chain rule.
