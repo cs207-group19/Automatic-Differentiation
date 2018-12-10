@@ -161,7 +161,7 @@ Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value 
           [[6.12323400e-17]
            [3.14159265e+00]]
 
-Demo 4: :math:`\mathbb{R}^m \rightarrow \\mathbb{R}^n`
+Demo 4: :math:`\mathbb{R}^m \rightarrow \mathbb{R}^n`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the case :math:`f(x,y,z) = (\sin(x), 4y + z^3)`. We want to calculate the value and the jacobian of :math:`f(x,y,z)` at :math:`x=\frac{\pi}{2}, y=3, z=-2`.

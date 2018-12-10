@@ -87,7 +87,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#demo-1">Demo 1: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^1\)</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#demo-2">Demo 2: <span class="math">\(\mathbb{R}^m \rightarrow \mathbb{R}^1\)</span></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#demo-3">Demo 3: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^n\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#demo-4">Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \\mathbb{R}^n\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo-4">Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \mathbb{R}^n\)</span></a></li>
 </ul>
 </li>
 </ul>
@@ -314,7 +314,7 @@
 </div>
 </div>
 <div class="section" id="demo-4">
-<h3>Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \\mathbb{R}^n\)</span><a class="headerlink" href="#demo-4" title="Permalink to this headline">¶</a></h3>
+<h3>Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \mathbb{R}^n\)</span><a class="headerlink" href="#demo-4" title="Permalink to this headline">¶</a></h3>
 <p>Consider the case <span class="math">\(f(x,y,z) = (\sin(x), 4y + z^3)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x,y,z)\)</span> at <span class="math">\(x=\frac{\pi}{2}, y=3, z=-2\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1, 4], jacobian of [[0 0 0], [0 4 12]]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
