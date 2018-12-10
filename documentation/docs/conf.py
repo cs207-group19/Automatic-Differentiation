@@ -19,8 +19,8 @@
 #
 import os
 import sys
-#sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../..'))
+# sys.path.insert(0, os.path.abspath(''))
+sys.path.insert(0, os.path.abspath('../../DeriveAlive'))
 
 
 # -- General configuration ------------------------------------------------
@@ -40,7 +40,22 @@ extensions = [
               'sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
+              'sphinx.ext.doctest',
               ]
+
+# autodoc configs
+autodoc_default_flags = ['members']
+
+# autosummary configs
+autosummary_generate = True
+
+# napoleon settings
+napoleon_include_init_with_doc = True
+napoleon_include_private_with_doc = True
+napoleon_include_special_with_doc = True
+
+# doctest configs
+doctest_test_doctest_blocks = ''
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -59,7 +74,7 @@ project = 'DeriveAlive'
 copyright = '2018, Chen Shi, Stephen Slater, Yue Sun'
 author = 'Chen Shi, Stephen Slater, Yue Sun'
 
-import DeriveAlive
+# import DeriveAlive
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

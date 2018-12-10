@@ -1,0 +1,1447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DeriveAlive &mdash; DeriveAlive  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DeriveAlive
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software_organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../future.html">Future</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeriveAlive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>DeriveAlive</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for DeriveAlive</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module for autodifferentiation</span>
+<span class="c1"># Harvard University, CS 207, Fall 2018</span>
+<span class="c1"># Authors: Chen Shi, Stephen Slater, Yue Sun</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Change built-in warnings to exceptions when using numpy</span>
+<span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Var"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var">[docs]</a><span class="k">class</span> <span class="nc">Var</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Creates a Var class supporting custom operations for Automatic Differentiation (AD).</span>
+
+<span class="sd">	Attributes</span>
+<span class="sd">	==========</span>
+<span class="sd">	val : numpy.ndarray</span>
+<span class="sd">	      The value of user defined function(s) F evaluated at x.</span>
+
+<span class="sd">	der : numpy.ndarray</span>
+<span class="sd">	      The corresponding derivative, gradient, or Jacobian of user defined</span>
+<span class="sd">	      functions(s).</span>
+<span class="sd">	 &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Var.__init__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__init__">[docs]</a>	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	    INPUTS</span>
+<span class="sd">	    =======</span>
+<span class="sd">	    val : int, float, list, or np.array</span>
+<span class="sd">	          The value of user defined function(s) F evaluated at x.</span>
+
+<span class="sd">	    der : int, float, list, or np.array</span>
+<span class="sd">	          The corresponding derivative, gradient, or Jacobian of user defined</span>
+<span class="sd">	          functions(s).</span>
+<span class="sd">	    </span>
+<span class="sd">	    NOTES</span>
+<span class="sd">	    =====</span>
+<span class="sd">	    PRE: </span>
+<span class="sd">	         - val: int, float, list, or np.array</span>
+<span class="sd">	         - der: int, float, list, or np.array</span>
+<span class="sd">	    POST:</span>
+<span class="sd">	         - val: np.array</span>
+<span class="sd">	         - der: np.array</span>
+
+<span class="sd">	    EXAMPLES</span>
+<span class="sd">	    =========</span>
+<span class="sd">	    #input a constant</span>
+<span class="sd">	    &gt;&gt;&gt; da.Var(3.0, None) </span>
+<span class="sd">	    Var([3.], None)</span>
+
+<span class="sd">	    #input a scalar</span>
+<span class="sd">	    &gt;&gt;&gt; da.Var(3.0) </span>
+<span class="sd">	    Var([3.], [1])</span>
+
+<span class="sd">	    #input a vector with two elements</span>
+<span class="sd">	    &gt;&gt;&gt; x = da.Var(3.0, [1, 0])</span>
+<span class="sd">	    &gt;&gt;&gt; y = da.Var(3.0, [1, 0])</span>
+<span class="sd">	    &gt;&gt;&gt; z = da.Var([x, y])</span>
+<span class="sd">	    &gt;&gt;&gt; z</span>
+<span class="sd">	    Values:</span>
+<span class="sd">	    [3. 3.],</span>
+<span class="sd">	    Jacobian:</span>
+<span class="sd">	    [[1 0]</span>
+<span class="sd">	     [1 0]]</span>
+<span class="sd">	    &quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+			<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">der</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">der</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="p">[</span><span class="n">der</span><span class="p">]</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">all_non_Vars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Var</span><span class="p">),</span> <span class="n">values</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+			<span class="k">if</span> <span class="n">all_non_Vars</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># self.values is a vector that contains a Var object at initialization</span>
+				<span class="n">max_num_vars</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span>
+					<span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">der</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Var</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span>
+					<span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">der</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Var</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">values</span><span class="p">])</span>
+				<span class="n">new_values</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="n">new_derivatives</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+					<span class="k">try</span><span class="p">:</span>
+						<span class="n">new_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+						<span class="n">new_derivatives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+					<span class="k">except</span><span class="p">:</span>
+						<span class="n">new_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+						<span class="n">new_derivatives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_num_vars</span><span class="p">))</span>
+
+				<span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">new_values</span><span class="p">))</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">new_derivatives</span><span class="p">))</span>
+
+		<span class="c1"># Convert values of -0.0 to 0.0 in derivative</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span>
+			<span class="n">der_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">der_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">der_vals</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">der_val</span> <span class="o">==</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">:</span>
+					<span class="n">der_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">der_vals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__repr__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__repr__">[docs]</a>	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	    Prints self in the form of Var([val], [der]) when self is a scalar or constant;</span>
+<span class="sd">	    Prints self in the form of Values([val]) Jacobian([der]) when self is a vector;</span>
+<span class="sd">	    </span>
+<span class="sd">	    Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        x: Var object with val if x is a constant</span>
+<span class="sd">           Var object with val and der if x is a scalar</span>
+<span class="sd">           Var object with val and der if x is a vector</span>
+<span class="sd">        </span>
+<span class="sd">	    Examples</span>
+<span class="sd">	    ========</span>
+<span class="sd">	    #input a constant</span>
+<span class="sd">	    &gt;&gt;&gt; x = da.Var(3.0, None) </span>
+<span class="sd">	    &gt;&gt;&gt; print(x)</span>
+<span class="sd">	    Var([3.], None)</span>
+
+<span class="sd">	    #input a scalar</span>
+<span class="sd">	    &gt;&gt;&gt; x = da.Var(3.0) </span>
+<span class="sd">	    &gt;&gt;&gt; print(x)</span>
+<span class="sd">	    Var([3.], [1])</span>
+
+<span class="sd">	    #input a vector with two elements</span>
+<span class="sd">	    &gt;&gt;&gt; x = da.Var(3.0, [1, 0])</span>
+<span class="sd">	    &gt;&gt;&gt; y = da.Var(3.0, [1, 0])</span>
+<span class="sd">	    &gt;&gt;&gt; z = da.Var([x, y])</span>
+<span class="sd">	    &gt;&gt;&gt; print(z)</span>
+<span class="sd">	    Values:</span>
+<span class="sd">	    [3. 3.],</span>
+<span class="sd">	    Jacobian:</span>
+<span class="sd">	    [[1 0]</span>
+<span class="sd">	     [1 0]]</span>
+<span class="sd">	    &quot;&quot;&quot;</span>
+	    
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">return</span> <span class="s1">&#39;Var(</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s1">&#39;Values:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">,</span><span class="se">\n</span><span class="s1">Jacobian:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__add__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__add__">[docs]</a>	<span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the addition of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======== </span>
+<span class="sd">        z: Var object that is the sum of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3, None) + 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([5], None)</span>
+
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3) + da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([7], [2])</span>
+
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3) + 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([5], [1])</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3,[1, 0]) + da.Var(4, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([7], [1 1])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+
+			<span class="c1"># Handle case when self.der or other.der contains None </span>
+			<span class="c1"># i.e. self or other is a vector of scalars, not of Vars</span>
+			<span class="n">len_self_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+			<span class="n">len_other_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span>
+			<span class="k">elif</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+			<span class="k">elif</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">other</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__radd__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__radd__">[docs]</a>	<span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the addition of other to self</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======== </span>
+<span class="sd">        z: Var object that is the sum of othe and self</span>
+<span class="sd">		</span>
+<span class="sd">		Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; z = 2 + da.Var(3, None)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([5], None)</span>
+
+<span class="sd">		&gt;&gt;&gt; z = 2 + da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([5], [1])</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
+		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__sub__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__sub__">[docs]</a>	<span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the substraction of self and other</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========</span>
+<span class="sd">        z: Var object that is the difference between self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3, None) - 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([1], None)</span>
+
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3) - 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([1], [1])</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3) - da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-1], [0])</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; z = da.Var(3, [1, 0]) - da.Var(4, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-1], [ 1 -1])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+			<span class="c1"># Maintain state of self and create new trace variable new_var</span>
+			<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__rsub__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rsub__">[docs]</a>	<span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the substraction of other and self</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========</span>
+<span class="sd">        z: Var object that is the difference between other and self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; z = 2.1 - da.Var(3, None)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-0.9], None)</span>
+
+<span class="sd">        &gt;&gt;&gt; z = 2 - da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-1.], [-1])       </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Var.__mul__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__mul__">[docs]</a>	<span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ========== </span>
+<span class="sd">        z: Var object that is the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0, None)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(2.0, None)</span>
+<span class="sd">        &gt;&gt;&gt; z = x * y</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([6.], None)</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(2.0)</span>
+<span class="sd">        &gt;&gt;&gt; z = x * y</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([6.], [5.])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(2, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = x * y</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([6.], [2. 3.])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Check if self.der is an array containing None</span>
+		<span class="n">len_self_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">len_other_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+			<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+			<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			
+			<span class="c1"># Handle case when self.der or other.der contains None </span>
+			<span class="c1"># i.e. self or other is a vector of scalars, not of Vars</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">self_val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span> 
+				<span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">self_val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+
+				<span class="n">len_p1_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+				<span class="n">len_p2_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">len_p1_shape</span> <span class="o">&gt;</span> <span class="n">len_p2_shape</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">len_p1_shape</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">p1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+						<span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">len_p2_shape</span> <span class="o">&gt;</span> <span class="n">len_p1_shape</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">len_p2_shape</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">p2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+						<span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="p">(</span><span class="n">p2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span>
+		<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">*</span> <span class="n">other</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">*</span> <span class="n">other</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
+
+			<span class="c1"># other is a numpy array or da.Var of scalars, not of Vars</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">*</span> <span class="n">other_val</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__rmul__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rmul__">[docs]</a>	<span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the product of other and self</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        z: Var object that is the product of other and self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(5.0)</span>
+<span class="sd">        &gt;&gt;&gt; z = 2 * x</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([10.], [2])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0, [1, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(1.0, [0, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; w = da.Var(2.0, [0, 0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = x + y ** 2 + x * w</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([10.], [3. 2. 3.])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
+		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__truediv__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__truediv__">[docs]</a>	<span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the division of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ========= </span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">         =======  </span>
+<span class="sd">        z: Var object that is the division of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========  </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0)</span>
+<span class="sd">        &gt;&gt;&gt; z = x / 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([1.5], [0.5])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0, [1, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(1.0, [0, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; w = da.Var(2.0, [0, 0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = (x + y ** 2 + x * w)/2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([5.], [1.5 1.  1.5])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Handle case when self.der or other.der is None</span>
+		<span class="n">other_is_scalar</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+		<span class="n">other_is_numpy</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+		<span class="n">len_self_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">other_is_scalar</span> <span class="ow">and</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">other_is_numpy</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+			<span class="ow">not</span> <span class="p">(</span><span class="n">other_is_scalar</span> <span class="ow">or</span> <span class="n">other_is_numpy</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ZeroDivisionError</span>
+
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">is_vec</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+			<span class="n">len_other_der_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_other_der_shape</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+			<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+
+			<span class="c1"># Handle case when self.der or other.der contains None </span>
+			<span class="c1"># i.e. self or other is a vector of scalars, not of Vars</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">num</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">self_val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="ow">not</span> <span class="n">len_self_der_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">len_other_der_shape</span><span class="p">:</span>
+				<span class="n">num</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">self_val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="n">denom</span> <span class="o">=</span> <span class="n">other_val</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span> <span class="o">**</span> <span class="mi">2</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">denom</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+					<span class="n">denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">denom</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
+
+			<span class="c1"># other is a numpy array or da.Var of scalars, not of Vars</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="n">other_val</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
+
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__rtruediv__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rtruediv__">[docs]</a>	<span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the division of other and self</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        z: Var object that is the division of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========   </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(2.0)</span>
+<span class="sd">        &gt;&gt;&gt; z = 1 / x</span>
+<span class="sd">        &gt;&gt;&gt; print(f)</span>
+<span class="sd">        Var([0.5], [-0.25])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0)</span>
+<span class="sd">        &gt;&gt;&gt; a = da.Var([ 1., x, x, 4.])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 / a</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Values:</span>
+<span class="sd">        [3.   1.   1.   0.75],</span>
+<span class="sd">        Jacobian:</span>
+<span class="sd">        [[ 0.        ]</span>
+<span class="sd">        [-0.33333333]</span>
+<span class="sd">        [-0.33333333]</span>
+<span class="sd">        [ 0.        ]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="sd">&#39;&#39;&#39;Note: self contains denominator (Var); other contains numerator&#39;&#39;&#39;</span>
+		<span class="c1"># Check for ZeroDivisionError at start rather than nesting exception block</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+			<span class="n">other</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> 
+			<span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)):</span>
+			<span class="k">raise</span> <span class="ne">ZeroDivisionError</span>
+			
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">))</span>
+				<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="p">(</span><span class="n">self_val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="c1"># other is a numpy array or da.Var of scalars, not of Vars</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
+			<span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">))</span>
+			<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="p">(</span><span class="n">self_val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> 
+
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__neg__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__neg__">[docs]</a>	<span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns negation of self</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        z: Var object with val = -self.val, der = -self.der</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0)</span>
+<span class="sd">        &gt;&gt;&gt; z = -x</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-3.], [-1])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+		<span class="n">der</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__abs__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__abs__">[docs]</a>	<span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the absolute value of self</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        z: Var object with val = abs(self.val), der = -self.der</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(-4.0)</span>
+<span class="sd">        &gt;&gt; z = abs(x)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([4.], [-1])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Absolute value is not differentiable at 0.&quot;</span><span class="p">)</span>
+		<span class="c1">#der = np.array([-1 if x &lt; 0 else 1 for x in self.val])</span>
+		<span class="c1">#der = abs(self.der)</span>
+		<span class="n">der_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">der_copy</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">val_i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="n">der_copy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">der_copy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der_copy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__eq__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__eq__">[docs]</a>	<span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check self and other is equal</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self == other, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; x == y</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="ow">and</span> 
+					<span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">der</span><span class="p">))</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="c1"># Compare scalar Vars with derivative 1 to scalars</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]):</span>
+				<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">other</span>
+			<span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Var.__ne__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__ne__">[docs]</a>	<span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check self and other is not equal</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self != other, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(5)</span>
+<span class="sd">        &gt;&gt;&gt; x != y</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__lt__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__lt__">[docs]</a>	<span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check whether the value self is less than other </span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, int, float</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self.val &lt; other.val, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; x &lt; 4</span>
+<span class="sd">        array([True])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(5)</span>
+<span class="sd">        &gt;&gt;&gt; x &lt; y</span>
+<span class="sd">        array([True])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Numpy internally checks if the dimensions of self and other match</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">other</span></div>
+
+<div class="viewcode-block" id="Var.__le__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__le__">[docs]</a>	<span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check whether the value self is less than or equal to other </span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, int, float</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self.val &lt;= other.val, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; x &lt;= 3</span>
+<span class="sd">        array([True])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__lt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__gt__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__gt__">[docs]</a>	<span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check whether the value self is greater than other </span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, int, float</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self.val &gt; other.val, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; x &gt; 2</span>
+<span class="sd">        array([True])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(1)</span>
+<span class="sd">        &gt;&gt;&gt; x &gt; y</span>
+<span class="sd">        array([True])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">other</span></div>
+
+<div class="viewcode-block" id="Var.__ge__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__ge__">[docs]</a>	<span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Check whether the value self is larger than or equal to other </span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        other: Var object, int, float</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ======= </span>
+<span class="sd">        Boolean: True if self.val &gt;= other.val, otherwise False</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ======== </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3)</span>
+<span class="sd">        &gt;&gt;&gt; x &gt;= 3</span>
+<span class="sd">        array([True])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__pow__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__pow__">[docs]</a>	<span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return power calculation of Var object in the form of Var object ** 2</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        n: real number</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is self raised to the power n</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; z = x ** 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([16], [8])</span>
+
+<span class="sd">        &gt;&gt;&gt; x = da.Var(3.0, [1, 0, 0])</span>
+<span class="sd">		&gt;&gt;&gt; y = da.Var(1.0, [0, 1, 0])</span>
+<span class="sd">		&gt;&gt;&gt; z = da.Var(2.0, [0, 0, 1])</span>
+<span class="sd">		&gt;&gt;&gt; f = da.Var([2 * x, y - 1, z ** 2])</span>
+<span class="sd">		&gt;&gt;&gt; z = f.pow(2)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Values:</span>
+<span class="sd">		[36.  0. 16.],</span>
+<span class="sd">		Jacobian:</span>
+<span class="sd">		[[24.  0.  0.]</span>
+<span class="sd"> 		 [ 0.  0.  0.]</span>
+<span class="sd"> 		 [ 0.  0. 32.]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+			<span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-positive number raised to a fraction encountered in pow.&quot;</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;Cannot compute derivative of 0^y for y &lt; 1.&quot;</span><span class="p">)</span>
+		
+			<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">((</span><span class="n">self_val</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+
+			<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot compute x^y when both x and y are Vars. Please reformat equation to use &quot;</span> \
+							 <span class="s2">&quot;rpow of scalar to power of vector, or use pow for a vector to a power of scalar.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__rpow__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rpow__">[docs]</a>	<span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return power calculation of n to the power Var object in the form of n ** Var</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        n: real number</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is n raised to the power self Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; z = 2 ** x</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([16], [11.09035489])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="n">val</span> <span class="o">=</span> <span class="mi">1</span>
+					<span class="n">der</span> <span class="o">=</span> <span class="mi">0</span>
+				<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+					<span class="n">der</span> <span class="o">=</span> <span class="mi">0</span>
+				<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;0.0 cannot be raised to a negative power.&quot;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+				<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">):</span>
+					<span class="k">if</span> <span class="n">val_i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+						<span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+					<span class="k">elif</span> <span class="n">val_i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+						<span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+					<span class="k">elif</span> <span class="n">val_i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;0.0 cannot be raised to a negative power.&quot;</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Real numbers only, math domain error.&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">n</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.sin"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.sin">[docs]</a>	<span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the sine of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: sine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(np.pi / 2, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 * np.sin(x) + 2 * np.sin(y)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([3.], [1.8369702e-16 2.0000000e+00])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.cos"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.cos">[docs]</a>	<span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the cosine of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: cosine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(np.pi / 2, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 * np.cos(x) + 2 * np.cos(y)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([2.], [-3.  0.])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.tan"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.tan">[docs]</a>	<span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the tangent of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: tangent of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(np.pi / 4, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(np.pi / 3, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 * np.tan(x) + 2 * np.tan(y) </span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([6.46410162], [6. 8.])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Ensure that no values in self.val are of the form (pi/2 + k*pi)        </span>
+		<span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">((</span><span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Tangent not valid at pi/2, -pi/2.&quot;</span><span class="p">)</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.arcsin"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.arcsin">[docs]</a>	<span class="k">def</span> <span class="nf">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the arcsine of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: arcsine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(0, [1, 0])</span>
+<span class="sd">		&gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">		&gt;&gt;&gt; z = 3 * np.arcsin(x) + 2 * np.arcsin(y)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([0.], [3. 2.])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Domain of arcsin is [-1, 1].&quot;</span><span class="p">)</span>		
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>	</div>
+
+<div class="viewcode-block" id="Var.arccos"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.arccos">[docs]</a>	<span class="k">def</span> <span class="nf">arccos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the arccosine of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: arccosine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(0, [1, 0])</span>
+<span class="sd">		&gt;&gt;&gt; y = da.Var(0.5, [0, 1])</span>
+<span class="sd">		&gt;&gt;&gt; z = 3 * np.arccos(x) + 2 * np.arccos(y)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([6.80678408], [-3.         -2.30940108])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Domain of arccos is [-1, 1].&quot;</span><span class="p">)</span>	
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.arctan"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.arctan">[docs]</a>	<span class="k">def</span> <span class="nf">arctan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the arctan of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: arctan of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(0.5, [1, 0])</span>
+<span class="sd">		&gt;&gt;&gt; y = da.Var(np.pi/2, [0, 1])</span>
+<span class="sd">		&gt;&gt;&gt; z = 3 * np.arctan(x) + 2 * np.arctan(y)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([3.39871247], [2.4        0.57680088])</span>
+<span class="sd">        &quot;&quot;&quot;</span>		
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>		</div>
+
+<div class="viewcode-block" id="Var.sinh"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.sinh">[docs]</a>	<span class="k">def</span> <span class="nf">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the sinh of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: sinh of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(-1, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 * np.sinh(x) + 2 * np.sinh(y)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([-3.52560358], [4.6292419 2.       ])</span>
+<span class="sd">        &quot;&quot;&quot;</span>		
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>	</div>
+
+<div class="viewcode-block" id="Var.cosh"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.cosh">[docs]</a>	<span class="k">def</span> <span class="nf">cosh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the cosh of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: cosh of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(-1, [1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; z = 3 * np.cosh(x) + 2 * np.cosh(y)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([6.6292419], [-3.52560358  0.        ])</span>
+<span class="sd">        &quot;&quot;&quot;</span>		
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>	</div>
+
+<div class="viewcode-block" id="Var.tanh"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.tanh">[docs]</a>	<span class="k">def</span> <span class="nf">tanh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Returns the tanh of Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ========= </span>
+<span class="sd">        z: tanh of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(-1, [1, 0])</span>
+<span class="sd">		&gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
+<span class="sd">		&gt;&gt;&gt; z = 3 * np.tanh(x) + 2 * np.tanh(y)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([-2.28478247], [1.25992302 2.        ])</span>
+<span class="sd">        &quot;&quot;&quot;</span>				
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">to_multiply</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>	</div>
+
+<div class="viewcode-block" id="Var.pow"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.pow">[docs]</a>	<span class="k">def</span> <span class="nf">pow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return power calculation of self to the power n in the form of self.pow(n)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        n: real number</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is self raised to the power n</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; z = x.pow(2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([16], [8])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
+		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__pow__</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+ 
+<div class="viewcode-block" id="Var.sqrt"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.sqrt">[docs]</a>	<span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return squred root of self </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is self raised to the power n</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(4)</span>
+<span class="sd">        &gt;&gt;&gt; z = np.sqrt(x)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        Var([2.], [0.25])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
+		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__pow__</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.log"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.log">[docs]</a>	<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return the log base of self </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        base: int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is log base of self </span>
+
+<span class="sd">        NOTES</span>
+<span class="sd">        ======</span>
+<span class="sd">        Use as Var.log(base) with customer defined base </span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(10)</span>
+<span class="sd">		&gt;&gt;&gt; z =  x.log(10)</span>
+<span class="sd">		&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([1.], [0.04342945])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-positive number encountered in log.&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">])</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">base</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+				<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.exp"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.exp">[docs]</a>	<span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">		Return the exponetial of self </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        self: Var object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        z: Var object that is the exponetial of self </span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========= </span>
+<span class="sd">        &gt;&gt;&gt; x = da.Var(1)</span>
+<span class="sd">		&gt;&gt;&gt; z = np.exp(x)</span>
+<span class="sd">	 	&gt;&gt;&gt; print(z)</span>
+<span class="sd">		Var([2.71828183], [2.71828183])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+			<span class="n">to_multiply</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_multiply</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">to_multiply</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">to_multiply</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Chen Shi, Stephen Slater, Yue Sun
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

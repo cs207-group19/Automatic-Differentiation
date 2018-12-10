@@ -65,9 +65,12 @@ API
 ---
 
 ``DeriveAlive.DeriveAlive``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. currentmodule:: DeriveAlive.DeriveAlive
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: DeriveAlive
+
+.. autoclass:: Var
    : members:
+
 
 -  Class attributes and methods:
 
