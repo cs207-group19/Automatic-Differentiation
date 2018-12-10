@@ -1,8 +1,8 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="Python" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="Python" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
@@ -204,7 +204,7 @@ trace variables and derivatives with respect to each input variable.</p>
 the value and the evaluated derivatives with respect to each
 input. Within the class we redefine the elementary functions and
 basic algebraic functions, including both evaluation and
-derivation. Since our computation graph includes “trace&quot;
+derivation. Since our computation graph includes “trace”
 variables, this class will account for each variable. Similar to a
 dual number, this class structure will allow us easy access to
 necessary attributes of each variable, such as the trace
@@ -225,7 +225,7 @@ and transforms them into numpy arrays automatically.</li>
 addition, subtraction, multiplication, division, sine, pow, log,
 etc. that take in <span class="math">\(1\)</span> <code class="docutils literal"><span class="pre">Var</span></code> type, or <span class="math">\(2\)</span> types, or
 <span class="math">\(1\)</span> and <span class="math">\(1\)</span> constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
-the next “trace&quot; variable). All other operations on constants will
+the next “trace” variable). All other operations on constants will
 use the standard Python library. In each <code class="docutils literal"><span class="pre">Var</span></code>, we will store as
 attributes the value of the variable (which is calculated based on
 the current operation and previous trace variables) and the
@@ -301,7 +301,7 @@ packaging instructions here:</div>
 <li><p class="first">Elementary functions</p>
 <ul>
 <li><p class="first">Our explanation of our elementary functions is included in the
-“Class attributes and methods&quot; section above. For the elementary
+“Class attributes and methods” section above. For the elementary
 functions, we defined our own custom methods within the <code class="docutils literal"><span class="pre">Var</span></code>
 class so that we can calculate, for example, the <span class="math">\(\sin(x)\)</span>
 of a variable <span class="math">\(x\)</span> using a package such as <code class="docutils literal"><span class="pre">numpy</span></code>, and
@@ -371,7 +371,7 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
               VERSION:'',
-              LANGUAGE:'Python',
+              LANGUAGE:'None',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
               HAS_SOURCE:  true,
