@@ -24,8 +24,7 @@ In the multivariate case, :math:`J(f)` is the Jacobian of :math:`f`. If :math:`J
 
 Here is an example in the univariate case:
 
-.. image:: images/root_finding.gif
-  :width: 600
+
 
 A common application of root finding is in Lagrangian optimization. For example, consider the Lagrangian :math:`\mathcal{L}(\textbf{b}, \lambda)`. One can solve for the weights :math:`\textbf{b}, \lambda` such that :math:`\frac{\partial \mathcal{L}{\partial b_j} = \frac{\partial \mathcal{L}}{\partial \lambda} = 0`.
 
