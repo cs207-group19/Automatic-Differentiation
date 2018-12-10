@@ -6,22 +6,22 @@ Current directory structure
 
 cs207-FinalProject/
 |-- DeriveAlive/
-| |-- DeriveAlive.py
-| |-- __init__.py
-| `-- root_finding.py
+|   |-- DeriveAlive.py
+|   |-- __init__.py
+|   `-- root_finding.py
 |-- demos/
-| |-- spline
-|   |-- spline.py
-|   `-- surprise.py
+|   `-- spline
+|       |-- spline.py
+|       `-- surprise.py
 |-- documentation/
-| |-- docs/
-| |-- milestone1.pdf
-| `-- milestone2.pdf
+|   |-- docs/
+|   |-- milestone1.pdf
+|   `-- milestone2.pdf
 |-- tests/
-| |-- __init__.py
-| |-- normalized.txt
-| |-- test_DeriveAlive.py
-| `-- test_root_finding.py
+|   |-- __init__.py
+|   |-- normalized.txt
+|   |-- test_DeriveAlive.py
+|   `-- test_root_finding.py
 |-- LICENSE
 |-- __init__.py
 |-- README.md
