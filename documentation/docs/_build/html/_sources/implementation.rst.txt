@@ -64,10 +64,12 @@ following choices:
 API
 ---
 
-```DeriveAlive```
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``DeriveAlive.DeriveAlive``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: DeriveAlive
-   : members:
+
+
+
 
 -  Class attributes and methods:
 
