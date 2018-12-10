@@ -83,7 +83,13 @@
 <li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive"><code class="docutils literal"><span class="pre">`DeriveAlive`</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
@@ -155,19 +161,16 @@
 <h1>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h1>
 <p>We plan to implement the forward mode of autodifferentiation with the
 following choices:</p>
-<ul>
-<li><p class="first">Variable domain: The variables are defined as real numbers, hence any
+<ul class="simple">
+<li>Variable domain: The variables are defined as real numbers, hence any
 calculations or results involving complex numbers will be excluded
-from the package.</p>
-</li>
-<li><p class="first">Type of user input: Regardless of the input type (e.g., a float or a
+from the package.</li>
+<li>Type of user input: Regardless of the input type (e.g., a float or a
 list or a numpy array), the <code class="docutils literal"><span class="pre">Var</span></code> class will automatically convert
 the input into a numpy array. This will provide flexibility in the
-future for implementing vector to vector functions.</p>
-</li>
-<li><p class="first">Core data structures: The core data structures will be classes, lists
-and numpy arrays.</p>
-<ul class="simple">
+future for implementing vector to vector functions.</li>
+<li>Core data structures: The core data structures will be classes, lists
+and numpy arrays.<ul>
 <li>Classes will help us provide an API for differentiation and custom
 functions, including custom methods for our elementary functions.</li>
 <li>Lists will help us maintain the collection of trace variables and
@@ -197,9 +200,8 @@ several parts of the implementation to include arrays so that
 providing vector to vector functions will be a smooth transition.</li>
 </ul>
 </li>
-<li><p class="first">Our implementation plan currently includes 1 class which accounts for
-trace variables and derivatives with respect to each input variable.</p>
-<ul class="simple">
+<li>Our implementation plan currently includes 1 class which accounts for
+trace variables and derivatives with respect to each input variable.<ul>
 <li><code class="docutils literal"><span class="pre">Var</span></code> class. The class instance itself has two main attributes:
 the value and the evaluated derivatives with respect to each
 input. Within the class we redefine the elementary functions and
@@ -213,6 +215,12 @@ variable. This trace table would also be of possible help in
 future project extensions.</li>
 </ul>
 </li>
+</ul>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derivealive">
+<h3><code class="docutils literal"><span class="pre">`DeriveAlive`</span></code><a class="headerlink" href="#derivealive" title="Permalink to this headline">¶</a></h3>
+<ul>
 <li><p class="first">Class attributes and methods:</p>
 <ul class="simple">
 <li>Attributes in <code class="docutils literal"><span class="pre">Var</span></code>: <code class="docutils literal"><span class="pre">self.var</span></code>, <code class="docutils literal"><span class="pre">self.der</span></code>. To cover
@@ -324,6 +332,8 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 </ul>
 </li>
 </ul>
+</div>
+</div>
 </div>
 
 

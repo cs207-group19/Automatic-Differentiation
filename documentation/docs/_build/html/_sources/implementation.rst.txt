@@ -61,6 +61,14 @@ following choices:
       variable. This trace table would also be of possible help in
       future project extensions.
 
+API
+---
+
+```DeriveAlive```
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: DeriveAlive
+   : members:
+
 -  Class attributes and methods:
 
    -  Attributes in ``Var``: ``self.var``, ``self.der``. To cover
