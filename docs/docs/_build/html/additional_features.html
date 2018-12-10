@@ -288,11 +288,15 @@ original function on one given interval</li>
 </div>
 <div class="section" id="demo">
 <h3>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h3>
-<p>Plot the quadratic spline of <span class="math">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
-10 intervals.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">spline</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<p>Plot the quadratic spline of <span class="math">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
+10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f1</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<span class="go">        return 10**var</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMin1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMax1</span> <span class="o">=</span> <span class="mi">1</span>
@@ -309,6 +313,103 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_1.png"><img alt="_images/7_3_3_1.png" src="_images/7_3_3_1.png" style="width: 600px;" /></a>
+<p>Plot the quadratic spline of <span class="math">\(f_2(x) = x^3, x \in [-1, 1]\)</span> with 10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f2</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<span class="go">        return var**3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMin2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMax2</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nIntervals2</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nSplinePoints2</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y2</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">coeffs2</span><span class="p">,</span> <span class="n">ks2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_coeff</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">xMin2</span><span class="p">,</span> <span class="n">xMax2</span><span class="p">,</span> <span class="n">nIntervals2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_plot</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">coeffs2</span><span class="p">,</span> <span class="n">ks2</span><span class="p">,</span> <span class="n">nSplinePoints2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spline_points2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">spline_points</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">coeffs2</span><span class="p">,</span> <span class="n">ks2</span><span class="p">,</span> <span class="n">nSplinePoints2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sp</span><span class="o">.</span><span class="n">spline_error</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">spline_points2</span><span class="p">)</span>
+<span class="go">0.0074670329670330216</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig2</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_3_3_2.png"><img alt="_images/7_3_3_2.png" src="_images/7_3_3_2.png" style="width: 600px;" /></a>
+<p>Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]$ and $x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f3</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<span class="go">        return np.sin(var)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMin3</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMax3</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nIntervals3</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nSplinePoints3</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y3</span><span class="p">,</span> <span class="n">A3</span><span class="p">,</span> <span class="n">coeffs3</span><span class="p">,</span> <span class="n">ks3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_coeff</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">xMin3</span><span class="p">,</span> <span class="n">xMax3</span><span class="p">,</span> <span class="n">nIntervals3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_plot</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">coeffs3</span><span class="p">,</span> <span class="n">ks3</span><span class="p">,</span> <span class="n">nSplinePoints3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spline_points3</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">spline_points</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">coeffs3</span><span class="p">,</span> <span class="n">ks3</span><span class="p">,</span> <span class="n">nSplinePoints3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sp</span><span class="o">.</span><span class="n">spline_error</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">spline_points3</span><span class="p">)</span>
+<span class="go">0.015578205778177232</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig3</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_3_3_3.png"><img alt="_images/7_3_3_3.png" src="_images/7_3_3_3.png" style="width: 600px;" /></a>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xMin4</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMax4</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nIntervals4</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nSplinePoints4</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y4</span><span class="p">,</span> <span class="n">A4</span><span class="p">,</span> <span class="n">coeffs4</span><span class="p">,</span> <span class="n">ks4</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_coeff</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">xMin4</span><span class="p">,</span> <span class="n">xMax4</span><span class="p">,</span> <span class="n">nIntervals4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig4</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_plot</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">coeffs4</span><span class="p">,</span> <span class="n">ks4</span><span class="p">,</span> <span class="n">nSplinePoints4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spline_points4</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">spline_points</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">coeffs4</span><span class="p">,</span> <span class="n">ks4</span><span class="p">,</span> <span class="n">nSplinePoints4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sp</span><span class="o">.</span><span class="n">spline_error</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">spline_points4</span><span class="p">)</span>
+<span class="go">0.0034954287455489196</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig4</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_3_3_4.png"><img alt="_images/7_3_3_4.png" src="_images/7_3_3_4.png" style="width: 600px;" /></a>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We can see that the quadratic splines do not work that well with linear-ish functions. While adding more intervals may help to make the approximated splines better.</p>
+</div>
+<p>Here we demonstrate that the more intervals will make the splines approximations better using a <span class="math">\(log-log\)</span> plot of the absolute average error with respect to :math: frac{1}{N}` with <span class="math">\(f(x) = 10^x, x \in [-\pi, \pi]\)</span> at intervals from 5 to 100.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<span class="go">        return 10 ** var</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMin</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xMax</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nIntervalsList</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nSplinePoints</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">squaredErrorList</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">nIntervals</span> <span class="ow">in</span> <span class="n">nIntervalsList</span><span class="p">:</span>
+<span class="go">        y, A, coeffs, ks = sp.quad_spline_coeff(f, xMin, xMax, nIntervals)</span>
+<span class="go">        spline_points = sp.spline_points(f, coeffs, ks, nSplinePoints)</span>
+<span class="go">        error = sp.spline_error(f, spline_points)</span>
+<span class="go">        squaredErrorList.append(error)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">nIntervalsList</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">squaredErrorList</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">nIntervalsList</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">nIntervalsList</span><span class="p">),</span> <span class="n">ys</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;linear fit&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">nIntervalsList</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">squaredErrorList</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;actual error plot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\log(1/N)$&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\log(average error)$&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;loglog plot of 1/N vs. average error&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_3_3_5.png"><img alt="_images/7_3_3_5.png" src="_images/7_3_3_5.png" style="width: 600px;" /></a>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="o">**</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span>
+<span class="go">(2.2462166565957835, 11.414027075895813)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We can see in the <span class="math">\(log-log\)</span> plot that the log of absolute average error is proportional to the log of <span class="math">\(\frac{1}{N}\)</span>, i.e. <span class="math">\(E_{1/N} \approx 11.4(\dfrac{1}{N})^{2.25}\)</span>.</p>
+</div>
 </div>
 <div class="section" id="drawing-with-splines">
 <h3>Drawing with Splines<a class="headerlink" href="#drawing-with-splines" title="Permalink to this headline">¶</a></h3>
