@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="Python" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="Python" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Background &mdash; DeriveAlive  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Software Organization" href="software_organization.html" />
+    <link rel="prev" title="How to Use DeriveAlive" href="how_to_use.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DeriveAlive
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <em>DeriveAlive</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-chain-rule">The Chain Rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradient-and-jacobian">Gradient and Jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-computational-graph">The Computational Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elementary-functions">Elementary functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">CS 207 Final Project: Milestone 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeriveAlive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Background</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/background.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<p>The chain rule, gradient (Jacobian), computational graph, elementary
+functions and several numerical methods serve as the mathematical
+cornerstone for this software. The mathematical concepts here come from
+CS 207 Lectures 9 and 10 on Autodifferentiation.</p>
+<div class="section" id="the-chain-rule">
+<h2>The Chain Rule<a class="headerlink" href="#the-chain-rule" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">The chain rule is critical to AD, since the derivative of the function
+with respect to the input is dependent upon the derivative of each
+trace in the evaluation with respect to the input.</div>
+<div class="line">If we have <span class="math">h(u(x))</span> then the derivative of <span class="math">h</span> with
+respect to <span class="math">x</span> is:</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math">
+\[\frac{\partial h}{\partial x} =\frac{\partial h}{\partial u} \cdot \frac{\partial u}{\partial x}\]</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">If we have another argument <span class="math">h(u, v)</span> where <span class="math">u</span> and
+<span class="math">v</span> are both functions of <span class="math">x</span>, then the derivative of
+<span class="math">h(x)</span> with respect to <span class="math">x</span> is:</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math">
+\[\frac{\partial h}{\partial x} =\frac{\partial h}{\partial u} \cdot \frac{\partial u}{\partial x} + \frac{\partial h}{\partial v} \cdot \frac{\partial v}{\partial x}\]</div>
+</div></blockquote>
+</div>
+<div class="section" id="gradient-and-jacobian">
+<h2>Gradient and Jacobian<a class="headerlink" href="#gradient-and-jacobian" title="Permalink to this headline">¶</a></h2>
+<p>If we have <span class="math">x\in\mathbb{R}^{m}</span> and function
+<span class="math">h\left(u\left(x\right),v\left(x\right)\right)</span>, we want to
+calculate the gradient of <span class="math">h</span> with respect to <span class="math">x</span>:</p>
+<div class="math">
+\[\nabla_{x} h = \frac{\partial h}{\partial u}\nabla_x u + \frac{\partial h}{\partial v} \nabla_x v\]</div>
+<p>In the case where we have a function
+<span class="math">h(x): \mathbb{R}^m \rightarrow \mathbb{R}^n</span>, we write the
+Jacobian matrix as follows, allowing us to store the gradient of each
+output with respect to each input.</p>
+<p><strong>J</strong> =</p>
+<div class="line-block">
+<div class="line">&amp; &amp; …&amp;</div>
+<div class="line">&amp; &amp; …&amp;</div>
+<div class="line">&amp; &amp; &amp;</div>
+<div class="line">&amp; &amp; …&amp;</div>
+</div>
+<p>In general, if we have a function <span class="math">g\left(y\left(x\right)\right)</span>
+where <span class="math">y\in\mathbb{R}^{n}</span> and <span class="math">x\in\mathbb{R}^{m}</span>. Then
+<span class="math">g</span> is a function of possibly <span class="math">n</span> other functions, each of
+which can be a function of <span class="math">m</span> variables. The gradient of
+<span class="math">g</span> is now given by</p>
+<div class="math">
+\[\nabla_{x}g = \sum_{i=1}^{n}{\frac{\partial g}{\partial y_{i}}\nabla_x y_{i}\left(x\right)}.\]</div>
+</div>
+<div class="section" id="the-computational-graph">
+<h2>The Computational Graph<a class="headerlink" href="#the-computational-graph" title="Permalink to this headline">¶</a></h2>
+<p>The computational graph lets us visualize what happens during the
+evaluation trace. The following example is based on Lectures 9 and 10.
+Consider the function:</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}f\left(x\right) = x - \exp\left(-2\sin^{2}\left(4x\right)\right)\\If we want to evaluate :math:`f` at the point :math:`x`, we construct a\end{aligned}\end{align} \]</div>
+<p>graph where the input value is <span class="math">x</span> and the output is <span class="math">y</span>.
+Each input variable is a node, and each subsequent operation of the
+execution trace applies an operation to one or more previous nodes (and
+creates a node for constants when applicable).</p>
+<p>As we execute <span class="math">f(x)</span> in the “forward mode&quot;, we can propagate not
+only the sequential evaluations of operations in the graph given
+previous nodes, but also the derivatives using the chain rule.</p>
+</div>
+<div class="section" id="elementary-functions">
+<h2>Elementary functions<a class="headerlink" href="#elementary-functions" title="Permalink to this headline">¶</a></h2>
+<p>An elementary function is built up of a finite combination of constant
+functions, field operations <span class="math">(+, -, \times, \div)</span>, algebraic,
+exponential, trigonometric, hyperbolic and logarithmic functions and
+their inverses under repeated compositions. Below is a table of some
+elementary functions and examples that we will include in our
+implementation.</p>
+<div class="line-block">
+<div class="line">1c1c1c1</div>
+<div class="line">&amp;Elementary Functions &amp; Example</div>
+<div class="line">[3pt] &amp;powers &amp;x^2</div>
+<div class="line">[3pt] &amp;roots &amp;</div>
+<div class="line">[3pt] &amp;exponentials &amp;e^x</div>
+<div class="line">[3pt] &amp;logarithms &amp;(x)</div>
+<div class="line">[3pt] &amp;trigonometrics &amp;(x)</div>
+<div class="line">[3pt] &amp;inverse trigonometrics &amp;(x)</div>
+<div class="line">[3pt] &amp;hyperbolics &amp;(x)</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="software_organization.html" class="btn btn-neutral float-right" title="Software Organization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="how_to_use.html" class="btn btn-neutral" title="How to Use DeriveAlive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Chen Shi, Stephen Slater, Yue Sun
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'Python',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

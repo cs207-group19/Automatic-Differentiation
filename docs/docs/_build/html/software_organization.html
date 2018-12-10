@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="Python" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="Python" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Software Organization &mdash; DeriveAlive  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Implementation" href="implementation.html" />
+    <link rel="prev" title="Background" href="background.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DeriveAlive
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <em>DeriveAlive</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Software Organization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-directory-structure">Current directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-modules-and-their-functionality">Basic modules and their functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-will-your-test-suite-live">Where will your test suite live?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-can-someone-install-your-package">How can someone install your package?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">CS 207 Final Project: Milestone 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeriveAlive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Software Organization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/software_organization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="software-organization">
+<h1>Software Organization<a class="headerlink" href="#software-organization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="current-directory-structure">
+<h2>Current directory structure<a class="headerlink" href="#current-directory-structure" title="Permalink to this headline">¶</a></h2>
+<div class="math">
+\[\begin{split}\begin{aligned}
+\texttt{cs207-FinalProject/} &amp; \\
+&amp; \texttt{README.md} \\
+&amp; \texttt{LICENSE} \\
+&amp; \texttt{DeriveAlive/} \\
+&amp; \indent \:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\: \texttt{DeriveAlive.py} \\
+&amp; \texttt{docs/} \\
+&amp; \indent \:\:\:\:\texttt{milestone1.pdf} \\
+&amp; \indent \:\:\:\:\texttt{milestone2.pdf} \\
+&amp; \texttt{tests/} \\
+&amp; \indent \:\:\:\:\:\:\texttt{test\_DeriveAlive.py} \\
+&amp; \cdots\end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="basic-modules-and-their-functionality">
+<h2>Basic modules and their functionality<a class="headerlink" href="#basic-modules-and-their-functionality" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code>: This module contains our custom library for
+autodifferentiation. It includes functionality for a <code class="docutils literal"><span class="pre">Var</span></code> class
+that contains values and derivatives, as well as class-specific
+methods for the operations that our model implements (e.g., tangent,
+sine, power, exponentiation, addition, multiplication, and so on).</li>
+<li><code class="docutils literal"><span class="pre">test_DeriveAlive</span></code>: This is a test suite for our module
+(explanation in the following section). It currently includes tests
+for scalar functions to ensure that the <code class="docutils literal"><span class="pre">DeriveAlive</span></code> module
+properly calculates values of scalar functions and gradients with
+respect to scalar inputs.</li>
+</ul>
+</div>
+<div class="section" id="where-will-your-test-suite-live">
+<h2>Where will your test suite live?<a class="headerlink" href="#where-will-your-test-suite-live" title="Permalink to this headline">¶</a></h2>
+<p>Our test suite is currently in a test file called
+<code class="docutils literal"><span class="pre">test_DeriveAlive.py</span></code> in its own <code class="docutils literal"><span class="pre">tests</span></code> folder. We use Travis CI
+for automatic testing for each push, and Coveralls for line coverage
+metrics. We have already set up these integrations, with badges included
+in the <code class="docutils literal"><span class="pre">README.md</span></code>. Users may run the test suite by navigating to the
+<code class="docutils literal"><span class="pre">tests/</span></code> folder and running the command <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">test_DeriveAlive.py</span></code>
+from the command line (or <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">tests</span></code> if the user is outside the
+<code class="docutils literal"><span class="pre">tests/</span></code> folder).</p>
+</div>
+<div class="section" id="how-can-someone-install-your-package">
+<h2>How can someone install your package?<a class="headerlink" href="#how-can-someone-install-your-package" title="Permalink to this headline">¶</a></h2>
+<p>We provide two ways for our package installation: GitHub and PyPI.</p>
+<ul>
+<li><p class="first">Installation from GitHub</p>
+<ul>
+<li><p class="first">Download the package from GitHub to your folder via these commands
+in the terminal:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">test_cs207</span>
+<span class="n">cd</span> <span class="n">test_cs207</span><span class="o">/</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">group19</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">/</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a virtual environment and activate it</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># If you don&#39;t have virtualenv, install it</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">virtualenv</span>
+<span class="c1"># Create virtual environment</span>
+<span class="n">virtualenv</span> <span class="n">env</span>
+<span class="c1"># Activate your virtual environment</span>
+<span class="n">source</span> <span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+<li><p class="first">Install required packages and run module tests in <code class="docutils literal"><span class="pre">tests/</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">pytest</span> <span class="n">tests</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Use DeriveAlive Python package (see demo in Section 2.2)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">Var</span><span class="p">([</span><span class="mf">1.57079633</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">])</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">quit</span><span class="p">()</span>
+
+<span class="c1"># deactivate virtual environment</span>
+<span class="n">deactivate</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Installation using PyPI</p>
+<div class="line-block">
+<div class="line">We also utilized the Python Package Index (PyPI) for distributing
+our package. PyPI is the official third-party software repository
+for Python and primarily hosts Python packages in the form of
+archives called sdists (source distributions) or precompiled
+wheels. The url to the project is
+<a class="reference external" href="https://pypi.org/project/DeriveAlive/">https://pypi.org/project/DeriveAlive/</a>.</div>
+</div>
+<ul>
+<li><p class="first">Create a virtual environment and activate it</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># If you don&#39;t have virtualenv, install it</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">virtualenv</span>
+<span class="c1"># Create virtual environment</span>
+<span class="n">virtualenv</span> <span class="n">env</span>
+<span class="c1"># Activate your virtual environment</span>
+<span class="n">source</span> <span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install DeriveAlive using pip. In the terminal, type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">DeriveAlive</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run module tests before beginning.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Navigate to https://pypi.org/project/DeriveAlive/#files</span>
+<span class="c1"># Download tar.gz folder, unzip, and enter the folder</span>
+<span class="n">pytest</span> <span class="n">tests</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Use DeriveAlive Python package # (see demo in Section 2.2)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">Var</span><span class="p">([</span><span class="mf">1.57079633</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">])</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">quit</span><span class="p">()</span>
+
+<span class="c1"># deactivate virtual environment</span>
+<span class="n">deactivate</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="implementation.html" class="btn btn-neutral float-right" title="Implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="background.html" class="btn btn-neutral" title="Background" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Chen Shi, Stephen Slater, Yue Sun
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'Python',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
