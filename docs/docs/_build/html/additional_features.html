@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Additional features &mdash; DeriveAlive  documentation</title>
+  <title>CS 207 Final Project: Milestone 2 &mdash; DeriveAlive  documentation</title>
   
 
   
@@ -84,8 +84,19 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Additional features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-use-case">Basic use case</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CS 207 Final Project: Milestone 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#additional-features">Additional features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#root-finding">Root finding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimization">Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quadratic-splines">Quadratic Splines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#demo">Demo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drawing-with-splines">Drawing with Splines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">CS 207 Final Project: Milestone 2</a></li>
@@ -135,7 +146,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Additional features</li>
+      <li>CS 207 Final Project: Milestone 2</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,42 +165,164 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="additional-features">
-<h1>Additional features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h1>
-<p>This package will have two possible additional features (at least one of
-which we will implement):</p>
+  <div class="section" id="cs-207-final-project-milestone-2">
+<h1>CS 207 Final Project: Milestone 2<a class="headerlink" href="#cs-207-final-project-milestone-2" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Group 19: Chen Shi, Stephen Slater, Yue Sun</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">November 2018</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="additional-features">
+<h2>Additional features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="root-finding">
+<h3>Root finding<a class="headerlink" href="#root-finding" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="optimization">
+<h3>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="quadratic-splines">
+<h3>Quadratic Splines<a class="headerlink" href="#quadratic-splines" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="background">
+<h4>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h4>
+<div class="line-block">
+<div class="line">The <code class="docutils literal"><span class="pre">DeriveAlive</span></code> package can be used to calculate quadratic splines
+since it automatically returns the first derivative of a function at a
+given point.</div>
+<div class="line">We aim to construct a piecewise quadratic spline <span class="math">s(x)</span> using
+<span class="math">N</span> equally-sized intervals over an interval for <span class="math">f(x)</span>.
+Define <span class="math">h=1/N</span>, and let <span class="math">s_{k}(x)</span> be the spline over the
+range <span class="math">[kh,(k+1)h]</span> for <span class="math">k=0,1,\ldots,N-1</span>. Each
+<span class="math">s_k(x)=a_kx^2+b_kx+c_k</span> is a quadratic, and hence the spline
+has <span class="math">3N</span> degrees of freedom in total.</div>
+<div class="line">The spline coefficients satisfy the following constraints:</div>
+</div>
 <ul class="simple">
-<li>Write an application that uses <em>DeriveAlive</em> to implement
-optimization methods, like different forms of Newton’s methods for
-optimization.</li>
-<li>Reverse mode, in which case we will store the Jacobian at each step.</li>
+<li>Each <span class="math">s_k(x)</span> should match the function values at both of its
+endpoints, so that <span class="math">s_k(kh)=f(kh)</span> and
+<span class="math">s_k( (k+1)h) =f( (k+1)h)</span>. (Provides <span class="math">2N</span> constraints.)</li>
+<li>At each interior boundary, the spline should be differentiable, so
+that <span class="math">s_{k-1}(kh)= s_k(kh)</span> for <span class="math">k=1,\ldots,N-1</span>.
+(Provides <span class="math">N-1</span> constraints.)</li>
+<li>Since <span class="math">f'(x+1)=10f'(x)</span>, let <span class="math">s'_{N-1}(1) = 10s'_0(0)</span>.
+(Provides <span class="math">1</span> constraint.)</li>
 </ul>
-<div class="section" id="basic-use-case">
-<h2>Basic use case<a class="headerlink" href="#basic-use-case" title="Permalink to this headline">¶</a></h2>
-<p>We demonstrate a possible use case: Newton root finding for
-<span class="math">y=x^2-1</span> with <em>DeriveAlive.</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">## Install at command line as in Section 4.4</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">DeriveAlive</span>
-<span class="n">python</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<p>Since there are <span class="math">3N</span> constraints for <span class="math">3N</span> degrees of
+freedom, there is a unique solution.</p>
+</div>
+<div class="section" id="implementation">
+<h4>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Methods<ul>
+<li><code class="docutils literal"><span class="pre">quad_spline_coeff</span></code>: calculate the coefficients of quadratic
+splines<ul>
+<li>input:<ul>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">xMin</span></code>: left endpoint of the <span class="math">x</span> interval</li>
+<li><code class="docutils literal"><span class="pre">xMax</span></code>: right endpoint of the <span class="math">x</span> interval</li>
+<li><code class="docutils literal"><span class="pre">nIntervals</span></code>: number of intervals that you want to slice
+the original function</li>
+</ul>
+</li>
+<li>return:<ul>
+<li><code class="docutils literal"><span class="pre">y</span></code>: the right hand side of <span class="math">Ax=y</span></li>
+<li><code class="docutils literal"><span class="pre">A</span></code>: the sqaure matrix in the left hand side of
+<span class="math">Ax=y</span></li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">a_i, b_i, c_i</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">x</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: get the coordinates of points on the
+corresponding splines<ul>
+<li>input:<ul>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">a_i, b_i, c_i</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">x</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
+<li><code class="docutils literal"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
+</ul>
+</li>
+<li>return:<ul>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: a list of spline points <span class="math">(x,y)</span> on
+each <span class="math">s_i</span></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">quad_spline_plot</span></code>: plot the original function and the
+corresponding splines<ul>
+<li>input:<ul>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">a_i, b_i, c_i</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">x</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
+<li><code class="docutils literal"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
+</ul>
+</li>
+<li>return:<ul>
+<li><code class="docutils literal"><span class="pre">fig</span></code>: the plot of <span class="math">f(x)</span> and splines</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">spline_error</span></code>: calculate the average absolute error of the
+spline and the original function at one point<ul>
+<li>input:<ul>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: a list of spline points <span class="math">(x,y)</span> on
+each <span class="math">s_i</span></li>
+</ul>
+</li>
+<li>return:<ul>
+<li><code class="docutils literal"><span class="pre">error</span></code>: average absolute error of the spline and the
+original function on one given interval</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>External dependencies<ul>
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="demo">
+<h4>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h4>
+<p>Plot the quadratic spline of <span class="math">f_1(x) = 10^x, x \in [-1, 1]</span> with
+10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spline</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># Initial guess: root at 0.5</span>
-<span class="c1"># Expect root at 1.0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mf">0.5</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">xMin1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">xMax1</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">nIntervals1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">nSplinePoints1</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="c1"># Newton root finding method</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">error</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">while</span> <span class="n">error</span> <span class="o">&gt;</span> <span class="mf">0.000001</span><span class="p">:</span>
-      <span class="n">x1</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">val</span> <span class="o">/</span> <span class="n">f</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-      <span class="n">error</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="n">da</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-      <span class="n">x0</span> <span class="o">=</span> <span class="n">x1</span>
-
-<span class="c1"># Expect root x = 1.0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-<span class="mf">1.0</span>
+<span class="n">y1</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">coeffs1</span><span class="p">,</span> <span class="n">ks1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_coeff</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">xMin1</span><span class="p">,</span> <span class="n">xMax1</span><span class="p">,</span> <span class="n">nIntervals1</span><span class="p">)</span>
+<span class="n">fig1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">quad_spline_plot</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">coeffs1</span><span class="p">,</span> <span class="n">ks1</span><span class="p">,</span> <span class="n">nSplinePoints1</span><span class="p">)</span>
+<span class="n">spline_points1</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">spline_points</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">coeffs1</span><span class="p">,</span> <span class="n">ks1</span><span class="p">,</span> <span class="n">nSplinePoints1</span><span class="p">)</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">spline_error</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">spline_points1</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.0038642295476342416</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drawing-with-splines">
+<h4>Drawing with Splines<a class="headerlink" href="#drawing-with-splines" title="Permalink to this headline">¶</a></h4>
+</div>
 </div>
 </div>
 </div>
