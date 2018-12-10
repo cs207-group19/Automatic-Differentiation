@@ -199,25 +199,20 @@ calculate the gradient of <span class="math">\(h\)</span> with respect to <span 
 <span class="math">\(h(x): \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we write the
 Jacobian matrix as follows, allowing us to store the gradient of each
 output with respect to each input.</p>
-<p>&quot;&quot;&quot;
-.. math:: <strong>J</strong> =   begin{bmatrix}</p>
-<blockquote>
-<div><blockquote>
-<div><dl class="docutils">
-<dt>frac{partial h_1}{partial x_1} &amp;</dt>
-<dd>frac{partial h_1}{partial x_2} &amp; ldots &amp;
-frac{partial h_1}{partial x_m} \[1ex]</dd>
-<dt>frac{partial h_2}{partial x_1} &amp;</dt>
-<dd>frac{partial h_2}{partial x_2} &amp; ldots &amp;
-frac{partial h_2}{partial x_m} \[1ex]
-vdots &amp; vdots &amp; ddots  &amp; vdots \[1ex]</dd>
-<dt>frac{partial h_n}{partial x_1} &amp;</dt>
-<dd>frac{partial h_n}{partial x_2} &amp; ldots &amp;
-frac{partial h_n}{partial x_m}</dd>
-</dl>
-</div></blockquote>
-<p>end{bmatrix}</p>
-</div></blockquote>
+<p>r&quot;&quot;&quot;</p>
+<div class="math">
+\[\begin{split}**J** =   \begin{bmatrix}
+  \frac{\partial h_1}{\partial x_1} &amp;
+    \frac{\partial h_1}{\partial x_2} &amp; \ldots &amp;
+    \frac{\partial h_1}{\partial x_m} \\[1ex]
+  \frac{\partial h_2}{\partial x_1} &amp;
+    \frac{\partial h_2}{\partial x_2} &amp; \ldots &amp;
+    \frac{\partial h_2}{\partial x_m} \\[1ex]
+    \vdots &amp; \vdots &amp; \ddots  &amp; \vdots \\[1ex]
+  \frac{\partial h_n}{\partial x_1} &amp;
+    \frac{\partial h_n}{\partial x_2} &amp; \ldots &amp;
+    \frac{\partial h_n}{\partial x_m}
+\end{bmatrix}\end{split}\]</div>
 <p>&quot;&quot;&quot;</p>
 <p>In general, if we have a function <span class="math">\(g\left(y\left(x\right)\right)\)</span>
 where <span class="math">\(y\in\mathbb{R}^{n}\)</span> and <span class="math">\(x\in\mathbb{R}^{m}\)</span>. Then
