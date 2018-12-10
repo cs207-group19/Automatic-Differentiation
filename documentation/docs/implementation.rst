@@ -67,8 +67,6 @@ API
 ``DeriveAlive.DeriveAlive``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: DeriveAlive
-
-.. autoclass:: Var
    : members:
 
 
