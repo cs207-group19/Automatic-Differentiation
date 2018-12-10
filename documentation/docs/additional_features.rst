@@ -44,6 +44,8 @@ freedom, there is a unique solution.
 Implementation
 ~~~~~~~~~~~~~~
 
+..automodule:: spline
+
 -  Methods
 
    -  ``quad_spline_coeff``: calculate the coefficients of quadratic
