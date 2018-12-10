@@ -14,19 +14,19 @@ def _get_unit_vec(length, pos):
 def _NewtonRootVector(f, var_list, iters=2000, tol=1e-10, der_shift=1):
 	# Number of variables
 	m = len(var_list)
-	vars_path = []
+	var_path = []
 	g_path = []
 
 	for i in range(iters):
 		g = f(var_list)
 		values = np.array([x_i.val for x_i in var_list])
 		values_flat = np.reshape(values, [-1])
-		vars_path.append(values_flat)
+		var_path.append(values_flat)
 		g_path.append(g.val)
 
 		# Check if guess is a root
 		if np.array_equal(g.val, np.zeros((g.val.shape))):
-			return da.Var(values_flat, g.der), vars_path, g_path
+			return da.Var(values_flat, g.der), var_path, g_path
 
 		# If derivative is extremely close to 0, set to +1 or -1 as a form of random restart
 		# This avoids making an entry of the new guess vector at, e.g., 1e10
@@ -51,10 +51,11 @@ def _NewtonRootVector(f, var_list, iters=2000, tol=1e-10, der_shift=1):
 		g = f(var_list)
 		values = np.array([x_i.val for x_i in var_list])
 		values_flat = np.reshape(values, [-1])
-		vars_path.append(values_flat)
+		var_path.append(values_flat)
 		g_path.append(g.val)
 	
-	return da.Var(values_flat, g.der), vars_path, g_path
+	root = da.Var(values_flat, g.der)
+	return root, var_path, g_path
 
 
 def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
@@ -64,18 +65,18 @@ def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
 	else:
 		x = x[0]
 
-	x_path = []
+	var_path = []
 	g_path = []
 
 	# Run Newton's root-finding method
 	for i in range(iters):
 		g = f(x)
-		x_path.append(x.val)
+		var_path.append(x.val)
 		g_path.append(g.val)
 
 		# Check if guess is a root
 		if np.array_equal(g.val, np.zeros((g.val.shape))):
-			return da.Var(x.val, g.der), x_path, g_path
+			return da.Var(x.val, g.der), var_path, g_path
 
 		# If derivative is extremely close to 0, set to +1 or -1 as a form of random restart
 		# This avoids making a new guess at, e.g., x + 1e10
@@ -96,10 +97,11 @@ def NewtonRoot(f, x, iters=2000, tol=1e-10, der_shift=1):
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
 		g = f(x)
-		x_path.append(x.val)
+		var_path.append(x.val)
 		g_path.append(g.val)
 
-	return da.Var(x.val, g.der), x_path, g_path
+	root = da.Var(x.val, g.der)
+	return root, var_path, g_path
 
 
 def NewtonOptimization(f, x0, tol=1e-7, iters=2000):
@@ -108,7 +110,7 @@ def NewtonOptimization(f, x0, tol=1e-7, iters=2000):
 
 def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 	m = len(var_list)
-	vars_path = []
+	var_path = []
 	g_path = []
 
 	for i in range(iters):
@@ -117,7 +119,7 @@ def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 		# print ("g:\n{}".format(g))
 		values = np.array([x_i.val for x_i in var_list])
 		values_flat = np.reshape(values, [-1])
-		vars_path.append(values_flat)
+		var_path.append(values_flat)
 		g_path.append(g.val)
 
 		# Take step in direction of steepest descent
@@ -136,11 +138,11 @@ def _GradientDescentVector(f, var_list, tol=1e-10, iters=10000, eta=0.01):
 		g = f(var_list)
 		values = np.array([x_i.val for x_i in var_list])
 		values_flat = np.reshape(values, [-1])
-		vars_path.append(values_flat)
+		var_path.append(values_flat)
 		g_path.append(g.val)
 	
-	return da.Var(values_flat, g.der), vars_path, g_path
-
+	minimum = da.Var(values_flat, g.der)
+	return minimum, var_path, g_path
 
 
 def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
@@ -148,11 +150,11 @@ def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
 	if is_vec_input:
 		return _GradientDescentVector(f, x, iters=iters, eta=eta)
 
-	x_path = []
+	var_path = []
 	g_path = []
 	for i in range(iters):
 		g = f(x)
-		x_path.append(x.val)
+		var_path.append(x.val)
 		g_path.append(g.val)
 
 		step = da.Var(eta * g.der, None)
@@ -168,7 +170,8 @@ def GradientDescent(f, x, tol=1e-10, iters=10000, eta=0.01):
 	else:
 		print ("Reached {} iterations without satisfying tolerance.".format(iters))
 		g = f(x)
-		x_path.append(x.val)
+		var_path.append(x.val)
 		g_path.append(g.val)
 
-	return da.Var(x.val, g.der), x_path, g_path
+	minimum = da.Var(x.val, g.der)
+	return minimum, var_path, g_path

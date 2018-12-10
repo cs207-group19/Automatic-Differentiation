@@ -80,12 +80,16 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#api">API</a><ul>
+<<<<<<< HEAD
+<li class="toctree-l3"><a class="reference internal" href="#derivealive"><code class="docutils literal notranslate"><span class="pre">`DeriveAlive`</span></code></a></li>
+=======
 <li class="toctree-l3"><a class="reference internal" href="#module-DeriveAlive"><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code></a></li>
+>>>>>>> d05e8b8d97a48425eb2c51b6ffc196c89a697feb
 </ul>
 </li>
 </ul>
@@ -166,7 +170,7 @@ following choices:</p>
 calculations or results involving complex numbers will be excluded
 from the package.</li>
 <li>Type of user input: Regardless of the input type (e.g., a float or a
-list or a numpy array), the <code class="docutils literal"><span class="pre">Var</span></code> class will automatically convert
+list or a numpy array), the <code class="docutils literal notranslate"><span class="pre">Var</span></code> class will automatically convert
 the input into a numpy array. This will provide flexibility in the
 future for implementing vector to vector functions.</li>
 <li>Core data structures: The core data structures will be classes, lists
@@ -176,25 +180,25 @@ functions, including custom methods for our elementary functions.</li>
 <li>Lists will help us maintain the collection of trace variables and
 output functions (in the case of multi-output models) from the
 computation graph in order. For example, if we have a function
-<span class="math">\(f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2\)</span>, then we store
-<span class="math">\(f = [f1, f2]\)</span>, where we have defined <span class="math">\(f1\)</span> and
-<span class="math">\(f2\)</span> as functions of <span class="math">\(x\)</span>, and we simply process the
+<span class="math notranslate nohighlight">\(f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2\)</span>, then we store
+<span class="math notranslate nohighlight">\(f = [f1, f2]\)</span>, where we have defined <span class="math notranslate nohighlight">\(f1\)</span> and
+<span class="math notranslate nohighlight">\(f2\)</span> as functions of <span class="math notranslate nohighlight">\(x\)</span>, and we simply process the
 functions in order. Depending on the extensions we choose for the
 project, we may use lists to store the parents of each node in the
 graph.</li>
 <li>Numpy arrays are the main data structure during the calculation.
 We store the list of derivatives as a numpy array so that we can
 apply entire functions to the array, rather than to each entry
-separately. Each trace <code class="docutils literal"><span class="pre">Var</span></code> has a numpy array of derivatives
+separately. Each trace <code class="docutils literal notranslate"><span class="pre">Var</span></code> has a numpy array of derivatives
 where the length of the array is the number of input variables in
 the function. In the vector-vector case, if we have a function
-<span class="math">\(f: \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we can process
-this as <span class="math">\(f = [f_1, f_2, \ldots, f_n]\)</span>, where each
-<span class="math">\(f_i\)</span> is a function
-<span class="math">\(f_i: \mathbb{R}^m \rightarrow \mathbb{R}\)</span>. Our
+<span class="math notranslate nohighlight">\(f: \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we can process
+this as <span class="math notranslate nohighlight">\(f = [f_1, f_2, \ldots, f_n]\)</span>, where each
+<span class="math notranslate nohighlight">\(f_i\)</span> is a function
+<span class="math notranslate nohighlight">\(f_i: \mathbb{R}^m \rightarrow \mathbb{R}\)</span>. Our
 implementation can act as a wrapper over these functions, and we
-can evaluate each <span class="math">\(f_i\)</span> independently, so long as we define
-<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. Currently, the
+can evaluate each <span class="math notranslate nohighlight">\(f_i\)</span> independently, so long as we define
+<span class="math notranslate nohighlight">\(f_i\)</span> in terms of the <span class="math notranslate nohighlight">\(m\)</span> inputs. Currently, the
 module supports scalar to scalar functions, but we have expanded
 several parts of the implementation to include arrays so that
 providing vector to vector functions will be a smooth transition.</li>
@@ -202,7 +206,7 @@ providing vector to vector functions will be a smooth transition.</li>
 </li>
 <li>Our implementation plan currently includes 1 class which accounts for
 trace variables and derivatives with respect to each input variable.<ul>
-<li><code class="docutils literal"><span class="pre">Var</span></code> class. The class instance itself has two main attributes:
+<li><code class="docutils literal notranslate"><span class="pre">Var</span></code> class. The class instance itself has two main attributes:
 the value and the evaluated derivatives with respect to each
 input. Within the class we redefine the elementary functions and
 basic algebraic functions, including both evaluation and
@@ -218,6 +222,10 @@ future project extensions.</li>
 </ul>
 <div class="section" id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<<<<<<< HEAD
+<div class="section" id="derivealive">
+<h3><code class="docutils literal notranslate"><span class="pre">`DeriveAlive`</span></code><a class="headerlink" href="#derivealive" title="Permalink to this headline">¶</a></h3>
+=======
 <div class="section" id="module-DeriveAlive">
 <span id="derivealive-derivealive"></span><h3><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code><a class="headerlink" href="#module-DeriveAlive" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -606,83 +614,84 @@ functions(s).</p>
 
 </dd></dl>
 
+>>>>>>> d05e8b8d97a48425eb2c51b6ffc196c89a697feb
 <ul>
 <li><p class="first">Class attributes and methods:</p>
 <ul class="simple">
-<li>Attributes in <code class="docutils literal"><span class="pre">Var</span></code>: <code class="docutils literal"><span class="pre">self.var</span></code>, <code class="docutils literal"><span class="pre">self.der</span></code>. To cover
-vector-to-vector cases, we implement our <code class="docutils literal"><span class="pre">self.var</span></code> and
-<code class="docutils literal"><span class="pre">self.der</span></code> as numpy arrays, in order to account for derivatives
+<li>Attributes in <code class="docutils literal notranslate"><span class="pre">Var</span></code>: <code class="docutils literal notranslate"><span class="pre">self.var</span></code>, <code class="docutils literal notranslate"><span class="pre">self.der</span></code>. To cover
+vector-to-vector cases, we implement our <code class="docutils literal notranslate"><span class="pre">self.var</span></code> and
+<code class="docutils literal notranslate"><span class="pre">self.der</span></code> as numpy arrays, in order to account for derivatives
 with respect to each input variable. Also the constructor checks
 whether the values and derivatives are integers, floats, or lists,
 and transforms them into numpy arrays automatically.</li>
 <li>We have overloaded elementary mathematical operations such as
 addition, subtraction, multiplication, division, sine, pow, log,
-etc. that take in <span class="math">\(1\)</span> <code class="docutils literal"><span class="pre">Var</span></code> type, or <span class="math">\(2\)</span> types, or
-<span class="math">\(1\)</span> and <span class="math">\(1\)</span> constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
+etc. that take in <span class="math notranslate nohighlight">\(1\)</span> <code class="docutils literal notranslate"><span class="pre">Var</span></code> type, or <span class="math notranslate nohighlight">\(2\)</span> types, or
+<span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(1\)</span> constant, and return a new <code class="docutils literal notranslate"><span class="pre">Var</span></code> (i.e.
 the next “trace” variable). All other operations on constants will
-use the standard Python library. In each <code class="docutils literal"><span class="pre">Var</span></code>, we will store as
+use the standard Python library. In each <code class="docutils literal notranslate"><span class="pre">Var</span></code>, we will store as
 attributes the value of the variable (which is calculated based on
 the current operation and previous trace variables) and the
 evaluated gradient of the variable with respect to each input
 variable.</li>
-<li>Methods in <code class="docutils literal"><span class="pre">Var</span></code>:<ul>
-<li><code class="docutils literal"><span class="pre">__init__</span></code>: initialize a <code class="docutils literal"><span class="pre">Var</span></code> class object, regardless of
+<li>Methods in <code class="docutils literal notranslate"><span class="pre">Var</span></code>:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: initialize a <code class="docutils literal notranslate"><span class="pre">Var</span></code> class object, regardless of
 the user input, with values and derivatives stored as numpy
 arrays.</li>
-<li><code class="docutils literal"><span class="pre">__add__</span></code>: overload add function to handle addition of
-<code class="docutils literal"><span class="pre">Var</span></code> class objects and addition of and non-<code class="docutils literal"><span class="pre">Var</span></code>
+<li><code class="docutils literal notranslate"><span class="pre">__add__</span></code>: overload add function to handle addition of
+<code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects and addition of and non-<code class="docutils literal notranslate"><span class="pre">Var</span></code>
 objects.</li>
-<li><code class="docutils literal"><span class="pre">__radd__</span></code>: preserve addition commutative property.</li>
-<li><code class="docutils literal"><span class="pre">__sub__</span></code>: overload subtraction function to handle
-subtraction of <code class="docutils literal"><span class="pre">Var</span></code> class objects and subtraction between
-and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
-<li><code class="docutils literal"><span class="pre">__rsub__</span></code>: allow subtraction for <span class="math">\(a - \texttt{Var}\)</span>
+<li><code class="docutils literal notranslate"><span class="pre">__radd__</span></code>: preserve addition commutative property.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__sub__</span></code>: overload subtraction function to handle
+subtraction of <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects and subtraction between
+and non-<code class="docutils literal notranslate"><span class="pre">Var</span></code> objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__rsub__</span></code>: allow subtraction for <span class="math notranslate nohighlight">\(a - \texttt{Var}\)</span>
 case where a is a float or an integer.</li>
-<li><code class="docutils literal"><span class="pre">__mul__</span></code>: overload multiplication function to handle
-multiplication of <code class="docutils literal"><span class="pre">Var</span></code> class objects and multiplication
-between and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
-<li><code class="docutils literal"><span class="pre">__rmul__</span></code>: preserve multiplication commutative property.</li>
-<li><code class="docutils literal"><span class="pre">__truediv__</span></code>: overload division function to handle division
-of <code class="docutils literal"><span class="pre">Var</span></code> class objects over floats or integers.</li>
-<li><code class="docutils literal"><span class="pre">__rtruediv__</span></code>: allow division for
-<span class="math">\(a \div \texttt{Var}\)</span> case where <span class="math">\(a\)</span> is a float or
+<li><code class="docutils literal notranslate"><span class="pre">__mul__</span></code>: overload multiplication function to handle
+multiplication of <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects and multiplication
+between and non-<code class="docutils literal notranslate"><span class="pre">Var</span></code> objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__rmul__</span></code>: preserve multiplication commutative property.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__truediv__</span></code>: overload division function to handle division
+of <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects over floats or integers.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__rtruediv__</span></code>: allow division for
+<span class="math notranslate nohighlight">\(a \div \texttt{Var}\)</span> case where <span class="math notranslate nohighlight">\(a\)</span> is a float or
 an integer.</li>
-<li><code class="docutils literal"><span class="pre">__neg__</span></code>: return negated <code class="docutils literal"><span class="pre">Var</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">__abs__</span></code>: return the absolute value of <code class="docutils literal"><span class="pre">Var</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">__eq__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if two <code class="docutils literal"><span class="pre">Var</span></code> objects have the
-same value and derivative, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
-<li><code class="docutils literal"><span class="pre">__pow__</span></code>, <code class="docutils literal"><span class="pre">__rpow__</span></code>, <code class="docutils literal"><span class="pre">pow</span></code>: extend power functions to
-<code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">log</span></code>: extend logarithmic functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">exp</span></code>: extend exponential functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">sin</span></code>, <code class="docutils literal"><span class="pre">cos</span></code>, <code class="docutils literal"><span class="pre">tan</span></code>: extend trigonometric functions to
-<code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">arcsin</span></code>, <code class="docutils literal"><span class="pre">arccos</span></code>, <code class="docutils literal"><span class="pre">arctan</span></code>: extend inverse
-trigonometric functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">sinh</span></code>, <code class="docutils literal"><span class="pre">cosh</span></code>, <code class="docutils literal"><span class="pre">tanh</span></code>: extend hyperbolic functions to
-<code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__neg__</span></code>: return negated <code class="docutils literal notranslate"><span class="pre">Var</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__abs__</span></code>: return the absolute value of <code class="docutils literal notranslate"><span class="pre">Var</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__eq__</span></code>: return <code class="docutils literal notranslate"><span class="pre">True</span></code> if two <code class="docutils literal notranslate"><span class="pre">Var</span></code> objects have the
+same value and derivative, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</li>
+<li><code class="docutils literal notranslate"><span class="pre">__pow__</span></code>, <code class="docutils literal notranslate"><span class="pre">__rpow__</span></code>, <code class="docutils literal notranslate"><span class="pre">pow</span></code>: extend power functions to
+<code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">log</span></code>: extend logarithmic functions to <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">exp</span></code>: extend exponential functions to <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">cos</span></code>, <code class="docutils literal notranslate"><span class="pre">tan</span></code>: extend trigonometric functions to
+<code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">arcsin</span></code>, <code class="docutils literal notranslate"><span class="pre">arccos</span></code>, <code class="docutils literal notranslate"><span class="pre">arctan</span></code>: extend inverse
+trigonometric functions to <code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal notranslate"><span class="pre">sinh</span></code>, <code class="docutils literal notranslate"><span class="pre">cosh</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh</span></code>: extend hyperbolic functions to
+<code class="docutils literal notranslate"><span class="pre">Var</span></code> class objects.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p class="first">External dependencies:</p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">NumPy</span></code> - This provides an API for a large collection of
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">NumPy</span></code> - This provides an API for a large collection of
 high-level mathematical operations. In addition, it provides
 support for large, multi-dimensional arrays and matrices.</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">doctest</span></code> - This module searches for pieces of text that look
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">doctest</span></code> - This module searches for pieces of text that look
 like interactive Python sessions (typically within the
 documentation of a function), and then executes those sessions to
 verify that they work exactly as shown.</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">pytest</span></code> - This is an alternative, more Pythonic way of writing
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">pytest</span></code> - This is an alternative, more Pythonic way of writing
 tests, making it easy to write small tests, yet scales to support
 complex functional testing. We plan to use this for a
 comprehensive test suite.</p>
 </li>
 <li><div class="first line-block">
-<div class="line"><code class="docutils literal"><span class="pre">setuptools</span></code> - This package allows us to create a package out
+<div class="line"><code class="docutils literal notranslate"><span class="pre">setuptools</span></code> - This package allows us to create a package out
 of our project for easy distribution. See more information on
 packaging instructions here:</div>
 <div class="line"><a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>.</div>
@@ -696,16 +705,16 @@ packaging instructions here:</div>
 <ul>
 <li><p class="first">Our explanation of our elementary functions is included in the
 “Class attributes and methods” section above. For the elementary
-functions, we defined our own custom methods within the <code class="docutils literal"><span class="pre">Var</span></code>
-class so that we can calculate, for example, the <span class="math">\(\sin(x)\)</span>
-of a variable <span class="math">\(x\)</span> using a package such as <code class="docutils literal"><span class="pre">numpy</span></code>, and
-also store the proper gradient (<span class="math">\(\cos(x)dx\)</span>) to propagate
+functions, we defined our own custom methods within the <code class="docutils literal notranslate"><span class="pre">Var</span></code>
+class so that we can calculate, for example, the <span class="math notranslate nohighlight">\(\sin(x)\)</span>
+of a variable <span class="math notranslate nohighlight">\(x\)</span> using a package such as <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, and
+also store the proper gradient (<span class="math notranslate nohighlight">\(\cos(x)dx\)</span>) to propagate
 the gradients forward. For example, consider a scalar function
-where <code class="docutils literal"><span class="pre">self.val</span></code> contains the current evaluation trace and
-<code class="docutils literal"><span class="pre">self.der</span></code> is a numpy array of the derivative of the current
-trace with respect to the input. When we apply <span class="math">\(\sin\)</span>, we
+where <code class="docutils literal notranslate"><span class="pre">self.val</span></code> contains the current evaluation trace and
+<code class="docutils literal notranslate"><span class="pre">self.der</span></code> is a numpy array of the derivative of the current
+trace with respect to the input. When we apply <span class="math notranslate nohighlight">\(\sin\)</span>, we
 propagate as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
            <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
            <span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
            <span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
@@ -713,7 +722,7 @@ propagate as follows:</p>
 </div>
 <p>The structure of each elementary function is that it calculates
 the new value (based on the operation) and the new derivative, and
-then returns a new <code class="docutils literal"><span class="pre">Var</span></code> with the updated arguments.</p>
+then returns a new <code class="docutils literal notranslate"><span class="pre">Var</span></code> with the updated arguments.</p>
 </li>
 </ul>
 </li>
