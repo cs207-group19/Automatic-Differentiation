@@ -20,7 +20,7 @@
 import os
 import sys
 #sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../../DeriveAlive'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- General configuration ------------------------------------------------
@@ -38,7 +38,6 @@ extensions = [
               'sphinx.ext.viewcode',
               'sphinx.ext.githubpages',
               'sphinx.ext.autodoc',
-              'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
               ]

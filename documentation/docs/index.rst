@@ -7,7 +7,7 @@ Welcome to DeriveAlive's documentation!
 =======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    introduction
    how_to_use

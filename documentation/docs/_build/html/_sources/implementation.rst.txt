@@ -64,9 +64,9 @@ following choices:
 API
 ---
 
-```DeriveAlive```
+``DeriveAlive.DeriveAlive``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. automodule:: DeriveAlive
+.. currentmodule:: DeriveAlive.DeriveAlive
    : members:
 
 -  Class attributes and methods:
