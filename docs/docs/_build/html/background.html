@@ -80,7 +80,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <em>DeriveAlive</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-chain-rule">The Chain Rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gradient-and-jacobian">Gradient and Jacobian</a></li>
@@ -199,13 +199,25 @@ calculate the gradient of <span class="math">\(h\)</span> with respect to <span 
 <span class="math">\(h(x): \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we write the
 Jacobian matrix as follows, allowing us to store the gradient of each
 output with respect to each input.</p>
-<p><strong>J</strong> =</p>
-<div class="line-block">
-<div class="line">&amp; &amp; …&amp;</div>
-<div class="line">&amp; &amp; …&amp;</div>
-<div class="line">&amp; &amp; &amp;</div>
-<div class="line">&amp; &amp; …&amp;</div>
-</div>
+<p>begin{center}
+textbf{J} =
+begin{bmatrix}</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>frac{partial h_1}{partial x_1} &amp;</dt>
+<dd>frac{partial h_1}{partial x_2} &amp; ldots &amp;
+frac{partial h_1}{partial x_m} \[1ex]</dd>
+<dt>frac{partial h_2}{partial x_1} &amp;</dt>
+<dd>frac{partial h_2}{partial x_2} &amp; ldots &amp;
+frac{partial h_2}{partial x_m} \[1ex]
+vdots &amp; vdots &amp; ddots  &amp; vdots \[1ex]</dd>
+<dt>frac{partial h_n}{partial x_1} &amp;</dt>
+<dd>frac{partial h_n}{partial x_2} &amp; ldots &amp;
+frac{partial h_n}{partial x_m}</dd>
+</dl>
+</div></blockquote>
+<p>end{bmatrix}
+end{center}</p>
 <p>In general, if we have a function <span class="math">\(g\left(y\left(x\right)\right)\)</span>
 where <span class="math">\(y\in\mathbb{R}^{n}\)</span> and <span class="math">\(x\in\mathbb{R}^{m}\)</span>. Then
 <span class="math">\(g\)</span> is a function of possibly <span class="math">\(n\)</span> other functions, each of
