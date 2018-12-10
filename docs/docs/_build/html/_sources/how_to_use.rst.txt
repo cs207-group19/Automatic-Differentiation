@@ -50,6 +50,7 @@ Declare Variables
 - Denote constants
 
 ::
+
       # None has to be typed, otherwise will be denoted as an R^1 variable
       >>> a = da.Var([1], None)
       >>> a
@@ -58,6 +59,7 @@ Declare Variables
 - Denote scalar variables and functions
 
 ::
+
       # The first way to denote a scalar varibale
       >>> x = da.Var([1])
       >>> x
@@ -76,6 +78,7 @@ Declare Variables
 - Denote vector variables and functions
 
 ::
+
       # Suppose we want to denote variables in R^3
       >>> x = da.Var([1], [1, 0, 0])
       >>> y = da.Var([2], [0, 1, 0])
@@ -110,8 +113,8 @@ Declare Variables
 
 
 
-:math:`\R^1 \rightarrow \R^1`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Demo 1: :math:`\mathbb{R}^1 \rightarrow \mathbb{R}^1`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the case :math:`f(x) = \sin(x) + 5 \tan(x/2)`. We want to calculate the value and the first derivative of :math:`f(x)` at :math:`x=\frac{\pi}{2}`.
 
@@ -125,8 +128,8 @@ Consider the case :math:`f(x) = \sin(x) + 5 \tan(x/2)`. We want to calculate the
       >>> print(f.der)
       [5.]
 
-:math:`\R^m \rightarrow \R^1`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Demo 2: :math:`\mathbb{R}^m \rightarrow \mathbb{R}^1`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the case :math:`f(x,y) = \sin(x) + \exp(y)`. We want to calculate the value and the jacobian of :math:`f(x,y)` at :math:`x=\frac{\pi}{2}, y=1`.
 
@@ -141,8 +144,8 @@ Consider the case :math:`f(x,y) = \sin(x) + \exp(y)`. We want to calculate the v
       >>> print(f.der)
       [6.12323400e-17  2.71828183e+00]
 
-:math:`\R^1 \rightarrow \R^n`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Demo 3: :math:`\mathbb{R}^1 \rightarrow \mathbb{R}^n`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value and the jacobian of :math:`f(x)` at :math:`x=\frac{\pi}{2}`.
 
@@ -158,8 +161,8 @@ Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value 
           [[6.12323400e-17]
            [3.14159265e+00]]
 
-:math:`\R^m \rightarrow \R^n`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Demo 4: :math:`\mathbb{R}^m \rightarrow \\mathbb{R}^n`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Consider the case :math:`f(x,y,z) = (\sin(x), 4y + z^3)`. We want to calculate the value and the jacobian of :math:`f(x,y,z)` at :math:`x=\frac{\pi}{2}, y=3, z=-2`.
 

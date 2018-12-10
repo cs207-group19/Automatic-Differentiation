@@ -84,10 +84,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#how-to-install">How to install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-demo">Basic demo</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#declare-variables">Declare Variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1"><span class="math">\(\R^1 \rightarrow \R^1\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2"><span class="math">\(\R^m \rightarrow \R^1\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3"><span class="math">\(\R^1 \rightarrow \R^n\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4"><span class="math">\(\R^m \rightarrow \R^n\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo-1">Demo 1: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^1\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo-2">Demo 2: <span class="math">\(\mathbb{R}^m \rightarrow \mathbb{R}^1\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo-3">Demo 3: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^n\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo-4">Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \\mathbb{R}^n\)</span></a></li>
 </ul>
 </li>
 </ul>
@@ -210,75 +210,69 @@
 <ul class="simple">
 <li>Denote constants</li>
 </ul>
-<dl class="docutils">
-<dt>::</dt>
-<dd># None has to be typed, otherwise will be denoted as an R^1 variable
-&gt;&gt;&gt; a = da.Var([1], None)
-&gt;&gt;&gt; a
-Var([1], None)</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># None has to be typed, otherwise will be denoted as an R^1 variable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li>Denote scalar variables and functions</li>
 </ul>
-<dl class="docutils">
-<dt>::</dt>
-<dd><p class="first"># The first way to denote a scalar varibale
-&gt;&gt;&gt; x = da.Var([1])
-&gt;&gt;&gt; x
-Var([1], [1])</p>
-<p># The second way to denote a scalar variable
-&gt;&gt;&gt; x = da.Var([1], [1])
-&gt;&gt;&gt; x
-Var([1], [1])</p>
-<p class="last"># Denote a scalar function
-&gt;&gt;&gt; f = 2*x + np.sin(x)
-&gt;&gt;&gt; f
-Var([2.84147098], [2.54030231])</p>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># The first way to denote a scalar varibale</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># The second way to denote a scalar variable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Denote a scalar function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+<span class="n">Var</span><span class="p">([</span><span class="mf">2.84147098</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.54030231</span><span class="p">])</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li>Denote vector variables and functions</li>
 </ul>
-<dl class="docutils">
-<dt>::</dt>
-<dd><p class="first"># Suppose we want to denote variables in R^3
-&gt;&gt;&gt; x = da.Var([1], [1, 0, 0])
-&gt;&gt;&gt; y = da.Var([2], [0, 1, 0])
-&gt;&gt;&gt; z = da.Var([3], [0, 0, 1])</p>
-<p># Suppose we want to denote an R^3 to R^1 function
-f = x + y + z
-&gt;&gt;&gt; f
-Var([6], [1 1 1])</p>
-<p># Suppose we want to denote an R^3 to R^3 function
-&gt;&gt;&gt; f = da.Var([x, y**2, z**4])
-&gt;&gt;&gt; f</p>
-<blockquote>
-<div><p>Values:
-[ 1  4 81],
-Jacobian:
-[[  1   0   0]</p>
-<blockquote>
-<div>[  0   4   0]
-[  0   0 108]]</div></blockquote>
-</div></blockquote>
-<p># Suppose we want to denote an R^1 to R^3 function
-&gt;&gt;&gt; x = da.Var([1])
-&gt;&gt;&gt; f = da.Var([x, np.sin(x), np.exp(x-1)])
-&gt;&gt;&gt; f</p>
-<blockquote class="last">
-<div><p>Values:
-[1.         0.84147098 1.        ],
-Jacobian:
-[[1.        ]</p>
-<blockquote>
-<div>[0.54030231]
-[1.        ]]</div></blockquote>
-</div></blockquote>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Suppose we want to denote variables in R^3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Suppose we want to denote an R^3 to R^1 function</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+<span class="n">Var</span><span class="p">([</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Suppose we want to denote an R^3 to R^3 function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="o">**</span><span class="mi">4</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+    <span class="n">Values</span><span class="p">:</span>
+    <span class="p">[</span> <span class="mi">1</span>  <span class="mi">4</span> <span class="mi">81</span><span class="p">],</span>
+    <span class="n">Jacobian</span><span class="p">:</span>
+    <span class="p">[[</span>  <span class="mi">1</span>   <span class="mi">0</span>   <span class="mi">0</span><span class="p">]</span>
+     <span class="p">[</span>  <span class="mi">0</span>   <span class="mi">4</span>   <span class="mi">0</span><span class="p">]</span>
+     <span class="p">[</span>  <span class="mi">0</span>   <span class="mi">0</span> <span class="mi">108</span><span class="p">]]</span>
+
+<span class="c1"># Suppose we want to denote an R^1 to R^3 function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+    <span class="n">Values</span><span class="p">:</span>
+    <span class="p">[</span><span class="mf">1.</span>         <span class="mf">0.84147098</span> <span class="mf">1.</span>        <span class="p">],</span>
+    <span class="n">Jacobian</span><span class="p">:</span>
+    <span class="p">[[</span><span class="mf">1.</span>        <span class="p">]</span>
+     <span class="p">[</span><span class="mf">0.54030231</span><span class="p">]</span>
+     <span class="p">[</span><span class="mf">1.</span>        <span class="p">]]</span>
+</pre></div>
 </div>
-<div class="section" id="id1">
-<h3><span class="math">\(\R^1 \rightarrow \R^1\)</span><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="demo-1">
+<h3>Demo 1: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^1\)</span><a class="headerlink" href="#demo-1" title="Permalink to this headline">¶</a></h3>
 <p>Consider the case <span class="math">\(f(x) = \sin(x) + 5 \tan(x/2)\)</span>. We want to calculate the value and the first derivative of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of 6.0, derivative of 5.0</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
@@ -290,8 +284,8 @@ Jacobian:
 </pre></div>
 </div>
 </div>
-<div class="section" id="id2">
-<h3><span class="math">\(\R^m \rightarrow \R^1\)</span><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="demo-2">
+<h3>Demo 2: <span class="math">\(\mathbb{R}^m \rightarrow \mathbb{R}^1\)</span><a class="headerlink" href="#demo-2" title="Permalink to this headline">¶</a></h3>
 <p>Consider the case <span class="math">\(f(x,y) = \sin(x) + \exp(y)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x,y)\)</span> at <span class="math">\(x=\frac{\pi}{2}, y=1\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of 3.71828183, jacobian of [0, 2.71828183]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -304,8 +298,8 @@ Jacobian:
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h3><span class="math">\(\R^1 \rightarrow \R^n\)</span><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="demo-3">
+<h3>Demo 3: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^n\)</span><a class="headerlink" href="#demo-3" title="Permalink to this headline">¶</a></h3>
 <p>Consider the case <span class="math">\(f(x) = (\sin(x), x^2)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1. 2.4674011], jacobian of [[0], [3.14159265]]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -319,8 +313,8 @@ Jacobian:
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h3><span class="math">\(\R^m \rightarrow \R^n\)</span><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="demo-4">
+<h3>Demo 4: <span class="math">\(\mathbb{R}^m \rightarrow \\mathbb{R}^n\)</span><a class="headerlink" href="#demo-4" title="Permalink to this headline">¶</a></h3>
 <p>Consider the case <span class="math">\(f(x,y,z) = (\sin(x), 4y + z^3)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x,y,z)\)</span> at <span class="math">\(x=\frac{\pi}{2}, y=3, z=-2\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1, 4], jacobian of [[0 0 0], [0 4 12]]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
