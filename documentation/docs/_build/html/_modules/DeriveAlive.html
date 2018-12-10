@@ -170,7 +170,7 @@
 <span class="sd">	      The corresponding derivative, gradient, or Jacobian of user defined</span>
 <span class="sd">	      functions(s).</span>
 <span class="sd">	 &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Var.__init__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__init__">[docs]</a>	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	    INPUTS</span>
 <span class="sd">	    =======</span>
@@ -249,9 +249,9 @@
 			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">der_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">der_vals</span><span class="p">):</span>
 				<span class="k">if</span> <span class="n">der_val</span> <span class="o">==</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">:</span>
 					<span class="n">der_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">der_vals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
+			<span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">der_vals</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__repr__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__repr__">[docs]</a>	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	    Prints self in the form of Var([val], [der]) when self is a scalar or constant;</span>
 <span class="sd">	    Prints self in the form of Values([val]) Jacobian([der]) when self is a vector;</span>
@@ -288,9 +288,9 @@
 	    
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 			<span class="k">return</span> <span class="s1">&#39;Var(</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-		<span class="k">return</span> <span class="s1">&#39;Values:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">,</span><span class="se">\n</span><span class="s1">Jacobian:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="s1">&#39;Values:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">,</span><span class="se">\n</span><span class="s1">Jacobian:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__add__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__add__">[docs]</a>	<span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the addition of self and other</span>
 <span class="sd">        </span>
@@ -340,9 +340,9 @@
 		<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
 			<span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">other</span>
 			<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span>
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__radd__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__radd__">[docs]</a>	<span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the addition of other to self</span>
 
@@ -367,9 +367,9 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
 		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__sub__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__sub__">[docs]</a>	<span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the substraction of self and other</span>
 
@@ -404,9 +404,9 @@
 			<span class="c1"># Maintain state of self and create new trace variable new_var</span>
 			<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span>
-		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__rsub__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rsub__">[docs]</a>	<span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Returns the substraction of other and self</span>
 
@@ -429,9 +429,9 @@
 <span class="sd">        &gt;&gt;&gt; print(z)</span>
 <span class="sd">        Var([-1.], [-1])       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span></div>
+		<span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Var.__mul__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__mul__">[docs]</a>	<span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the product of self and other</span>
 <span class="sd">        </span>
@@ -507,9 +507,9 @@
 			<span class="k">else</span><span class="p">:</span>
 				<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
 				<span class="n">der</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="o">*</span> <span class="n">other_val</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__rmul__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rmul__">[docs]</a>	<span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the product of other and self</span>
 <span class="sd">        </span>
@@ -538,19 +538,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 		<span class="c1"># Maintain state of self and create new trace variable new_var</span>
 		<span class="n">new_var</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">new_var</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__truediv__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__truediv__">[docs]</a>	<span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the division of self and other</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
-<span class="sd">        ========= </span>
+<span class="sd">        ========== </span>
 <span class="sd">        self: Var object</span>
 <span class="sd">        other: Var object, float, or int</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
-<span class="sd">         =======  </span>
+<span class="sd">        =======  </span>
 <span class="sd">        z: Var object that is the division of self and other</span>
 <span class="sd">        </span>
 <span class="sd">        Examples</span>
@@ -613,9 +613,9 @@
 				<span class="n">other_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
 				<span class="n">der</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="n">other_val</span><span class="p">)</span> <span class="k">if</span> <span class="n">len_self_der_shape</span> <span class="k">else</span> <span class="kc">None</span>
 
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__rtruediv__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rtruediv__">[docs]</a>	<span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the division of other and self</span>
 <span class="sd">        </span>
@@ -673,9 +673,9 @@
 			<span class="n">self_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
 			<span class="n">der</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="p">(</span><span class="n">self_val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> 
 
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__neg__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__neg__">[docs]</a>	<span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns negation of self</span>
 
@@ -696,9 +696,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 		<span class="n">val</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span>
 		<span class="n">der</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__abs__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__abs__">[docs]</a>	<span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Returns the absolute value of self</span>
 
@@ -727,9 +727,9 @@
 			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">):</span>
 				<span class="k">if</span> <span class="n">val_i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
 					<span class="n">der_copy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">der_copy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der_copy</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der_copy</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__eq__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__eq__">[docs]</a>	<span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check self and other is equal</span>
 <span class="sd">		</span>
@@ -756,9 +756,9 @@
 			<span class="c1"># Compare scalar Vars with derivative 1 to scalars</span>
 			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">der</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]):</span>
 				<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">other</span>
-			<span class="k">return</span> <span class="kc">False</span></div>
+			<span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Var.__ne__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__ne__">[docs]</a>	<span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check self and other is not equal</span>
 
@@ -778,9 +778,9 @@
 <span class="sd">        &gt;&gt;&gt; x != y</span>
 <span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__lt__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__lt__">[docs]</a>	<span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check whether the value self is less than other </span>
 
@@ -808,9 +808,9 @@
 		<span class="k">try</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
 		<span class="k">except</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">other</span></div>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">other</span>
 
-<div class="viewcode-block" id="Var.__le__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__le__">[docs]</a>	<span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check whether the value self is less than or equal to other </span>
 
@@ -829,9 +829,9 @@
 <span class="sd">        &gt;&gt;&gt; x &lt;= 3</span>
 <span class="sd">        array([True])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__lt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__lt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__gt__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__gt__">[docs]</a>	<span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check whether the value self is greater than other </span>
 
@@ -858,9 +858,9 @@
 		<span class="k">try</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
 		<span class="k">except</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">other</span></div>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">other</span>
 
-<div class="viewcode-block" id="Var.__ge__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__ge__">[docs]</a>	<span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Check whether the value self is larger than or equal to other </span>
 
@@ -879,9 +879,9 @@
 <span class="sd">        &gt;&gt;&gt; x &gt;= 3</span>
 <span class="sd">        array([True])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__pow__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__pow__">[docs]</a>	<span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Return power calculation of Var object in the form of Var object ** 2</span>
 
@@ -932,9 +932,9 @@
 			<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot compute x^y when both x and y are Vars. Please reformat equation to use &quot;</span> \
-							 <span class="s2">&quot;rpow of scalar to power of vector, or use pow for a vector to a power of scalar.&quot;</span><span class="p">)</span></div>
+							 <span class="s2">&quot;rpow of scalar to power of vector, or use pow for a vector to a power of scalar.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Var.__rpow__"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.__rpow__">[docs]</a>	<span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">		Return power calculation of n to the power Var object in the form of n ** Var</span>
 
@@ -983,7 +983,7 @@
 			<span class="k">else</span><span class="p">:</span>
 				<span class="n">der</span> <span class="o">=</span> <span class="kc">None</span>
 
-		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">der</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Var.sin"><a class="viewcode-back" href="../implementation.html#DeriveAlive.Var.sin">[docs]</a>	<span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; </span>

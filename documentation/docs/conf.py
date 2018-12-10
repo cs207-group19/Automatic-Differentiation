@@ -38,23 +38,25 @@ extensions = [
               'sphinx.ext.viewcode',
               'sphinx.ext.githubpages',
               'sphinx.ext.autodoc',
+              'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
+              'numpydoc',
               ]
 
 # autodoc configs
 autodoc_default_flags = ['members']
 
 # autosummary configs
-autosummary_generate = True
+# autosummary_generate = True
 
-# napoleon settings
-napoleon_include_init_with_doc = True
-napoleon_include_private_with_doc = True
-napoleon_include_special_with_doc = True
+# # napoleon settings
+# napoleon_include_init_with_doc = True
+# napoleon_include_private_with_doc = True
+# napoleon_include_special_with_doc = True
 
-# doctest configs
-doctest_test_doctest_blocks = ''
+# # doctest configs
+# doctest_test_doctest_blocks = ''
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
