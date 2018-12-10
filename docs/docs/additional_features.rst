@@ -188,7 +188,7 @@ Plot the quadratic spline of :math:`f_2(x) = x^3, x \in [-1, 1]` with 10 interva
 .. image:: images/7_3_3_2.png
   :width: 600       
 
-Plot the quadratic spline of :math:`f_3(x) = \sin(x), x \in [-1,1]$ and $x \in [-\pi, \pi]` with 5 intervals and 10 intervals.
+Plot the quadratic spline of :math:`f_3(x) = \sin(x), x \in [-1,1]` and :math:`x \in [-\pi, \pi]` with 5 intervals and 10 intervals.
 
 ::
 
@@ -276,3 +276,49 @@ Here we demonstrate that the more intervals will make the splines approximations
 
 Drawing with Splines
 ~~~~~~~~~~~~~~~~~~~~
+
+This graph is shipped within ``DeriveAlive`` package as a surprise.
+
+We want to draw a graph based on the follow 20 functions.
+:math:`f_1(x) = \frac{-1}{0.5^2} x^2 + 1, x \in [-0.5, 0]`
+:math:`f_2(x) = \frac{1}{0.5^2} x^2 - 1, x \in [-0.5, 0]`
+:math:`f_3(x) = \frac{-1}{0.5} x^2 + 1, x \in [0, 0.5]`
+:math:`f_4(x) = \frac{1}{0.5} x^2 - 1, x \in [0, 0.5]`
+:math:`f_5(x) = \frac{1}{0.5} (x-1.5)^2, x \in [1, 1.5]`
+:math:`f_6(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1, 1.5]`
+:math:`f_7(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1, 1.5]`
+:math:`f_8(x) = \frac{-1}{0.5} (x-1.5)^2, x \in [1.5, 2]`
+:math:`f_9(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1.5, 2]`
+:math:`f_10(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1.5, 2]`
+:math:`f_11(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [2.5, 3]`
+:math:`f_12(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [3, 3.5]`
+:math:`f_13(x) = 1.5x - 4.75, x \in [2.5, 3.5]`
+:math:`f_14(x) = -1, x \in [2.5, 3.5]`
+:math:`f_15(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]`
+:math:`f_16(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]`
+:math:`f_17(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]`
+:math:`f_18(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]`
+:math:`f_19(x) = 1, x \in [5.5, 6.5]`
+:math:`f_20(x) = \frac{-1}{(-0.75)^2} (x-6.5)^2 + 1, x \in [5.75, 6.5]`
+
+::
+
+  >>> import surprise
+  # We first draw out the start and end points of each function
+  >>> surprise.drawPoints()
+
+.. image:: images/7_3_3_6.png
+  :width: 600       
+
+::
+  # Then we use the spline suite to draw quadratic splines based on the two points
+  >>> surprise.drawSpline()
+
+.. image:: images/7_3_3_7.png
+  :width: 600       
+
+::
+  >>> surprise.drawTogether()
+
+.. image:: images/7_3_3_8.png
+  :width: 600       

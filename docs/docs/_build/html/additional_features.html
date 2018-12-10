@@ -332,7 +332,7 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_2.png"><img alt="_images/7_3_3_2.png" src="_images/7_3_3_2.png" style="width: 600px;" /></a>
-<p>Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]$ and $x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
+<p>Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]\)</span> and <span class="math">\(x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f3</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return np.sin(var)</span>
 
@@ -413,6 +413,48 @@ original function on one given interval</li>
 </div>
 <div class="section" id="drawing-with-splines">
 <h3>Drawing with Splines<a class="headerlink" href="#drawing-with-splines" title="Permalink to this headline">¶</a></h3>
+<p>This graph is shipped within <code class="docutils literal"><span class="pre">DeriveAlive</span></code> package as a surprise.</p>
+<p>We want to draw a graph based on the follow 20 functions.
+<span class="math">\(f_1(x) = \frac{-1}{0.5^2} x^2 + 1, x \in [-0.5, 0]\)</span>
+<span class="math">\(f_2(x) = \frac{1}{0.5^2} x^2 - 1, x \in [-0.5, 0]\)</span>
+<span class="math">\(f_3(x) = \frac{-1}{0.5} x^2 + 1, x \in [0, 0.5]\)</span>
+<span class="math">\(f_4(x) = \frac{1}{0.5} x^2 - 1, x \in [0, 0.5]\)</span>
+<span class="math">\(f_5(x) = \frac{1}{0.5} (x-1.5)^2, x \in [1, 1.5]\)</span>
+<span class="math">\(f_6(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1, 1.5]\)</span>
+<span class="math">\(f_7(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1, 1.5]\)</span>
+<span class="math">\(f_8(x) = \frac{-1}{0.5} (x-1.5)^2, x \in [1.5, 2]\)</span>
+<span class="math">\(f_9(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1.5, 2]\)</span>
+<span class="math">\(f_10(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1.5, 2]\)</span>
+<span class="math">\(f_11(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [2.5, 3]\)</span>
+<span class="math">\(f_12(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [3, 3.5]\)</span>
+<span class="math">\(f_13(x) = 1.5x - 4.75, x \in [2.5, 3.5]\)</span>
+<span class="math">\(f_14(x) = -1, x \in [2.5, 3.5]\)</span>
+<span class="math">\(f_15(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span>
+<span class="math">\(f_16(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]\)</span>
+<span class="math">\(f_17(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span>
+<span class="math">\(f_18(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]\)</span>
+<span class="math">\(f_19(x) = 1, x \in [5.5, 6.5]\)</span>
+<span class="math">\(f_20(x) = \frac{-1}{(-0.75)^2} (x-6.5)^2 + 1, x \in [5.75, 6.5]\)</span></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">surprise</span>
+<span class="go"># We first draw out the start and end points of each function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">surprise</span><span class="o">.</span><span class="n">drawPoints</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_3_3_6.png"><img alt="_images/7_3_3_6.png" src="_images/7_3_3_6.png" style="width: 600px;" /></a>
+<dl class="docutils">
+<dt>::</dt>
+<dd># Then we use the spline suite to draw quadratic splines based on the two points
+&gt;&gt;&gt; surprise.drawSpline()</dd>
+</dl>
+<a class="reference internal image-reference" href="_images/7_3_3_7.png"><img alt="_images/7_3_3_7.png" src="_images/7_3_3_7.png" style="width: 600px;" /></a>
+<dl class="docutils">
+<dt>::</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">surprise</span><span class="o">.</span><span class="n">drawTogether</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<a class="reference internal image-reference" href="_images/7_3_3_8.png"><img alt="_images/7_3_3_8.png" src="_images/7_3_3_8.png" style="width: 600px;" /></a>
 </div>
 </div>
 </div>
