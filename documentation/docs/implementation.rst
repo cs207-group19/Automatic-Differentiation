@@ -68,8 +68,7 @@ API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: DeriveAlive
 
-.. autoclass:: Var
-   : members:
+
 
 
 -  Class attributes and methods:
