@@ -4,35 +4,32 @@ Software Organization
 Current directory structure
 ---------------------------
 
-"""
-cs207-FinalProject/
+::
 
-                   DeriveAlive/
-
-                               DeriveAlive.py
-
-                               __init__.py
-|   `-- root_finding.py
-|-- demos/
-|   `-- spline
-|       |-- spline.py
-|       `-- surprise.py
-|-- documentation/
-|   |-- docs/
-|   |-- milestone1.pdf
-|   `-- milestone2.pdf
-|-- tests/
-|   |-- __init__.py
-|   |-- normalized.txt
-|   |-- test_DeriveAlive.py
-|   `-- test_root_finding.py
-|-- LICENSE
-|-- __init__.py
-|-- README.md
-|-- requirements.txt
-|-- setup.cfg
-`-- setup.py
-"""
+    cs207-FinalProject/
+    |-- DeriveAlive/
+    |   |-- DeriveAlive.py
+    |   |-- __init__.py
+    |   `-- root_finding.py
+    |-- demos/
+    |   `-- spline
+    |       |-- spline.py
+    |       `-- surprise.py
+    |-- documentation/
+    |   |-- docs/
+    |   |-- milestone1.pdf
+    |   `-- milestone2.pdf
+    |-- tests/
+    |   |-- __init__.py
+    |   |-- normalized.txt
+    |   |-- test_DeriveAlive.py
+    |   `-- test_root_finding.py
+    |-- LICENSE
+    |-- __init__.py
+    |-- README.md
+    |-- requirements.txt
+    |-- setup.cfg
+    `-- setup.py
 
 Basic modules and their functionality
 -------------------------------------
