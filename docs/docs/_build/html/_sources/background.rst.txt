@@ -40,9 +40,7 @@ In the case where we have a function
 Jacobian matrix as follows, allowing us to store the gradient of each
 output with respect to each input.
 
-r"""
-
-.. math:: **J** =   \begin{bmatrix}
+.. math:: J =       \begin{bmatrix}
 					  \frac{\partial h_1}{\partial x_1} & 
 					    \frac{\partial h_1}{\partial x_2} & \ldots &
 					    \frac{\partial h_1}{\partial x_m} \\[1ex] 
@@ -54,8 +52,6 @@ r"""
 					    \frac{\partial h_n}{\partial x_2} & \ldots &
 					    \frac{\partial h_n}{\partial x_m}
 					\end{bmatrix}
-
-"""
 
 In general, if we have a function :math:`g\left(y\left(x\right)\right)`
 where :math:`y\in\mathbb{R}^{n}` and :math:`x\in\mathbb{R}^{m}`. Then
