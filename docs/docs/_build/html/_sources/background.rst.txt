@@ -1,8 +1,4 @@
 
-.. role:: math(raw)
-   :format: html latex
-..
-
 Background
 ==========
 
@@ -68,7 +64,7 @@ Consider the function:
 
 .. math:: f\left(x\right) = x - \exp\left(-2\sin^{2}\left(4x\right)\right)
 
- If we want to evaluate :math:`f` at the point :math:`x`, we construct a
+If we want to evaluate :math:`f` at the point :math:`x`, we construct a
 graph where the input value is :math:`x` and the output is :math:`y`.
 Each input variable is a node, and each subsequent operation of the
 execution trace applies an operation to one or more previous nodes (and

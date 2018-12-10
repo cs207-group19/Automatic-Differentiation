@@ -1,9 +1,5 @@
-.. role:: math(raw)
-   :format: html latex
-..
-
 References
-=======
+==========
 
 -  CS 207 Lectures 9 and 10 (Autodifferentiation)
 

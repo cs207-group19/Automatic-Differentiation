@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
-<li class="toctree-l1"><a class="reference internal" href="future.html">CS 207 Final Project: Milestone 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
 
@@ -173,9 +173,9 @@ functions, including custom methods for our elementary functions.</li>
 <li>Lists will help us maintain the collection of trace variables and
 output functions (in the case of multi-output models) from the
 computation graph in order. For example, if we have a function
-<span class="math">f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2</span>, then we store
-<span class="math">f = [f1, f2]</span>, where we have defined <span class="math">f1</span> and
-<span class="math">f2</span> as functions of <span class="math">x</span>, and we simply process the
+<span class="math">\(f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2\)</span>, then we store
+<span class="math">\(f = [f1, f2]\)</span>, where we have defined <span class="math">\(f1\)</span> and
+<span class="math">\(f2\)</span> as functions of <span class="math">\(x\)</span>, and we simply process the
 functions in order. Depending on the extensions we choose for the
 project, we may use lists to store the parents of each node in the
 graph.</li>
@@ -185,13 +185,13 @@ apply entire functions to the array, rather than to each entry
 separately. Each trace <code class="docutils literal"><span class="pre">Var</span></code> has a numpy array of derivatives
 where the length of the array is the number of input variables in
 the function. In the vector-vector case, if we have a function
-<span class="math">f: \mathbb{R}^m \rightarrow \mathbb{R}^n</span>, we can process
-this as <span class="math">f = [f_1, f_2, \ldots, f_n]</span>, where each
-<span class="math">f_i</span> is a function
-<span class="math">f_i: \mathbb{R}^m \rightarrow \mathbb{R}</span>. Our
+<span class="math">\(f: \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we can process
+this as <span class="math">\(f = [f_1, f_2, \ldots, f_n]\)</span>, where each
+<span class="math">\(f_i\)</span> is a function
+<span class="math">\(f_i: \mathbb{R}^m \rightarrow \mathbb{R}\)</span>. Our
 implementation can act as a wrapper over these functions, and we
-can evaluate each <span class="math">f_i</span> independently, so long as we define
-<span class="math">f_i</span> in terms of the <span class="math">m</span> inputs. Currently, the
+can evaluate each <span class="math">\(f_i\)</span> independently, so long as we define
+<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. Currently, the
 module supports scalar to scalar functions, but we have expanded
 several parts of the implementation to include arrays so that
 providing vector to vector functions will be a smooth transition.</li>
@@ -223,8 +223,8 @@ whether the values and derivatives are integers, floats, or lists,
 and transforms them into numpy arrays automatically.</li>
 <li>We have overloaded elementary mathematical operations such as
 addition, subtraction, multiplication, division, sine, pow, log,
-etc. that take in <span class="math">1</span> <code class="docutils literal"><span class="pre">Var</span></code> type, or <span class="math">2</span> types, or
-<span class="math">1</span> and <span class="math">1</span> constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
+etc. that take in <span class="math">\(1\)</span> <code class="docutils literal"><span class="pre">Var</span></code> type, or <span class="math">\(2\)</span> types, or
+<span class="math">\(1\)</span> and <span class="math">\(1\)</span> constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
 the next “trace&quot; variable). All other operations on constants will
 use the standard Python library. In each <code class="docutils literal"><span class="pre">Var</span></code>, we will store as
 attributes the value of the variable (which is calculated based on
@@ -242,7 +242,7 @@ objects.</li>
 <li><code class="docutils literal"><span class="pre">__sub__</span></code>: overload subtraction function to handle
 subtraction of <code class="docutils literal"><span class="pre">Var</span></code> class objects and subtraction between
 and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
-<li><code class="docutils literal"><span class="pre">__rsub__</span></code>: allow subtraction for <span class="math">a - \texttt{Var}</span>
+<li><code class="docutils literal"><span class="pre">__rsub__</span></code>: allow subtraction for <span class="math">\(a - \texttt{Var}\)</span>
 case where a is a float or an integer.</li>
 <li><code class="docutils literal"><span class="pre">__mul__</span></code>: overload multiplication function to handle
 multiplication of <code class="docutils literal"><span class="pre">Var</span></code> class objects and multiplication
@@ -251,7 +251,7 @@ between and non-<code class="docutils literal"><span class="pre">Var</span></cod
 <li><code class="docutils literal"><span class="pre">__truediv__</span></code>: overload division function to handle division
 of <code class="docutils literal"><span class="pre">Var</span></code> class objects over floats or integers.</li>
 <li><code class="docutils literal"><span class="pre">__rtruediv__</span></code>: allow division for
-<span class="math">a \div \texttt{Var}</span> case where <span class="math">a</span> is a float or
+<span class="math">\(a \div \texttt{Var}\)</span> case where <span class="math">\(a\)</span> is a float or
 an integer.</li>
 <li><code class="docutils literal"><span class="pre">__neg__</span></code>: return negated <code class="docutils literal"><span class="pre">Var</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">__abs__</span></code>: return the absolute value of <code class="docutils literal"><span class="pre">Var</span></code>.</li>
@@ -303,13 +303,13 @@ packaging instructions here:</div>
 <li><p class="first">Our explanation of our elementary functions is included in the
 “Class attributes and methods&quot; section above. For the elementary
 functions, we defined our own custom methods within the <code class="docutils literal"><span class="pre">Var</span></code>
-class so that we can calculate, for example, the <span class="math">\sin(x)</span>
-of a variable <span class="math">x</span> using a package such as <code class="docutils literal"><span class="pre">numpy</span></code>, and
-also store the proper gradient (<span class="math">\cos(x)dx</span>) to propagate
+class so that we can calculate, for example, the <span class="math">\(\sin(x)\)</span>
+of a variable <span class="math">\(x\)</span> using a package such as <code class="docutils literal"><span class="pre">numpy</span></code>, and
+also store the proper gradient (<span class="math">\(\cos(x)dx\)</span>) to propagate
 the gradients forward. For example, consider a scalar function
 where <code class="docutils literal"><span class="pre">self.val</span></code> contains the current evaluation trace and
 <code class="docutils literal"><span class="pre">self.der</span></code> is a numpy array of the derivative of the current
-trace with respect to the input. When we apply <span class="math">\sin</span>, we
+trace with respect to the input. When we apply <span class="math">\(\sin\)</span>, we
 propagate as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
            <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>

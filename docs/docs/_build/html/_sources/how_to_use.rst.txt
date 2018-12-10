@@ -11,8 +11,8 @@ How to install
   ``numpy``), since we include those dependencies as imports in our
   module. Then, the user will define an input of type ``Var`` in our
   module. After this, the user can define a function in terms of this
-  ``Var``. Essentially, the user will give the initial input math::`x`
-  and then apply math::`f` to math::`x` and store the new value and
+  ``Var``. Essentially, the user will give the initial input :math:`x`
+  and then apply :math:`f` to :math:`x` and store the new value and
   derivative with respect to :math:`x` inside :math:`f`. At each step of
   the evaluation, the program will process nodes in the implicit
   computation graph in order, propagating values and derivatives. The

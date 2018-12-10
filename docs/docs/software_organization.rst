@@ -1,8 +1,3 @@
-
-.. role:: math(raw)
-   :format: html latex
-..
-
 Software Organization
 =====================
 

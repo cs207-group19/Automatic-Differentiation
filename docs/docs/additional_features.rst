@@ -17,12 +17,14 @@ Background
 | The ``DeriveAlive`` package can be used to calculate quadratic splines
   since it automatically returns the first derivative of a function at a
   given point.
+
 | We aim to construct a piecewise quadratic spline :math:`s(x)` using
   :math:`N` equally-sized intervals over an interval for :math:`f(x)`.
   Define :math:`h=1/N`, and let :math:`s_{k}(x)` be the spline over the
   range :math:`[kh,(k+1)h]` for :math:`k=0,1,\ldots,N-1`. Each
   :math:`s_k(x)=a_kx^2+b_kx+c_k` is a quadratic, and hence the spline
   has :math:`3N` degrees of freedom in total.
+  
 | The spline coefficients satisfy the following constraints:
 
 -  Each :math:`s_k(x)` should match the function values at both of its
@@ -154,6 +156,7 @@ Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
         0.0038642295476342416
 
         >>> fig1
+
 .. image:: images/7_3_3_1.png
   :width: 600       
 

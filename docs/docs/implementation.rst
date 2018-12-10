@@ -1,9 +1,3 @@
-
-.. role:: math(raw)
-   :format: html latex
-..
-
-
 Implementation
 ==============
 

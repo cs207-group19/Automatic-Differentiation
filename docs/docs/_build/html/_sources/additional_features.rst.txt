@@ -1,13 +1,3 @@
-=================================
-CS 207 Final Project: Milestone 2
-=================================
-
-:Author: Group 19: Chen Shi, Stephen Slater, Yue Sun
-:Date:   November 2018
-
-.. role:: math(raw)
-   :format: html latex
-..
 
 Additional features
 ===================
@@ -27,12 +17,14 @@ Background
 | The ``DeriveAlive`` package can be used to calculate quadratic splines
   since it automatically returns the first derivative of a function at a
   given point.
+
 | We aim to construct a piecewise quadratic spline :math:`s(x)` using
   :math:`N` equally-sized intervals over an interval for :math:`f(x)`.
   Define :math:`h=1/N`, and let :math:`s_{k}(x)` be the spline over the
   range :math:`[kh,(k+1)h]` for :math:`k=0,1,\ldots,N-1`. Each
   :math:`s_k(x)=a_kx^2+b_kx+c_k` is a quadratic, and hence the spline
   has :math:`3N` degrees of freedom in total.
+  
 | The spline coefficients satisfy the following constraints:
 
 -  Each :math:`s_k(x)` should match the function values at both of its
@@ -148,23 +140,29 @@ Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
 
 ::
 
-        import spline as sp
-        import numpy as np
-        import matplotlib.pyplot as plt
+        >>> import spline as sp
+        >>> import numpy as np
+        >>> import matplotlib.pyplot as plt
       
-        xMin1 = -1
-        xMax1 = 1
-        nIntervals1 = 10
-        nSplinePoints1 = 5
+        >>> xMin1 = -1
+        >>> xMax1 = 1
+        >>> nIntervals1 = 10
+        >>> nSplinePoints1 = 5
 
-        y1, A1, coeffs1, ks1 = sp.quad_spline_coeff(f1, xMin1, xMax1, nIntervals1)
-        fig1 = sp.quad_spline_plot(f1, coeffs1, ks1, nSplinePoints1)
-        spline_points1 = sp.spline_points(f1, coeffs1, ks1, nSplinePoints1)
-        sp.spline_error(f1, spline_points1)
-
-::
-
+        >>> y1, A1, coeffs1, ks1 = sp.quad_spline_coeff(f1, xMin1, xMax1, nIntervals1)
+        >>> fig1 = sp.quad_spline_plot(f1, coeffs1, ks1, nSplinePoints1)
+        >>> spline_points1 = sp.spline_points(f1, coeffs1, ks1, nSplinePoints1)
+        >>> sp.spline_error(f1, spline_points1)
         0.0038642295476342416
+
+        >>> fig1
+
+.. image:: images/7_3_3_1.png
+  :width: 600       
+
+
+
+
 
 Drawing with Splines
 ~~~~~~~~~~~~~~~~~~~~
