@@ -37,8 +37,18 @@ Implementation
 
       -  input:
 
-         -  ``f``: function of interest, callable. If :math:`f` is a scalar to scalar function, then define :math:'f' as follows:
+         -  ``f``: function of interest, callable. If :math:`f` is a scalar to scalar function, then define :math: `f` as follows:
 
+         .. code-block:: python
+            :linenos:
+
+            def f(x):
+                # Use x in function
+                return x ** 2 + np.exp(x)  
+
+            If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
+         as a list. In this case, define :math:`f` as follows:
+                        
 ::
 
          def f(x):
