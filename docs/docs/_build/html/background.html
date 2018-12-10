@@ -232,7 +232,7 @@ graph where the input value is <span class="math">\(x\)</span> and the output is
 Each input variable is a node, and each subsequent operation of the
 execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).</p>
-<a class="reference internal image-reference" href="_images/computationgraph.png"><img alt="_images/computationgraph.png" src="_images/computationgraph.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="_images/computationgraph.png"><img alt="_images/computationgraph.png" src="_images/computationgraph.png" style="width: 800px;" /></a>
 <p>As we execute <span class="math">\(f(x)\)</span> in the “forward mode&quot;, we can propagate not
 only the sequential evaluations of operations in the graph given
 previous nodes, but also the derivatives using the chain rule.</p>
@@ -245,17 +245,40 @@ exponential, trigonometric, hyperbolic and logarithmic functions and
 their inverses under repeated compositions. Below is a table of some
 elementary functions and examples that we will include in our
 implementation.</p>
-<div class="math">
-\[\begin{split}\begin{tabular}{1c1c1c1} \\
-        &amp;Elementary Functions  &amp; Example \\
-        &amp;powers &amp;x^2 \\
-        &amp;roots &amp;\sqrt{x} \\
-        &amp;exponentials &amp;e^{x} \\
-        &amp;logarithms &amp;\log(x) \\
-        &amp;trigonometrics &amp;\sin(x) \\
-        &amp;inverse trigonometrics &amp;\arcsin(x) \\
-        &amp;hyperbolics &amp;\sinh(x)
-\end{tabular}\end{split}\]</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="57%" />
+<col width="43%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Elementary Functions</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>powers</td>
+<td><span class="math">\(x^2\)</span></td>
+</tr>
+<tr class="row-odd"><td>roots</td>
+<td><span class="math">\(\sqrt{x}\)</span></td>
+</tr>
+<tr class="row-even"><td>exponentials</td>
+<td><span class="math">\(e^{x}\)</span></td>
+</tr>
+<tr class="row-odd"><td>logarithms</td>
+<td><span class="math">\(\log(x)\)</span></td>
+</tr>
+<tr class="row-even"><td>trigonometrics</td>
+<td><span class="math">\(\sin(x)\)</span></td>
+</tr>
+<tr class="row-odd"><td>inverse trigonometrics</td>
+<td><span class="math">\(\arcsin(x)\)</span></td>
+</tr>
+<tr class="row-even"><td>hyperbolics</td>
+<td><span class="math">\(\sinh(x)\)</span></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

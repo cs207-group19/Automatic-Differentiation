@@ -77,7 +77,7 @@ execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).
 
 .. image:: images/computationgraph.png
-  :width: 600       
+  :width: 800       
 
 As we execute :math:`f(x)` in the “forward mode", we can propagate not
 only the sequential evaluations of operations in the graph given
@@ -93,14 +93,16 @@ their inverses under repeated compositions. Below is a table of some
 elementary functions and examples that we will include in our
 implementation.
 
-.. math::   \begin{tabular}{1c1c1c1} \\
-				&Elementary Functions  & Example \\
-				&powers &x^2 \\
-				&roots &\sqrt{x} \\
-				&exponentials &e^{x} \\
-				&logarithms &\log(x) \\
-				&trigonometrics &\sin(x) \\
-				&inverse trigonometrics &\arcsin(x) \\
-				&hyperbolics &\sinh(x)
-			\end{tabular}
+======================== ============
+Elementary Functions     Example
+======================== ============
+        powers           :math:`x^2`
+        roots            :math:`\sqrt{x}`
+     exponentials        :math:`e^{x}`  
+      logarithms         :math:`\log(x)`  
+    trigonometrics       :math:`\sin(x)` 
+ inverse trigonometrics  :math:`\arcsin(x)` 
+     hyperbolics         :math:`\sinh(x)`
+======================== ============
+
 
