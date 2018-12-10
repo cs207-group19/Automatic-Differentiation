@@ -80,9 +80,16 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Use <em>DeriveAlive</em></a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-install">How to install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#basic-demo">Basic demo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-demo">Basic demo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#declare-variables">Declare Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><span class="math">\(\R^1 \rightarrow \R^1\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2"><span class="math">\(\R^m \rightarrow \R^1\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3"><span class="math">\(\R^1 \rightarrow \R^n\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4"><span class="math">\(\R^m \rightarrow \R^n\)</span></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
@@ -136,7 +143,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>How to Use <em>DeriveAlive</em></li>
+      <li>How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -156,55 +163,178 @@
            <div itemprop="articleBody">
             
   <div class="section" id="how-to-use-derivealive">
-<h1>How to Use <em>DeriveAlive</em><a class="headerlink" href="#how-to-use-derivealive" title="Permalink to this headline">¶</a></h1>
+<h1>How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code><a class="headerlink" href="#how-to-use-derivealive" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="how-to-install">
 <h2>How to install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line">The user can either download from GitHub or use use <code class="docutils literal"><span class="pre">pip</span></code> to install
-the package. Installation details are listed in Section 4.4. After
-installation, the user will need to import our package (see pseudocode
-below). Implicitly, this will import other dependencies (such as
-<code class="docutils literal"><span class="pre">numpy</span></code>), since we include those dependencies as imports in our
-module. Then, the user will define an input of type <code class="docutils literal"><span class="pre">Var</span></code> in our
-module. After this, the user can define a function in terms of this
-<code class="docutils literal"><span class="pre">Var</span></code>. Essentially, the user will give the initial input <span class="math">\(x\)</span>
-and then apply <span class="math">\(f\)</span> to <span class="math">\(x\)</span> and store the new value and
-derivative with respect to <span class="math">\(x\)</span> inside <span class="math">\(f\)</span>. At each step of
-the evaluation, the program will process nodes in the implicit
-computation graph in order, propagating values and derivatives. The
-final output yield another <code class="docutils literal"><span class="pre">Var</span></code> containing <span class="math">\(f(x)\)</span> and
-<span class="math">\(f'(x)\)</span>.</div>
+<div class="line">The url to the project is <a class="reference external" href="https://pypi.org/project/DeriveAlive/">https://pypi.org/project/DeriveAlive/</a>.</div>
 </div>
+<blockquote>
+<div><ul>
+<li><p class="first">Create a virtual environment and activate it</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># If you don&#39;t have virtualenv, install it</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">virtualenv</span>
+<span class="c1"># Create virtual environment</span>
+<span class="n">virtualenv</span> <span class="n">env</span>
+<span class="c1"># Activate your virtual environment</span>
+<span class="n">source</span> <span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install <code class="docutils literal"><span class="pre">DeriveAlive</span></code> using pip. In the terminal, type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">DeriveAlive</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run module tests before beginning.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Navigate to https://pypi.org/project/DeriveAlive/#files</span>
+<span class="c1"># Download tar.gz folder, unzip, and enter the folder</span>
+<span class="n">pytest</span> <span class="n">tests</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
 </div>
 <div class="section" id="basic-demo">
 <h2>Basic demo<a class="headerlink" href="#basic-demo" title="Permalink to this headline">¶</a></h2>
-<p>For example, consider the case
-$f(x) = sin(x) + 5 cdot tan(x/2)$. If the user wants to evaluate
-<span class="math">\(f(x)\)</span> at <span class="math">\(x = a\)</span>, where $a = pi/2$, the user will
-instantiate a <code class="docutils literal"><span class="pre">Var</span></code> object as <code class="docutils literal"><span class="pre">da.Var(np.pi/2)</span></code>. Then, the user will
-give the initial input <span class="math">\(a\)</span> and set $y = f(a)$, which stores
-<span class="math">\(f(a)\)</span> and <span class="math">\(f'(a)\)</span> as attributes inside the <code class="docutils literal"><span class="pre">Var</span></code>
-<span class="math">\(y\)</span>. This functionality will propagate throughout the graph with
-more variables in a recursive structure, where each evaluation trace
-creates a new <code class="docutils literal"><span class="pre">Var</span></code>. See the code below for a demonstration. Note that
-<span class="math">\(\sin(\pi/2) = 1.0\)</span> and <span class="math">\(\tan(\pi/4) = 1.0\)</span>, and their
-evaluated derivatives <span class="math">\(\cos(\pi/2) = 0\)</span> and
-<span class="math">\(\frac{1}{\cos^2(\pi/4)} = 2\)</span>. We assign <span class="math">\(y = f(a)\)</span> by
-explicitly applying the <code class="docutils literal"><span class="pre">Var</span></code>-specific operations of <span class="math">\(f\)</span> to
-<span class="math">\(a\)</span>. The closed form of the derivative is
-<span class="math">\(f'(x) = \cos(x) + 5 * \frac{1}{\cos^2(x/2)} * \frac{1}{2}\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Install at command line using installation instructions in Section 4.4</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">DeriveAlive</span>
 <span class="n">python</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="c1"># Expect value of 6.0, derivative of 5.0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">tan</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-<span class="p">[</span><span class="mf">6.0</span><span class="p">]</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">]</span>
 </pre></div>
+</div>
+<div class="section" id="declare-variables">
+<h3>Declare Variables<a class="headerlink" href="#declare-variables" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Denote constants</li>
+</ul>
+<dl class="docutils">
+<dt>::</dt>
+<dd># None has to be typed, otherwise will be denoted as an R^1 variable
+&gt;&gt;&gt; a = da.Var([1], None)
+&gt;&gt;&gt; a
+Var([1], None)</dd>
+</dl>
+<ul class="simple">
+<li>Denote scalar variables and functions</li>
+</ul>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first"># The first way to denote a scalar varibale
+&gt;&gt;&gt; x = da.Var([1])
+&gt;&gt;&gt; x
+Var([1], [1])</p>
+<p># The second way to denote a scalar variable
+&gt;&gt;&gt; x = da.Var([1], [1])
+&gt;&gt;&gt; x
+Var([1], [1])</p>
+<p class="last"># Denote a scalar function
+&gt;&gt;&gt; f = 2*x + np.sin(x)
+&gt;&gt;&gt; f
+Var([2.84147098], [2.54030231])</p>
+</dd>
+</dl>
+<ul class="simple">
+<li>Denote vector variables and functions</li>
+</ul>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first"># Suppose we want to denote variables in R^3
+&gt;&gt;&gt; x = da.Var([1], [1, 0, 0])
+&gt;&gt;&gt; y = da.Var([2], [0, 1, 0])
+&gt;&gt;&gt; z = da.Var([3], [0, 0, 1])</p>
+<p># Suppose we want to denote an R^3 to R^1 function
+f = x + y + z
+&gt;&gt;&gt; f
+Var([6], [1 1 1])</p>
+<p># Suppose we want to denote an R^3 to R^3 function
+&gt;&gt;&gt; f = da.Var([x, y**2, z**4])
+&gt;&gt;&gt; f</p>
+<blockquote>
+<div><p>Values:
+[ 1  4 81],
+Jacobian:
+[[  1   0   0]</p>
+<blockquote>
+<div>[  0   4   0]
+[  0   0 108]]</div></blockquote>
+</div></blockquote>
+<p># Suppose we want to denote an R^1 to R^3 function
+&gt;&gt;&gt; x = da.Var([1])
+&gt;&gt;&gt; f = da.Var([x, np.sin(x), np.exp(x-1)])
+&gt;&gt;&gt; f</p>
+<blockquote class="last">
+<div><p>Values:
+[1.         0.84147098 1.        ],
+Jacobian:
+[[1.        ]</p>
+<blockquote>
+<div>[0.54030231]
+[1.        ]]</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+</div>
+<div class="section" id="id1">
+<h3><span class="math">\(\R^1 \rightarrow \R^1\)</span><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Consider the case <span class="math">\(f(x) = \sin(x) + 5 \tan(x/2)\)</span>. We want to calculate the value and the first derivative of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of 6.0, derivative of 5.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+<span class="p">[</span><span class="mf">6.</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+<span class="p">[</span><span class="mf">5.</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3><span class="math">\(\R^m \rightarrow \R^1\)</span><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Consider the case <span class="math">\(f(x,y) = \sin(x) + \exp(y)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x,y)\)</span> at <span class="math">\(x=\frac{\pi}{2}, y=1\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of 3.71828183, jacobian of [0, 2.71828183]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+<span class="p">[</span><span class="mf">3.71828183</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
+<span class="p">[</span><span class="mf">6.12323400e-17</span>  <span class="mf">2.71828183e+00</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3><span class="math">\(\R^1 \rightarrow \R^n\)</span><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Consider the case <span class="math">\(f(x) = (\sin(x), x^2)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1. 2.4674011], jacobian of [[0], [3.14159265]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+    <span class="n">Values</span><span class="p">:</span>
+    <span class="p">[</span><span class="mf">1.</span>        <span class="mf">2.4674011</span><span class="p">],</span>
+    <span class="n">Jacobian</span><span class="p">:</span>
+    <span class="p">[[</span><span class="mf">6.12323400e-17</span><span class="p">]</span>
+     <span class="p">[</span><span class="mf">3.14159265e+00</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3><span class="math">\(\R^m \rightarrow \R^n\)</span><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Consider the case <span class="math">\(f(x,y,z) = (\sin(x), 4y + z^3)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x,y,z)\)</span> at <span class="math">\(x=\frac{\pi}{2}, y=3, z=-2\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1, 4], jacobian of [[0 0 0], [0 4 12]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">4</span><span class="o">*</span><span class="n">y</span><span class="o">+</span><span class="n">z</span><span class="o">**</span><span class="mi">3</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
+<span class="n">Values</span><span class="p">:</span>
+<span class="p">[</span><span class="mf">1.</span> <span class="mf">4.</span><span class="p">],</span>
+<span class="n">Jacobian</span><span class="p">:</span>
+<span class="p">[[</span><span class="mf">6.123234e-17</span> <span class="mf">0.000000e+00</span> <span class="mf">0.000000e+00</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.000000e+00</span> <span class="mf">4.000000e+00</span> <span class="mf">1.200000e+01</span><span class="p">]]</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

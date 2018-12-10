@@ -8,7 +8,7 @@ will require differentiation. There are many important applications of
 automatic differentiation in optimization, machine learning, and
 numerical methods (e.g., time integration, root-finding).
 
-This documentation introduces *DeriveAlive*, a software
+This documentation introduces ``DeriveAlive``, a software
 library uses the concept of automatic differentiation to solve
 differentiation problems in scientific computing. Additional features 
 of an optimization suite and a quadratic spline suite are also listed
