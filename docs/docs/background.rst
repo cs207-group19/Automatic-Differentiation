@@ -76,6 +76,9 @@ Each input variable is a node, and each subsequent operation of the
 execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).
 
+.. image:: images/computationgraph.png
+  :width: 600       
+
 As we execute :math:`f(x)` in the “forward mode", we can propagate not
 only the sequential evaluations of operations in the graph given
 previous nodes, but also the derivatives using the chain rule.
@@ -90,13 +93,14 @@ their inverses under repeated compositions. Below is a table of some
 elementary functions and examples that we will include in our
 implementation.
 
-| 1c1c1c1
-| &Elementary Functions & Example
-| [3pt] &powers &x^2
-| [3pt] &roots &
-| [3pt] &exponentials &e^x
-| [3pt] &logarithms &(x)
-| [3pt] &trigonometrics &(x)
-| [3pt] &inverse trigonometrics &(x)
-| [3pt] &hyperbolics &(x)
+.. math::   \begin{tabular}{1c1c1c1} \\
+				&Elementary Functions  & Example \\
+				&powers &x^2 \\
+				&roots &\sqrt{x} \\
+				&exponentials &e^{x} \\
+				&logarithms &\log(x) \\
+				&trigonometrics &\sin(x) \\
+				&inverse trigonometrics &\arcsin(x) \\
+				&hyperbolics &\sinh(x)
+			\end{tabular}
 

@@ -232,6 +232,7 @@ graph where the input value is <span class="math">\(x\)</span> and the output is
 Each input variable is a node, and each subsequent operation of the
 execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).</p>
+<a class="reference internal image-reference" href="_images/computationgraph.png"><img alt="_images/computationgraph.png" src="_images/computationgraph.png" style="width: 600px;" /></a>
 <p>As we execute <span class="math">\(f(x)\)</span> in the “forward mode&quot;, we can propagate not
 only the sequential evaluations of operations in the graph given
 previous nodes, but also the derivatives using the chain rule.</p>
@@ -244,17 +245,17 @@ exponential, trigonometric, hyperbolic and logarithmic functions and
 their inverses under repeated compositions. Below is a table of some
 elementary functions and examples that we will include in our
 implementation.</p>
-<div class="line-block">
-<div class="line">1c1c1c1</div>
-<div class="line">&amp;Elementary Functions &amp; Example</div>
-<div class="line">[3pt] &amp;powers &amp;x^2</div>
-<div class="line">[3pt] &amp;roots &amp;</div>
-<div class="line">[3pt] &amp;exponentials &amp;e^x</div>
-<div class="line">[3pt] &amp;logarithms &amp;(x)</div>
-<div class="line">[3pt] &amp;trigonometrics &amp;(x)</div>
-<div class="line">[3pt] &amp;inverse trigonometrics &amp;(x)</div>
-<div class="line">[3pt] &amp;hyperbolics &amp;(x)</div>
-</div>
+<div class="math">
+\[\begin{split}\begin{tabular}{1c1c1c1} \\
+        &amp;Elementary Functions  &amp; Example \\
+        &amp;powers &amp;x^2 \\
+        &amp;roots &amp;\sqrt{x} \\
+        &amp;exponentials &amp;e^{x} \\
+        &amp;logarithms &amp;\log(x) \\
+        &amp;trigonometrics &amp;\sin(x) \\
+        &amp;inverse trigonometrics &amp;\arcsin(x) \\
+        &amp;hyperbolics &amp;\sinh(x)
+\end{tabular}\end{split}\]</div>
 </div>
 </div>
 
