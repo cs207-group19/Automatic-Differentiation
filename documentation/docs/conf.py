@@ -41,7 +41,6 @@ extensions = [
               'sphinx.ext.autosummary',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
-              'numpydoc',
               ]
 
 # autodoc configs
