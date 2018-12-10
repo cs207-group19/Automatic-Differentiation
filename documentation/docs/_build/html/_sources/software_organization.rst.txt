@@ -4,10 +4,14 @@ Software Organization
 Current directory structure
 ---------------------------
 
+"""
 cs207-FinalProject/
-|-- DeriveAlive/
-|   |-- DeriveAlive.py
-|   |-- __init__.py
+
+                   DeriveAlive/
+
+                               DeriveAlive.py
+
+                               __init__.py
 |   `-- root_finding.py
 |-- demos/
 |   `-- spline
@@ -28,6 +32,7 @@ cs207-FinalProject/
 |-- requirements.txt
 |-- setup.cfg
 `-- setup.py
+"""
 
 Basic modules and their functionality
 -------------------------------------
