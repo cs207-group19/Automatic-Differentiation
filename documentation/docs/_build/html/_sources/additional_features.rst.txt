@@ -5,8 +5,146 @@ Additional features
 Root finding
 ------------
 
+Background
+~~~~~~~~~~
+
+Newton root finding starts from an initial guess for :math:`x_1` and converges to :math:`x` such that :math:`f(x) = 0`. The algorithm is iterative. At each step :math:`t`, the algorithm finds a line (or plane, in higher dimensions) that is tangent to :math:`f` at :math:`x_t`. The new guess for :math:`x_{t+1}` is where the tangent line crosses the :math:`x`-axis. This generalizes to :math:`m` dimensions.
+
+- Algorithm (univariate case)
+
+for :math:`t` iterations or until step size < ``tol``:
+    :math:`x_{t+1} \Leftarrow x_{t} - \frac{f(x_t)}{f'(x_t)}`
+
+- Algorithm (multivariate case)
+
+for :math:`t` iterations or until step size < ``tol``:
+    :math:`\textbf{x}_{t+1} \Leftarrow \textbf{x}_t - (J(f)(\textbf{x}_t))^{-1}f(\textbf{x}_t)`
+
+In the multivariate case, :math:`J(f)` is the Jacobian of :math:`f`. If :math:`J(f)` is non-square, we use the pseudoinverse.
+
+Here is an example in the univariate case:
+
+.. image:: images/root_finding.gif
+  :width: 600
+
+A common application of root finding is in Lagrangian optimization. For example, consider the Lagrangian :math:`\mathcal{L}(\textbf{b}, \lambda)`. One can solve for the weights :math:`\textbf{b}, \lambda` such that :math:`\frac{\partial \mathcal{L}{\partial b_j} = \frac{\partial \mathcal{L}}{\partial \lambda} = 0`.
+
+Implementation
+~~~~~~~~~~~~~~
+
+-  Methods
+
+   -  ``NewtonRoot``: return a root of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`
+
+      -  input:
+
+         -  ``f``: function of interest, callable. If :math:`f` is a scalar to scalar function, then define :math:'f' as follows:
+
+::         
+         def f(x):
+             # Use x in function
+             return x ** 2 + np.exp(x)
+:
+         
+         If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
+         as a list. In this case, define :math:`f` as follows:
+
+::         
+         def f(variables):
+             x, y, z = variables
+             return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
+:
+         
+         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as:
+
+::
+         x0 = da.Var(1, [1, 0, 0])
+         y0 = da.Var(2, [0, 1, 0])
+         z0 = da.Var(3, [0, 0, 1])
+         x = [x0, y0, z0]
+:
+
+         -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
+
+         -  ``tol``: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1)` is smaller than ``tol``, then the algorithm will add that step and then terminate, even if the number of iterations has not reached ``iters``.
+
+      -  return:
+
+         -  ``root``: da.Var :math:`\in \mathbb{R}^m`. The `val` attribute contains a numpy array of the root that the algorithm found in :math:`min(iters, t)` iterations (:math:`iters, t` defined above). The `der` attribute contains the Jacobian value at the specified root.
+
+         -  ``var_path``: a numpy array (:math:`\mathbb{R}^{n \times m}`), where :math:`n = min(iters, t)` is the number of steps of the algorithm and :math:`m` if the dimension of the root, where rows of the array are steps taken in consecutive order.
+
+         -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
+
+-  External dependencies
+
+   -  ``DeriveAlive``
+
+   -  ``NumPy``
+
+   -  ``matplotlib.pyplot``
+
 Optimization
 ------------
+
+Background
+~~~~~~~~~~
+
+Gradient Descent is used to find the local minimum of a function :math:`f` by taking locally optimum steps in the direction of steepest descent. A common application is in machine learning when a user desires to find optimal weights to minimize a loss function.
+
+Here is a visualization of Gradient Descent on a convex function of 2 variables:
+
+.. image:: images/gradient_descent.png
+  :width: 600
+
+Implementation
+~~~~~~~~~~~~~~
+
+-  Methods
+
+   -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum.
+
+      -  input:
+
+         -  ``f``: function of interest, callable. In machine learning applications, this should be the cost function. For example, if solving for optimal weights to minimize a cost function :math:`f`, then :math:`f` can be defined as :math:`\frac{1}{2m}` times the sum of :math:`m` squared residuals.
+
+         If :math:`f` is a scalar to scalar function, then define :math:'f' as follows:
+
+::
+         def f(x):
+             # Use x in function
+             return x ** 2 + np.exp(x)
+:
+
+         If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
+         as a list. In this case, define :math:`f` as follows:
+
+::
+         def f(variables):
+             x, y, z = variables
+             return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
+:
+
+         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as follows:
+        
+::
+        >>> x0 = da.Var(1, [1, 0, 0])
+        >>> y0 = da.Var(2, [0, 1, 0])
+        >>> z0 = da.Var(3, [0, 0, 1])
+        >>> x = [x0, y0, z0]
+:
+
+         -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
+
+         -  ``tol``: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1)` is smaller than ``tol``, then the algorithm will add that step and then terminate, even if the number of iterations has not reached ``iters``.
+
+      -  return:
+
+         -  ``minimum``: da.Var :math:`\in \mathbb{R}^m`. The `val` attribute contains a numpy array of the minimum that the algorithm found in :math:`min(iters, t)` iterations (:math:`iters, t` defined above). The `der` attribute contains the Jacobian value at the specified root.
+
+         -  ``var_path``: a numpy array (:math:`\mathbb{R}^{n \times m}`), where :math:`n = min(iters, t)` is the number of steps of the algorithm and :math:`m` if the dimension of the minimum, where rows of the array are steps taken in consecutive order.
+
+         -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
 
 Quadratic Splines
 -----------------
