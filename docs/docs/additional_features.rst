@@ -1,13 +1,3 @@
-=================================
-CS 207 Final Project: Milestone 2
-=================================
-
-:Author: Group 19: Chen Shi, Stephen Slater, Yue Sun
-:Date:   November 2018
-
-.. role:: math(raw)
-   :format: html latex
-..
 
 Additional features
 ===================
@@ -148,23 +138,28 @@ Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
 
 ::
 
-        import spline as sp
-        import numpy as np
-        import matplotlib.pyplot as plt
+        >>> import spline as sp
+        >>> import numpy as np
+        >>> import matplotlib.pyplot as plt
       
-        xMin1 = -1
-        xMax1 = 1
-        nIntervals1 = 10
-        nSplinePoints1 = 5
+        >>> xMin1 = -1
+        >>> xMax1 = 1
+        >>> nIntervals1 = 10
+        >>> nSplinePoints1 = 5
 
-        y1, A1, coeffs1, ks1 = sp.quad_spline_coeff(f1, xMin1, xMax1, nIntervals1)
-        fig1 = sp.quad_spline_plot(f1, coeffs1, ks1, nSplinePoints1)
-        spline_points1 = sp.spline_points(f1, coeffs1, ks1, nSplinePoints1)
-        sp.spline_error(f1, spline_points1)
-
-::
-
+        >>> y1, A1, coeffs1, ks1 = sp.quad_spline_coeff(f1, xMin1, xMax1, nIntervals1)
+        >>> fig1 = sp.quad_spline_plot(f1, coeffs1, ks1, nSplinePoints1)
+        >>> spline_points1 = sp.spline_points(f1, coeffs1, ks1, nSplinePoints1)
+        >>> sp.spline_error(f1, spline_points1)
         0.0038642295476342416
+
+        >>> fig1
+.. image:: images/7_3_3_1.png
+  :width: 600       
+
+
+
+
 
 Drawing with Splines
 ~~~~~~~~~~~~~~~~~~~~
