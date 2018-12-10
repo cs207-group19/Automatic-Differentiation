@@ -209,51 +209,46 @@
 </ul>
 </li>
 </ul>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first docutils">
-<dt>def f(x):</dt>
-<dd># Use x in function
-return x ** 2 + np.exp(x)</dd>
-</dl>
-<p class="last">If <span class="math">\(f\)</span> is a function of multiple scalars (i.e. <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>), the arguments to <span class="math">\(f\)</span> must be passed in
-as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
-</dd>
-</dl>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first docutils">
-<dt>def f(variables):</dt>
-<dd>x, y, z = variables
-return x ** 2 + y ** 2 + z ** 2 + np.sin(x)</dd>
-</dl>
-<ul class="last simple">
-<li><code class="docutils literal"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math">\(f\)</span>. If <span class="math">\(f\)</span> is a scalar to scalar function (i.e. <span class="math">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal"><span class="pre">x</span></code> as:</li>
-</ul>
-</dd>
-</dl>
-<dl class="docutils">
-<dt>::</dt>
-<dd><blockquote class="first">
-<div><p>x0 = da.Var(1, [1, 0, 0])
-y0 = da.Var(2, [0, 1, 0])
-z0 = da.Var(3, [0, 0, 1])
-x = [x0, y0, z0]</p>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math">\((t, iters)\)</span> iterations, where <span class="math">\(t\)</span> is the number of steps until <code class="docutils literal"><span class="pre">tol</span></code> is satisfied.</li>
-<li><code class="docutils literal"><span class="pre">tol</span></code>: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1)\)</span> is smaller than <code class="docutils literal"><span class="pre">tol</span></code>, then the algorithm will add that step and then terminate, even if the number of iterations has not reached <code class="docutils literal"><span class="pre">iters</span></code>.</li>
-</ul>
-</div></blockquote>
-<ul class="last simple">
-<li>return:<ul>
-<li><code class="docutils literal"><span class="pre">root</span></code>: da.Var <span class="math">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the root that the algorithm found in <span class="math">\(min(iters, t)\)</span> iterations (<span class="math">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
-<li><code class="docutils literal"><span class="pre">var_path</span></code>: a numpy array (<span class="math">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math">\(m\)</span> if the dimension of the root, where rows of the array are steps taken in consecutive order.</li>
-<li><code class="docutils literal"><span class="pre">g_path</span></code>: a numpy array (<span class="math">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math">\(f\)</span> at each guess in <code class="docutils literal"><span class="pre">var_path</span></code>.</li>
-</ul>
-</li>
-</ul>
-</dd>
-</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Use x in function</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>def f(x):
+    # Use x in function
+    return x ** 2 + np.exp(x)
+
+If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
+as a list. In this case, define :math:`f` as follows:
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>def f(variables):
+    x, y, z = variables
+    return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
+
+
+-  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as:
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>   x0 = da.Var(1, [1, 0, 0])
+   y0 = da.Var(2, [0, 1, 0])
+   z0 = da.Var(3, [0, 0, 1])
+   x = [x0, y0, z0]
+
+
+   -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
+
+   -  ``tol``: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1)` is smaller than ``tol``, then the algorithm will add that step and then terminate, even if the number of iterations has not reached ``iters``.
+
+-  return:
+
+   -  ``root``: da.Var :math:`\in \mathbb{R}^m`. The `val` attribute contains a numpy array of the root that the algorithm found in :math:`min(iters, t)` iterations (:math:`iters, t` defined above). The `der` attribute contains the Jacobian value at the specified root.
+
+   -  ``var_path``: a numpy array (:math:`\mathbb{R}^{n \times m}`), where :math:`n = min(iters, t)` is the number of steps of the algorithm and :math:`m` if the dimension of the root, where rows of the array are steps taken in consecutive order.
+
+   -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
+</pre></div>
+</div>
 <ul class="simple">
 <li>External dependencies<ul>
 <li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
