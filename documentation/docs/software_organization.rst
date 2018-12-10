@@ -17,32 +17,17 @@ cs207-FinalProject/
 | |-- docs/
 | |-- milestone1.pdf
 | `-- milestone2.pdf
-`-- tests/
-  |-- __init__.py
-  |-- normalized.txt
-  |-- test_DeriveAlive.py
-  `-- test_root_finding.py
+|-- tests/
+| |-- __init__.py
+| |-- normalized.txt
+| |-- test_DeriveAlive.py
+| `-- test_root_finding.py
 |-- LICENSE
 |-- __init__.py
 |-- README.md
 |-- requirements.txt
 |-- setup.cfg
 `-- setup.py
-
-.. math::
-
-   \begin{aligned}
-   \texttt{cs207-FinalProject/} & \\
-   & \texttt{README.md} \\
-   & \texttt{LICENSE} \\
-   & \texttt{DeriveAlive/} \\
-   & \indent \:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\: \texttt{DeriveAlive.py} \\
-   & \texttt{docs/} \\
-   & \indent \:\:\:\:\texttt{milestone1.pdf} \\
-   & \indent \:\:\:\:\texttt{milestone2.pdf} \\
-   & \texttt{tests/} \\
-   & \indent \:\:\:\:\:\:\texttt{test\_DeriveAlive.py} \\
-   & \cdots\end{aligned}
 
 Basic modules and their functionality
 -------------------------------------
@@ -99,7 +84,6 @@ We provide two ways for our package installation: GitHub and PyPI.
               # Activate your virtual environment
               source env/bin/activate
 
-      | 
 
    -  Install required packages and run module tests in ``tests/``
 
