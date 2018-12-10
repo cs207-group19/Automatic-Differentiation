@@ -44,7 +44,7 @@ Implementation
          def f(x):
              # Use x in function
              return x ** 2 + np.exp(x)
-:
+
          
          If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
          as a list. In this case, define :math:`f` as follows:
@@ -53,7 +53,7 @@ Implementation
          def f(variables):
              x, y, z = variables
              return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
-:
+
          
          -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as:
 
@@ -62,7 +62,7 @@ Implementation
          y0 = da.Var(2, [0, 1, 0])
          z0 = da.Var(3, [0, 0, 1])
          x = [x0, y0, z0]
-:
+
 
          -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
 
@@ -114,7 +114,7 @@ Implementation
          def f(x):
              # Use x in function
              return x ** 2 + np.exp(x)
-:
+
 
          If :math:`f` is a function of multiple scalars (i.e. :math:`\mathbb{R}^m \Rightarrow \mathbb{R}^1`), the arguments to :math:`f` must be passed in
          as a list. In this case, define :math:`f` as follows:
@@ -123,7 +123,7 @@ Implementation
          def f(variables):
              x, y, z = variables
              return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
-:
+
 
          -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as follows:
         
@@ -132,7 +132,7 @@ Implementation
         >>> y0 = da.Var(2, [0, 1, 0])
         >>> z0 = da.Var(3, [0, 0, 1])
         >>> x = [x0, y0, z0]
-:
+
 
          -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
 

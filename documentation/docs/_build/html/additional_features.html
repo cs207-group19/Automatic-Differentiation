@@ -80,7 +80,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to Use <code class="docutils literal"><span class="pre">DeriveAlive</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
@@ -176,33 +176,33 @@
 <h2>Root finding<a class="headerlink" href="#root-finding" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="background">
 <h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
-<p>Newton root finding starts from an initial guess for <span class="math notranslate nohighlight">\(x_1\)</span> and converges to <span class="math notranslate nohighlight">\(x\)</span> such that <span class="math notranslate nohighlight">\(f(x) = 0\)</span>. The algorithm is iterative. At each step <span class="math notranslate nohighlight">\(t\)</span>, the algorithm finds a line (or plane, in higher dimensions) that is tangent to <span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(x_t\)</span>. The new guess for <span class="math notranslate nohighlight">\(x_{t+1}\)</span> is where the tangent line crosses the <span class="math notranslate nohighlight">\(x\)</span>-axis. This generalizes to <span class="math notranslate nohighlight">\(m\)</span> dimensions.</p>
+<p>Newton root finding starts from an initial guess for <span class="math">\(x_1\)</span> and converges to <span class="math">\(x\)</span> such that <span class="math">\(f(x) = 0\)</span>. The algorithm is iterative. At each step <span class="math">\(t\)</span>, the algorithm finds a line (or plane, in higher dimensions) that is tangent to <span class="math">\(f\)</span> at <span class="math">\(x_t\)</span>. The new guess for <span class="math">\(x_{t+1}\)</span> is where the tangent line crosses the <span class="math">\(x\)</span>-axis. This generalizes to <span class="math">\(m\)</span> dimensions.</p>
 <ul class="simple">
 <li>Algorithm (univariate case)</li>
 </ul>
 <dl class="docutils">
-<dt>for <span class="math notranslate nohighlight">\(t\)</span> iterations or until step size &lt; <code class="docutils literal notranslate"><span class="pre">tol</span></code>:</dt>
-<dd><span class="math notranslate nohighlight">\(x_{t+1} \Leftarrow x_{t} - \frac{f(x_t)}{f'(x_t)}\)</span></dd>
+<dt>for <span class="math">\(t\)</span> iterations or until step size &lt; <code class="docutils literal"><span class="pre">tol</span></code>:</dt>
+<dd><span class="math">\(x_{t+1} \Leftarrow x_{t} - \frac{f(x_t)}{f'(x_t)}\)</span></dd>
 </dl>
 <ul class="simple">
 <li>Algorithm (multivariate case)</li>
 </ul>
 <dl class="docutils">
-<dt>for <span class="math notranslate nohighlight">\(t\)</span> iterations or until step size &lt; <code class="docutils literal notranslate"><span class="pre">tol</span></code>:</dt>
-<dd><span class="math notranslate nohighlight">\(\textbf{x}_{t+1} \Leftarrow \textbf{x}_t - (J(f)(\textbf{x}_t))^{-1}f(\textbf{x}_t)\)</span></dd>
+<dt>for <span class="math">\(t\)</span> iterations or until step size &lt; <code class="docutils literal"><span class="pre">tol</span></code>:</dt>
+<dd><span class="math">\(\textbf{x}_{t+1} \Leftarrow \textbf{x}_t - (J(f)(\textbf{x}_t))^{-1}f(\textbf{x}_t)\)</span></dd>
 </dl>
-<p>In the multivariate case, <span class="math notranslate nohighlight">\(J(f)\)</span> is the Jacobian of <span class="math notranslate nohighlight">\(f\)</span>. If <span class="math notranslate nohighlight">\(J(f)\)</span> is non-square, we use the pseudoinverse.</p>
+<p>In the multivariate case, <span class="math">\(J(f)\)</span> is the Jacobian of <span class="math">\(f\)</span>. If <span class="math">\(J(f)\)</span> is non-square, we use the pseudoinverse.</p>
 <p>Here is an example in the univariate case:</p>
 <a class="reference internal image-reference" href="_images/root_finding.gif"><img alt="_images/root_finding.gif" src="_images/root_finding.gif" style="width: 600px;" /></a>
-<p>A common application of root finding is in Lagrangian optimization. For example, consider the Lagrangian <span class="math notranslate nohighlight">\(\mathcal{L}(\textbf{b}, \lambda)\)</span>. One can solve for the weights <span class="math notranslate nohighlight">\(\textbf{b}, \lambda\)</span> such that <span class="math notranslate nohighlight">\(\frac{\partial \mathcal{L}{\partial b_j} = \frac{\partial \mathcal{L}}{\partial \lambda} = 0\)</span>.</p>
+<p>A common application of root finding is in Lagrangian optimization. For example, consider the Lagrangian <span class="math">\(\mathcal{L}(\textbf{b}, \lambda)\)</span>. One can solve for the weights <span class="math">\(\textbf{b}, \lambda\)</span> such that <span class="math">\(\frac{\partial \mathcal{L}{\partial b_j} = \frac{\partial \mathcal{L}}{\partial \lambda} = 0\)</span>.</p>
 </div>
 <div class="section" id="implementation">
 <h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Methods<ul>
-<li><code class="docutils literal notranslate"><span class="pre">NewtonRoot</span></code>: return a root of a function <span class="math notranslate nohighlight">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span><ul>
+<li><code class="docutils literal"><span class="pre">NewtonRoot</span></code>: return a root of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span><ul>
 <li>input:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest, callable. If <span class="math notranslate nohighlight">\(f\)</span> is a scalar to scalar function, then define :math:’f’ as follows:</li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest, callable. If <span class="math">\(f\)</span> is a scalar to scalar function, then define :math:’f’ as follows:</li>
 </ul>
 </li>
 </ul>
@@ -212,61 +212,54 @@
 </ul>
 <dl class="docutils">
 <dt>::</dt>
-<dd><dl class="first last docutils">
+<dd><dl class="first docutils">
 <dt>def f(x):</dt>
 <dd># Use x in function
 return x ** 2 + np.exp(x)</dd>
 </dl>
+<p class="last">If <span class="math">\(f\)</span> is a function of multiple scalars (i.e. <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>), the arguments to <span class="math">\(f\)</span> must be passed in
+as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 </dd>
 </dl>
-<p>:</p>
-<blockquote>
-<div>If <span class="math notranslate nohighlight">\(f\)</span> is a function of multiple scalars (i.e. <span class="math notranslate nohighlight">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>), the arguments to <span class="math notranslate nohighlight">\(f\)</span> must be passed in
-as a list. In this case, define <span class="math notranslate nohighlight">\(f\)</span> as follows:</div></blockquote>
 <dl class="docutils">
 <dt>::</dt>
-<dd><dl class="first last docutils">
+<dd><dl class="first docutils">
 <dt>def f(variables):</dt>
 <dd>x, y, z = variables
 return x ** 2 + y ** 2 + z ** 2 + np.sin(x)</dd>
 </dl>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math">\(f\)</span>. If <span class="math">\(f\)</span> is a scalar to scalar function (i.e. <span class="math">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal"><span class="pre">x</span></code> as:</li>
+</ul>
 </dd>
 </dl>
-<p>:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math notranslate nohighlight">\(f\)</span>. If <span class="math notranslate nohighlight">\(f\)</span> is a scalar to scalar function (i.e. <span class="math notranslate nohighlight">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal notranslate"><span class="pre">x</span></code> as:</li>
-</ul>
-</div></blockquote>
 <dl class="docutils">
 <dt>::</dt>
-<dd>x0 = da.Var(1, [1, 0, 0])
+<dd><blockquote class="first">
+<div><p>x0 = da.Var(1, [1, 0, 0])
 y0 = da.Var(2, [0, 1, 0])
 z0 = da.Var(3, [0, 0, 1])
-x = [x0, y0, z0]</dd>
-</dl>
-<p>:</p>
-<blockquote>
-<div><blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math notranslate nohighlight">\((t, iters)\)</span> iterations, where <span class="math notranslate nohighlight">\(t\)</span> is the number of steps until <code class="docutils literal notranslate"><span class="pre">tol</span></code> is satisfied.</li>
-<li><code class="docutils literal notranslate"><span class="pre">tol</span></code>: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of <span class="math notranslate nohighlight">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1)\)</span> is smaller than <code class="docutils literal notranslate"><span class="pre">tol</span></code>, then the algorithm will add that step and then terminate, even if the number of iterations has not reached <code class="docutils literal notranslate"><span class="pre">iters</span></code>.</li>
+x = [x0, y0, z0]</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math">\((t, iters)\)</span> iterations, where <span class="math">\(t\)</span> is the number of steps until <code class="docutils literal"><span class="pre">tol</span></code> is satisfied.</li>
+<li><code class="docutils literal"><span class="pre">tol</span></code>: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1)\)</span> is smaller than <code class="docutils literal"><span class="pre">tol</span></code>, then the algorithm will add that step and then terminate, even if the number of iterations has not reached <code class="docutils literal"><span class="pre">iters</span></code>.</li>
 </ul>
 </div></blockquote>
-<ul class="simple">
+<ul class="last simple">
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">root</span></code>: da.Var <span class="math notranslate nohighlight">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the root that the algorithm found in <span class="math notranslate nohighlight">\(min(iters, t)\)</span> iterations (<span class="math notranslate nohighlight">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
-<li><code class="docutils literal notranslate"><span class="pre">var_path</span></code>: a numpy array (<span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math notranslate nohighlight">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math notranslate nohighlight">\(m\)</span> if the dimension of the root, where rows of the array are steps taken in consecutive order.</li>
-<li><code class="docutils literal notranslate"><span class="pre">g_path</span></code>: a numpy array (<span class="math notranslate nohighlight">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math notranslate nohighlight">\(f\)</span> at each guess in <code class="docutils literal notranslate"><span class="pre">var_path</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">root</span></code>: da.Var <span class="math">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the root that the algorithm found in <span class="math">\(min(iters, t)\)</span> iterations (<span class="math">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
+<li><code class="docutils literal"><span class="pre">var_path</span></code>: a numpy array (<span class="math">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math">\(m\)</span> if the dimension of the root, where rows of the array are steps taken in consecutive order.</li>
+<li><code class="docutils literal"><span class="pre">g_path</span></code>: a numpy array (<span class="math">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math">\(f\)</span> at each guess in <code class="docutils literal"><span class="pre">var_path</span></code>.</li>
 </ul>
 </li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <ul class="simple">
 <li>External dependencies<ul>
-<li><code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">NumPy</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></li>
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
 </ul>
 </li>
 </ul>
@@ -276,7 +269,7 @@ x = [x0, y0, z0]</dd>
 <h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
 <h3>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>Gradient Descent is used to find the local minimum of a function <span class="math notranslate nohighlight">\(f\)</span> by taking locally optimum steps in the direction of steepest descent. A common application is in machine learning when a user desires to find optimal weights to minimize a loss function.</p>
+<p>Gradient Descent is used to find the local minimum of a function <span class="math">\(f\)</span> by taking locally optimum steps in the direction of steepest descent. A common application is in machine learning when a user desires to find optimal weights to minimize a loss function.</p>
 <p>Here is a visualization of Gradient Descent on a convex function of 2 variables:</p>
 <a class="reference internal image-reference" href="_images/gradient_descent.png"><img alt="_images/gradient_descent.png" src="_images/gradient_descent.png" style="width: 600px;" /></a>
 </div>
@@ -285,13 +278,13 @@ x = [x0, y0, z0]</dd>
 <ul>
 <li><p class="first">Methods</p>
 <ul>
-<li><p class="first"><code class="docutils literal notranslate"><span class="pre">GradientDescent</span></code>: solve for a local minimum of a function <span class="math notranslate nohighlight">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>. If <span class="math notranslate nohighlight">\(f\)</span> is a convex function, then the local minimum is a global minimum.</p>
+<li><p class="first"><code class="docutils literal"><span class="pre">GradientDescent</span></code>: solve for a local minimum of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>. If <span class="math">\(f\)</span> is a convex function, then the local minimum is a global minimum.</p>
 <ul>
 <li><p class="first">input:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest, callable. In machine learning applications, this should be the cost function. For example, if solving for optimal weights to minimize a cost function <span class="math notranslate nohighlight">\(f\)</span>, then <span class="math notranslate nohighlight">\(f\)</span> can be defined as <span class="math notranslate nohighlight">\(\frac{1}{2m}\)</span> times the sum of <span class="math notranslate nohighlight">\(m\)</span> squared residuals.</li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest, callable. In machine learning applications, this should be the cost function. For example, if solving for optimal weights to minimize a cost function <span class="math">\(f\)</span>, then <span class="math">\(f\)</span> can be defined as <span class="math">\(\frac{1}{2m}\)</span> times the sum of <span class="math">\(m\)</span> squared residuals.</li>
 </ul>
-<p>If <span class="math notranslate nohighlight">\(f\)</span> is a scalar to scalar function, then define :math:’f’ as follows:</p>
+<p>If <span class="math">\(f\)</span> is a scalar to scalar function, then define :math:’f’ as follows:</p>
 </li>
 </ul>
 </li>
@@ -300,59 +293,53 @@ x = [x0, y0, z0]</dd>
 </ul>
 <dl class="docutils">
 <dt>::</dt>
-<dd><dl class="first last docutils">
+<dd><dl class="first docutils">
 <dt>def f(x):</dt>
 <dd># Use x in function
 return x ** 2 + np.exp(x)</dd>
 </dl>
+<p class="last">If <span class="math">\(f\)</span> is a function of multiple scalars (i.e. <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>), the arguments to <span class="math">\(f\)</span> must be passed in
+as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 </dd>
 </dl>
-<p>:</p>
-<blockquote>
-<div>If <span class="math notranslate nohighlight">\(f\)</span> is a function of multiple scalars (i.e. <span class="math notranslate nohighlight">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>), the arguments to <span class="math notranslate nohighlight">\(f\)</span> must be passed in
-as a list. In this case, define <span class="math notranslate nohighlight">\(f\)</span> as follows:</div></blockquote>
 <dl class="docutils">
 <dt>::</dt>
-<dd><dl class="first last docutils">
+<dd><dl class="first docutils">
 <dt>def f(variables):</dt>
 <dd>x, y, z = variables
 return x ** 2 + y ** 2 + z ** 2 + np.sin(x)</dd>
 </dl>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math">\(f\)</span>. If <span class="math">\(f\)</span> is a scalar to scalar function (i.e. <span class="math">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal"><span class="pre">x</span></code> as follows:</li>
+</ul>
 </dd>
 </dl>
-<p>:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math notranslate nohighlight">\(f\)</span>. If <span class="math notranslate nohighlight">\(f\)</span> is a scalar to scalar function (i.e. <span class="math notranslate nohighlight">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal notranslate"><span class="pre">x</span></code> as follows:</li>
-</ul>
-</div></blockquote>
 <dl class="docutils">
 <dt>::</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<dd><blockquote class="first">
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y0</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z0</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span><span class="p">]</span>
 </pre></div>
 </div>
-</dd>
-</dl>
-<p>:</p>
 <blockquote>
-<div><blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math notranslate nohighlight">\((t, iters)\)</span> iterations, where <span class="math notranslate nohighlight">\(t\)</span> is the number of steps until <code class="docutils literal notranslate"><span class="pre">tol</span></code> is satisfied.</li>
-<li><code class="docutils literal notranslate"><span class="pre">tol</span></code>: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of <span class="math notranslate nohighlight">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1)\)</span> is smaller than <code class="docutils literal notranslate"><span class="pre">tol</span></code>, then the algorithm will add that step and then terminate, even if the number of iterations has not reached <code class="docutils literal notranslate"><span class="pre">iters</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math">\((t, iters)\)</span> iterations, where <span class="math">\(t\)</span> is the number of steps until <code class="docutils literal"><span class="pre">tol</span></code> is satisfied.</li>
+<li><code class="docutils literal"><span class="pre">tol</span></code>: int or float, optional, default=1e-10. If the size of the update step (L2 norm in the case of <span class="math">\(\mathbb{R}^m \Rightarrow \mathbb{R}^1)\)</span> is smaller than <code class="docutils literal"><span class="pre">tol</span></code>, then the algorithm will add that step and then terminate, even if the number of iterations has not reached <code class="docutils literal"><span class="pre">iters</span></code>.</li>
 </ul>
 </div></blockquote>
-<ul class="simple">
+</div></blockquote>
+<ul class="last simple">
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">minimum</span></code>: da.Var <span class="math notranslate nohighlight">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the minimum that the algorithm found in <span class="math notranslate nohighlight">\(min(iters, t)\)</span> iterations (<span class="math notranslate nohighlight">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
-<li><code class="docutils literal notranslate"><span class="pre">var_path</span></code>: a numpy array (<span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math notranslate nohighlight">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math notranslate nohighlight">\(m\)</span> if the dimension of the minimum, where rows of the array are steps taken in consecutive order.</li>
-<li><code class="docutils literal notranslate"><span class="pre">g_path</span></code>: a numpy array (<span class="math notranslate nohighlight">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math notranslate nohighlight">\(f\)</span> at each guess in <code class="docutils literal notranslate"><span class="pre">var_path</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">minimum</span></code>: da.Var <span class="math">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the minimum that the algorithm found in <span class="math">\(min(iters, t)\)</span> iterations (<span class="math">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
+<li><code class="docutils literal"><span class="pre">var_path</span></code>: a numpy array (<span class="math">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math">\(m\)</span> if the dimension of the minimum, where rows of the array are steps taken in consecutive order.</li>
+<li><code class="docutils literal"><span class="pre">g_path</span></code>: a numpy array (<span class="math">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math">\(f\)</span> at each guess in <code class="docutils literal"><span class="pre">var_path</span></code>.</li>
 </ul>
 </li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </div>
 </div>
 <div class="section" id="quadratic-splines">
@@ -360,102 +347,103 @@ return x ** 2 + y ** 2 + z ** 2 + np.sin(x)</dd>
 <div class="section" id="id3">
 <h3>Background<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
-<div class="line">The <code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code> package can be used to calculate quadratic splines
+<div class="line">The <code class="docutils literal"><span class="pre">DeriveAlive</span></code> package can be used to calculate quadratic splines
 since it automatically returns the first derivative of a function at a
 given point.</div>
 </div>
 <div class="line-block">
-<div class="line">We aim to construct a piecewise quadratic spline <span class="math notranslate nohighlight">\(s(x)\)</span> using
-<span class="math notranslate nohighlight">\(N\)</span> equally-sized intervals over an interval for <span class="math notranslate nohighlight">\(f(x)\)</span>.
-Define <span class="math notranslate nohighlight">\(h=1/N\)</span>, and let <span class="math notranslate nohighlight">\(s_{k}(x)\)</span> be the spline over the
-range <span class="math notranslate nohighlight">\([kh,(k+1)h]\)</span> for <span class="math notranslate nohighlight">\(k=0,1,\ldots,N-1\)</span>. Each
-<span class="math notranslate nohighlight">\(s_k(x)=a_kx^2+b_kx+c_k\)</span> is a quadratic, and hence the spline
-has <span class="math notranslate nohighlight">\(3N\)</span> degrees of freedom in total.</div>
+<div class="line">We aim to construct a piecewise quadratic spline <span class="math">\(s(x)\)</span> using
+<span class="math">\(N\)</span> equally-sized intervals over an interval for <span class="math">\(f(x)\)</span>.
+Define <span class="math">\(h=1/N\)</span>, and let <span class="math">\(s_{k}(x)\)</span> be the spline over the
+range <span class="math">\([kh,(k+1)h]\)</span> for <span class="math">\(k=0,1,\ldots,N-1\)</span>. Each
+<span class="math">\(s_k(x)=a_kx^2+b_kx+c_k\)</span> is a quadratic, and hence the spline
+has <span class="math">\(3N\)</span> degrees of freedom in total.</div>
 </div>
 <div class="line-block">
 <div class="line">The spline coefficients satisfy the following constraints:</div>
 </div>
 <ul class="simple">
-<li>Each <span class="math notranslate nohighlight">\(s_k(x)\)</span> should match the function values at both of its
-endpoints, so that <span class="math notranslate nohighlight">\(s_k(kh)=f(kh)\)</span> and
-<span class="math notranslate nohighlight">\(s_k( (k+1)h) =f( (k+1)h)\)</span>. (Provides <span class="math notranslate nohighlight">\(2N\)</span> constraints.)</li>
+<li>Each <span class="math">\(s_k(x)\)</span> should match the function values at both of its
+endpoints, so that <span class="math">\(s_k(kh)=f(kh)\)</span> and
+<span class="math">\(s_k( (k+1)h) =f( (k+1)h)\)</span>. (Provides <span class="math">\(2N\)</span> constraints.)</li>
 <li>At each interior boundary, the spline should be differentiable, so
-that <span class="math notranslate nohighlight">\(s_{k-1}(kh)= s_k(kh)\)</span> for <span class="math notranslate nohighlight">\(k=1,\ldots,N-1\)</span>.
-(Provides <span class="math notranslate nohighlight">\(N-1\)</span> constraints.)</li>
-<li>Since <span class="math notranslate nohighlight">\(f'(x+1)=10f'(x)\)</span>, let <span class="math notranslate nohighlight">\(s'_{N-1}(1) = 10s'_0(0)\)</span>.
-(Provides <span class="math notranslate nohighlight">\(1\)</span> constraint.)</li>
+that <span class="math">\(s_{k-1}(kh)= s_k(kh)\)</span> for <span class="math">\(k=1,\ldots,N-1\)</span>.
+(Provides <span class="math">\(N-1\)</span> constraints.)</li>
+<li>Since <span class="math">\(f'(x+1)=10f'(x)\)</span>, let <span class="math">\(s'_{N-1}(1) = 10s'_0(0)\)</span>.
+(Provides <span class="math">\(1\)</span> constraint.)</li>
 </ul>
-<p>Since there are <span class="math notranslate nohighlight">\(3N\)</span> constraints for <span class="math notranslate nohighlight">\(3N\)</span> degrees of
+<p>Since there are <span class="math">\(3N\)</span> constraints for <span class="math">\(3N\)</span> degrees of
 freedom, there is a unique solution.</p>
 </div>
 <div class="section" id="id4">
 <h3>Implementation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>..automodule:: spline</p>
 <ul class="simple">
 <li>Methods<ul>
-<li><code class="docutils literal notranslate"><span class="pre">quad_spline_coeff</span></code>: calculate the coefficients of quadratic
+<li><code class="docutils literal"><span class="pre">quad_spline_coeff</span></code>: calculate the coefficients of quadratic
 splines<ul>
 <li>input:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest</li>
-<li><code class="docutils literal notranslate"><span class="pre">xMin</span></code>: left endpoint of the <span class="math notranslate nohighlight">\(x\)</span> interval</li>
-<li><code class="docutils literal notranslate"><span class="pre">xMax</span></code>: right endpoint of the <span class="math notranslate nohighlight">\(x\)</span> interval</li>
-<li><code class="docutils literal notranslate"><span class="pre">nIntervals</span></code>: number of intervals that you want to slice
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">xMin</span></code>: left endpoint of the <span class="math">\(x\)</span> interval</li>
+<li><code class="docutils literal"><span class="pre">xMax</span></code>: right endpoint of the <span class="math">\(x\)</span> interval</li>
+<li><code class="docutils literal"><span class="pre">nIntervals</span></code>: number of intervals that you want to slice
 the original function</li>
 </ul>
 </li>
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">y</span></code>: the right hand side of <span class="math notranslate nohighlight">\(Ax=y\)</span></li>
-<li><code class="docutils literal notranslate"><span class="pre">A</span></code>: the sqaure matrix in the left hand side of
-<span class="math notranslate nohighlight">\(Ax=y\)</span></li>
-<li><code class="docutils literal notranslate"><span class="pre">coeffs</span></code>: coefficients of <span class="math notranslate nohighlight">\(a_i, b_i, c_i\)</span></li>
-<li><code class="docutils literal notranslate"><span class="pre">ks</span></code>: points of interest in the <span class="math notranslate nohighlight">\(x\)</span> interval as
-<code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code> objects</li>
+<li><code class="docutils literal"><span class="pre">y</span></code>: the right hand side of <span class="math">\(Ax=y\)</span></li>
+<li><code class="docutils literal"><span class="pre">A</span></code>: the sqaure matrix in the left hand side of
+<span class="math">\(Ax=y\)</span></li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">\(a_i, b_i, c_i\)</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">\(x\)</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">spline_points</span></code>: get the coordinates of points on the
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: get the coordinates of points on the
 corresponding splines<ul>
 <li>input:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest</li>
-<li><code class="docutils literal notranslate"><span class="pre">coeffs</span></code>: coefficients of <span class="math notranslate nohighlight">\(a_i, b_i, c_i\)</span></li>
-<li><code class="docutils literal notranslate"><span class="pre">ks</span></code>: points of interest in the <span class="math notranslate nohighlight">\(x\)</span> interval as
-<code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code> objects</li>
-<li><code class="docutils literal notranslate"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">\(a_i, b_i, c_i\)</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">\(x\)</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
+<li><code class="docutils literal"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
 </ul>
 </li>
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">spline_points</span></code>: a list of spline points <span class="math notranslate nohighlight">\((x,y)\)</span> on
-each <span class="math notranslate nohighlight">\(s_i\)</span></li>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: a list of spline points <span class="math">\((x,y)\)</span> on
+each <span class="math">\(s_i\)</span></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">quad_spline_plot</span></code>: plot the original function and the
+<li><code class="docutils literal"><span class="pre">quad_spline_plot</span></code>: plot the original function and the
 corresponding splines<ul>
 <li>input:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest</li>
-<li><code class="docutils literal notranslate"><span class="pre">coeffs</span></code>: coefficients of <span class="math notranslate nohighlight">\(a_i, b_i, c_i\)</span></li>
-<li><code class="docutils literal notranslate"><span class="pre">ks</span></code>: points of interest in the <span class="math notranslate nohighlight">\(x\)</span> interval as
-<code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code> objects</li>
-<li><code class="docutils literal notranslate"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">coeffs</span></code>: coefficients of <span class="math">\(a_i, b_i, c_i\)</span></li>
+<li><code class="docutils literal"><span class="pre">ks</span></code>: points of interest in the <span class="math">\(x\)</span> interval as
+<code class="docutils literal"><span class="pre">DeriveAlive</span></code> objects</li>
+<li><code class="docutils literal"><span class="pre">nSplinePoints</span></code>: number of points to draw each spline</li>
 </ul>
 </li>
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">fig</span></code>: the plot of <span class="math notranslate nohighlight">\(f(x)\)</span> and splines</li>
+<li><code class="docutils literal"><span class="pre">fig</span></code>: the plot of <span class="math">\(f(x)\)</span> and splines</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">spline_error</span></code>: calculate the average absolute error of the
+<li><code class="docutils literal"><span class="pre">spline_error</span></code>: calculate the average absolute error of the
 spline and the original function at one point<ul>
 <li>input:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function of interest</li>
-<li><code class="docutils literal notranslate"><span class="pre">spline_points</span></code>: a list of spline points <span class="math notranslate nohighlight">\((x,y)\)</span> on
-each <span class="math notranslate nohighlight">\(s_i\)</span></li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function of interest</li>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: a list of spline points <span class="math">\((x,y)\)</span> on
+each <span class="math">\(s_i\)</span></li>
 </ul>
 </li>
 <li>return:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">error</span></code>: average absolute error of the spline and the
+<li><code class="docutils literal"><span class="pre">error</span></code>: average absolute error of the spline and the
 original function on one given interval</li>
 </ul>
 </li>
@@ -464,23 +452,23 @@ original function on one given interval</li>
 </ul>
 </li>
 <li>External dependencies<ul>
-<li><code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">NumPy</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></li>
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="demo">
 <h3>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">spline</span> <span class="k">as</span> <span class="nn">sp</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">spline</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
-<p>Plot the quadratic spline of <span class="math notranslate nohighlight">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
+<p>Plot the quadratic spline of <span class="math">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
 10 intervals.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f1</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f1</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return 10**var</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMin1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -498,8 +486,8 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_1.png"><img alt="_images/7_3_3_1.png" src="_images/7_3_3_1.png" style="width: 600px;" /></a>
-<p>Plot the quadratic spline of <span class="math notranslate nohighlight">\(f_2(x) = x^3, x \in [-1, 1]\)</span> with 10 intervals.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f2</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<p>Plot the quadratic spline of <span class="math">\(f_2(x) = x^3, x \in [-1, 1]\)</span> with 10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f2</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return var**3</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMin2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -517,8 +505,8 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_2.png"><img alt="_images/7_3_3_2.png" src="_images/7_3_3_2.png" style="width: 600px;" /></a>
-<p>Plot the quadratic spline of <span class="math notranslate nohighlight">\(f_3(x) = \sin(x), x \in [-1,1]\)</span> and <span class="math notranslate nohighlight">\(x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f3</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<p>Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]\)</span> and <span class="math">\(x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f3</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return np.sin(var)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMin3</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -536,7 +524,7 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_3.png"><img alt="_images/7_3_3_3.png" src="_images/7_3_3_3.png" style="width: 600px;" /></a>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xMin4</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xMin4</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMax4</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nIntervals4</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nSplinePoints4</span> <span class="o">=</span> <span class="mi">5</span>
@@ -555,8 +543,8 @@ original function on one given interval</li>
 <p class="first admonition-title">Note</p>
 <p class="last">We can see that the quadratic splines do not work that well with linear-ish functions. While adding more intervals may help to make the approximated splines better.</p>
 </div>
-<p>Here we demonstrate that the more intervals will make the splines approximations better using a <span class="math notranslate nohighlight">\(log-log\)</span> plot of the absolute average error with respect to :math: frac{1}{N}` with <span class="math notranslate nohighlight">\(f(x) = 10^x, x \in [-\pi, \pi]\)</span> at intervals from 5 to 100.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<p>Here we demonstrate that the more intervals will make the splines approximations better using a <span class="math">\(log-log\)</span> plot of the absolute average error with respect to :math: frac{1}{N}` with <span class="math">\(f(x) = 10^x, x \in [-\pi, \pi]\)</span> at intervals from 5 to 100.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return 10 ** var</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xMin</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
@@ -586,57 +574,57 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_5.png"><img alt="_images/7_3_3_5.png" src="_images/7_3_3_5.png" style="width: 600px;" /></a>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="o">**</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="o">**</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span>
 <span class="go">(2.2462166565957835, 11.414027075895813)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">We can see in the <span class="math notranslate nohighlight">\(log-log\)</span> plot that the log of absolute average error is proportional to the log of <span class="math notranslate nohighlight">\(\frac{1}{N}\)</span>, i.e. <span class="math notranslate nohighlight">\(E_{1/N} \approx 11.4(\dfrac{1}{N})^{2.25}\)</span>.</p>
+<p class="last">We can see in the <span class="math">\(log-log\)</span> plot that the log of absolute average error is proportional to the log of <span class="math">\(\frac{1}{N}\)</span>, i.e. <span class="math">\(E_{1/N} \approx 11.4(\dfrac{1}{N})^{2.25}\)</span>.</p>
 </div>
 </div>
 <div class="section" id="drawing-with-splines">
 <h3>Drawing with Splines<a class="headerlink" href="#drawing-with-splines" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
-<div class="line">This graph is shipped within <code class="docutils literal notranslate"><span class="pre">DeriveAlive</span></code> package as a surprise.</div>
+<div class="line">This graph is shipped within <code class="docutils literal"><span class="pre">DeriveAlive</span></code> package as a surprise.</div>
 </div>
 <div class="line-block">
 <div class="line">We want to draw a graph based on the follow 20 functions.</div>
 </div>
 <ul class="simple">
-<li><span class="math notranslate nohighlight">\(f_1(x) = \frac{-1}{0.5^2} x^2 + 1, x \in [-0.5, 0]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_2(x) = \frac{1}{0.5^2} x^2 - 1, x \in [-0.5, 0]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_3(x) = \frac{-1}{0.5} x^2 + 1, x \in [0, 0.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_4(x) = \frac{1}{0.5} x^2 - 1, x \in [0, 0.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_6(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1, 1.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_7(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1, 1.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_8(x) = \frac{-1}{0.5} (x-1.5)^2, x \in [1.5, 2]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_9(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1.5, 2]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{10}(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1.5, 2]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{11}(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [2.5, 3]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{12}(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [3, 3.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{13}(x) = 1.5x - 4.75, x \in [2.5, 3.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{14}(x) = -1, x \in [2.5, 3.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{18}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{19}(x) = 1, x \in [5.5, 6.5]\)</span></li>
-<li><span class="math notranslate nohighlight">\(f_{20}(x) = \frac{-1}{(-0.75)^2} (x-6.5)^2 + 1, x \in [5.75, 6.5]\)</span></li>
+<li><span class="math">\(f_1(x) = \frac{-1}{0.5^2} x^2 + 1, x \in [-0.5, 0]\)</span></li>
+<li><span class="math">\(f_2(x) = \frac{1}{0.5^2} x^2 - 1, x \in [-0.5, 0]\)</span></li>
+<li><span class="math">\(f_3(x) = \frac{-1}{0.5} x^2 + 1, x \in [0, 0.5]\)</span></li>
+<li><span class="math">\(f_4(x) = \frac{1}{0.5} x^2 - 1, x \in [0, 0.5]\)</span></li>
+<li><span class="math">\(f_6(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1, 1.5]\)</span></li>
+<li><span class="math">\(f_7(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1, 1.5]\)</span></li>
+<li><span class="math">\(f_8(x) = \frac{-1}{0.5} (x-1.5)^2, x \in [1.5, 2]\)</span></li>
+<li><span class="math">\(f_9(x) = \frac{-1}{0.5} (x-1.5)^2 + 1, x \in [1.5, 2]\)</span></li>
+<li><span class="math">\(f_{10}(x) = \frac{1}{0.5} (x-1.5)^2 - 1, x \in [1.5, 2]\)</span></li>
+<li><span class="math">\(f_{11}(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [2.5, 3]\)</span></li>
+<li><span class="math">\(f_{12}(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [3, 3.5]\)</span></li>
+<li><span class="math">\(f_{13}(x) = 1.5x - 4.75, x \in [2.5, 3.5]\)</span></li>
+<li><span class="math">\(f_{14}(x) = -1, x \in [2.5, 3.5]\)</span></li>
+<li><span class="math">\(f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
+<li><span class="math">\(f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]\)</span></li>
+<li><span class="math">\(f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
+<li><span class="math">\(f_{18}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]\)</span></li>
+<li><span class="math">\(f_{19}(x) = 1, x \in [5.5, 6.5]\)</span></li>
+<li><span class="math">\(f_{20}(x) = \frac{-1}{(-0.75)^2} (x-6.5)^2 + 1, x \in [5.75, 6.5]\)</span></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">surprise</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">surprise</span>
 <span class="go"># We first draw out the start and end points of each function</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">surprise</span><span class="o">.</span><span class="n">drawPoints</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_6.png"><img alt="_images/7_3_3_6.png" src="_images/7_3_3_6.png" style="width: 600px;" /></a>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then we use the spline suite to draw quadratic splines based on the two points</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Then we use the spline suite to draw quadratic splines based on the two points</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">surprise</span><span class="o">.</span><span class="n">drawSpline</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_7.png"><img alt="_images/7_3_3_7.png" src="_images/7_3_3_7.png" style="width: 600px;" /></a>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">surprise</span><span class="o">.</span><span class="n">drawTogether</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">surprise</span><span class="o">.</span><span class="n">drawTogether</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_8.png"><img alt="_images/7_3_3_8.png" src="_images/7_3_3_8.png" style="width: 600px;" /></a>
