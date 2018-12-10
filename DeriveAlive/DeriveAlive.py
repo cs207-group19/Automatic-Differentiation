@@ -395,12 +395,12 @@ class Var(object):
 		Returns the division of self and other
         
         Parameters
-        ========= 
+        ========== 
         self: Var object
         other: Var object, float, or int
         
         Returns
-         =======  
+        =======  
         z: Var object that is the division of self and other
         
         Examples
