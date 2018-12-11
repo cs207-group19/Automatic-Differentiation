@@ -87,8 +87,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#forward-mode-implementation">Forward Mode Implementation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#api">API</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#derivealive-derivealive"><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#derivealive-optimization"><code class="docutils literal"><span class="pre">DeriveAlive.optimization</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#derivealive-root-finding"><code class="docutils literal"><span class="pre">DeriveAlive.root_finding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-rootfinding"><code class="docutils literal"><span class="pre">DeriveAlive.rootfinding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-optimize"><code class="docutils literal"><span class="pre">DeriveAlive.optimize</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#derivealive-spline"><code class="docutils literal"><span class="pre">DeriveAlive.spline</span></code></a></li>
 </ul>
 </li>
@@ -246,6 +246,10 @@ variable.</li>
 <li><code class="docutils literal"><span class="pre">__init__</span></code>: initialize a <code class="docutils literal"><span class="pre">Var</span></code> class object, regardless of
 the user input, with values and derivatives stored as numpy
 arrays.</li>
+<li><code class="docutils literal"><span class="pre">__repr__</span></code>: overload the print format, prints self in the
+form of <code class="docutils literal"><span class="pre">Var([val],</span> <span class="pre">[der])</span></code> when self is a scalar or constant;
+prints self in the form of <code class="docutils literal"><span class="pre">Values([val])</span> <span class="pre">Jacobian([der])</span></code>
+when self is a vector.</li>
 <li><code class="docutils literal"><span class="pre">__add__</span></code>: overload add function to handle addition of
 <code class="docutils literal"><span class="pre">Var</span></code> class objects and addition of and non-<code class="docutils literal"><span class="pre">Var</span></code>
 objects.</li>
@@ -268,45 +272,58 @@ an integer.</li>
 <li><code class="docutils literal"><span class="pre">__abs__</span></code>: return the absolute value of <code class="docutils literal"><span class="pre">Var</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">__eq__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if two <code class="docutils literal"><span class="pre">Var</span></code> objects have the
 same value and derivative, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
+<li><code class="docutils literal"><span class="pre">__ne__</span></code>: return <code class="docutils literal"><span class="pre">False</span></code> if two <code class="docutils literal"><span class="pre">Var</span></code> objects have the
+same value and derivative, <code class="docutils literal"><span class="pre">True</span></code> otherwise.</li>
+<li><code class="docutils literal"><span class="pre">__lt__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if the value of <code class="docutils literal"><span class="pre">Var</span></code> object is
+less than an integer / a float / the value of <code class="docutils literal"><span class="pre">Var</span></code> object,
+<code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
+<li><code class="docutils literal"><span class="pre">__le__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if the value of <code class="docutils literal"><span class="pre">Var</span></code> object is
+less than or equal to an integer / a float / the value of
+<code class="docutils literal"><span class="pre">Var</span></code> object, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
+<li><code class="docutils literal"><span class="pre">__gt__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if the value of <code class="docutils literal"><span class="pre">Var</span></code> object is
+greater than an integer / a float / the value of <code class="docutils literal"><span class="pre">Var</span></code> object,
+<code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
+<li><code class="docutils literal"><span class="pre">__ge__</span></code>: return <code class="docutils literal"><span class="pre">True</span></code> if the value of <code class="docutils literal"><span class="pre">Var</span></code> object is
+greater than or equal to an integer / a float / the value of
+<code class="docutils literal"><span class="pre">Var</span></code> object, <code class="docutils literal"><span class="pre">False</span></code> otherwise.</li>
 <li><code class="docutils literal"><span class="pre">__pow__</span></code>, <code class="docutils literal"><span class="pre">__rpow__</span></code>, <code class="docutils literal"><span class="pre">pow</span></code>: extend power functions to
 <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">log</span></code>: extend logarithmic functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
-<li><code class="docutils literal"><span class="pre">exp</span></code>: extend exponential functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
 <li><code class="docutils literal"><span class="pre">sin</span></code>, <code class="docutils literal"><span class="pre">cos</span></code>, <code class="docutils literal"><span class="pre">tan</span></code>: extend trigonometric functions to
 <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
 <li><code class="docutils literal"><span class="pre">arcsin</span></code>, <code class="docutils literal"><span class="pre">arccos</span></code>, <code class="docutils literal"><span class="pre">arctan</span></code>: extend inverse
 trigonometric functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
 <li><code class="docutils literal"><span class="pre">sinh</span></code>, <code class="docutils literal"><span class="pre">cosh</span></code>, <code class="docutils literal"><span class="pre">tanh</span></code>: extend hyperbolic functions to
 <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal"><span class="pre">sqrt</span></code>: return the square root of <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal"><span class="pre">log</span></code>: extend logarithmic functions with custom base input
+to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal"><span class="pre">exp</span></code>: extend exponential functions to <code class="docutils literal"><span class="pre">Var</span></code> class objects.</li>
+<li><code class="docutils literal"><span class="pre">logistic</span></code>: return the logistic function value with input of
+<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p class="first">External dependencies:</p>
-<ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">NumPy</span></code> - This provides an API for a large collection of
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">NumPy</span></code> - This provides an API for a large collection of
 high-level mathematical operations. In addition, it provides
-support for large, multi-dimensional arrays and matrices.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">doctest</span></code> - This module searches for pieces of text that look
+support for large, multi-dimensional arrays and matrices.</li>
+<li><code class="docutils literal"><span class="pre">doctest</span></code> - This module searches for pieces of text that look
 like interactive Python sessions (typically within the
 documentation of a function), and then executes those sessions to
-verify that they work exactly as shown.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">pytest</span></code> - This is an alternative, more Pythonic way of writing
+verify that they work exactly as shown.</li>
+<li><code class="docutils literal"><span class="pre">pytest</span></code> - This is an alternative, more Pythonic way of writing
 tests, making it easy to write small tests, yet scales to support
 complex functional testing. We plan to use this for a
-comprehensive test suite.</p>
+comprehensive test suite.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">setuptools</span></code> - This package allows us to create a package out</dt>
+<dd>of our project for easy distribution. See more information on
+packaging instructions here: <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>.</dd>
+</dl>
 </li>
-<li><div class="first line-block">
-<div class="line"><code class="docutils literal"><span class="pre">setuptools</span></code> - This package allows us to create a package out
-of our project for easy distribution. See more information on
-packaging instructions here:</div>
-<div class="line"><a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>.</div>
-</div>
-</li>
-<li><p class="first">Test suites: Travis CI, Coveralls</p>
-</li>
+<li>Test suites: Travis CI, Coveralls</li>
 </ul>
 </li>
 <li><p class="first">Elementary functions</p>
@@ -336,14 +353,71 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 </li>
 </ul>
 </div>
-<div class="section" id="derivealive-optimization">
-<h3><code class="docutils literal"><span class="pre">DeriveAlive.optimization</span></code><a class="headerlink" href="#derivealive-optimization" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="derivealive-rootfinding">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.rootfinding</span></code><a class="headerlink" href="#derivealive-rootfinding" title="Permalink to this headline">¶</a></h3>
+<p>Detailed methods with inputs and return information are listed in Additional Features - Root Finding.</p>
+<ul>
+<li><p class="first">Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">NewtonRoot</span></code>: return a root of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">External dependencies:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
+<li>Test suites: Travis CI, Coveralls</li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="derivealive-root-finding">
-<h3><code class="docutils literal"><span class="pre">DeriveAlive.root_finding</span></code><a class="headerlink" href="#derivealive-root-finding" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="derivealive-optimize">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.optimize</span></code><a class="headerlink" href="#derivealive-optimize" title="Permalink to this headline">¶</a></h3>
+<p>Detailed methods with inputs and return information are listed in Additional Features - Optimization.</p>
+<ul>
+<li><p class="first">Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">GradientDescent</span></code>: solve for a local minimum of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>. If <span class="math">\(f\)</span> is a convex function, then the local minimum is a global minimum.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">External dependencies:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
+<li>Test suites: Travis CI, Coveralls</li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="derivealive-spline">
 <h3><code class="docutils literal"><span class="pre">DeriveAlive.spline</span></code><a class="headerlink" href="#derivealive-spline" title="Permalink to this headline">¶</a></h3>
+<p>Detailed methods with inputs and return information are listed in Additional Features - Quadratic Splines.</p>
+<ul>
+<li><p class="first">Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">quad_spline_coeff</span></code>: calculate the coefficients of quadratic splines.</li>
+<li><code class="docutils literal"><span class="pre">spline_points</span></code>: get the coordinates of points on the corresponding splines.</li>
+<li><code class="docutils literal"><span class="pre">quad_spline_plot</span></code>: plot the original function and the corresponding splines.</li>
+<li><code class="docutils literal"><span class="pre">spline_error</span></code>: calculate the average absolute error of the spline and the original function at one point.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">External dependencies:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
+<li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
+<li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
+<li>Test suites: Travis CI, Coveralls</li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 </div>

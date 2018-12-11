@@ -25,7 +25,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in np.arange(-2, 2.1, 1):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root = [0]
 			der = [0]
@@ -44,7 +44,9 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(-1, 4):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+
+			if val == 1:
+				fig = rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)
 
 			root_1, der_1 = [0], [-2]
 			root_2, der_2 = [2], [2]
@@ -61,9 +63,10 @@ def test_NewtonRoot_r1_to_r1():
 		f_string = 'f(x) = -(x+3)^2 + 2'
 
 		for val in range(-7, 2, 2):
-			x0 = [da.Var(val)]
+			# Test non-Var input
+			x0 = val
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root_1 = [-3 + np.sqrt(2)]
 			root_2 = [-3 - np.sqrt(2)]
@@ -81,7 +84,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(2, 7):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root = [4 + np.cbrt(3)]
 			np.testing.assert_array_almost_equal(solution.val, root)	
@@ -98,7 +101,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in [np.pi - 0.25, np.pi, 1.5 * np.pi, 2 * np.pi - 0.25, 2 * np.pi + 0.25]:
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
 
 			root_multiple_of_pi = (solution.val / np.pi) % 1
 			np.testing.assert_array_almost_equal(root_multiple_of_pi, [0.])	
@@ -116,7 +119,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in np.arange(-0.75, 0.8, 0.25):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
 
 			root = [0.166402]
 			der = [4.62465]
@@ -150,7 +153,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = -y
 			der = [1, 1]
@@ -172,7 +175,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, animate=True)	
 
 			# root: x = +-y
 			der = [2 * xn, -2 * yn]
@@ -194,7 +197,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True)	
 
 			# root: x = y = 0
 			der = [0, 0]
@@ -215,7 +218,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x_val, y_val]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25)	
 			
 			# root: x = +- 2(sqrt(y^2 + 1))/sqrt(2y - 1)
 			value = 2 * np.sqrt(yn ** 2 + 1) / (np.sqrt(2 * yn - 1))
@@ -241,7 +244,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = 1 +- sqrt(-(y + 1)^2)
 			inner = -(yn + 1) ** 2
@@ -270,7 +273,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True, animate=True)
 
 			root = [0, 0, 0]
 			assert np.allclose(solution.val, root)
@@ -295,7 +298,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
 
 			# root: z = -y -z +- sqrt(3)
 			root_1 = -yn - zn - np.sqrt(3)
@@ -326,7 +329,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
 
 			# root: x = +- (zn^2)^(1 / (yn^2))
 			root_1 = (zn ** 2) ** (1 / (yn ** 2))

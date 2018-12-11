@@ -152,6 +152,14 @@ Implementation
 
          -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
 
+-  External dependencies
+
+   -  ``DeriveAlive``
+
+   -  ``NumPy``
+
+   -  ``matplotlib.pyplot``
+
 Quadratic Splines
 -----------------
 

@@ -77,7 +77,7 @@ execution trace applies an operation to one or more previous nodes (and
 creates a node for constants when applicable).
 
 .. image:: images/computationgraph.png
-  :width: 800       
+  :width: 600       
 
 As we execute :math:`f(x)` in the “forward mode", we can propagate not
 only the sequential evaluations of operations in the graph given

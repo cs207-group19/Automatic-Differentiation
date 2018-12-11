@@ -10,13 +10,15 @@ Current directory structure
     |-- DeriveAlive/
     |   |-- DeriveAlive.py
     |   |-- __init__.py
-    |   |-- optimization.py    
-    |   |-- root_finding.py
+    |   |-- optimize.py    
+    |   |-- rootfinding.py
     |   `-- spline.py
     |-- demos/
-    |   `-- Presentation.ipynb
+    |   |-- Presentation.ipynb
+    |   `-- surprise.py
     |-- documentation/
     |   |-- docs/
+    |   |-- documentation.pdf
     |   |-- milestone1.pdf
     |   `-- milestone2.pdf
     |-- tests/
@@ -24,7 +26,8 @@ Current directory structure
     |   |-- gradient_descent_demo.py
     |   |-- normalized.txt
     |   |-- test_DeriveAlive.py
-    |   `-- test_root_finding.py
+    |   |-- test_root_finding.py
+    |   `-- test_spline.py
     |-- LICENSE
     |-- __init__.py
     |-- README.md
@@ -41,17 +44,11 @@ Basic modules and their functionality
    methods for the operations that our model implements (e.g., tangent,
    sine, power, exponentiation, addition, multiplication, and so on).
 
--  ``test_DeriveAlive``: This is a test suite for our module
-   (explanation in the following section). It currently includes tests
-   for scalar functions to ensure that the ``DeriveAlive`` module
-   properly calculates values of scalar functions and gradients with
-   respect to scalar inputs.
-
--  ``optimization``: This module utilizes our custom library for
+-  ``optimize``: This module utilizes our custom library for
    autodifferentiation to perform optimization. It includes 
    ``DeriveAlive.Var`` class-specific methods for gradient descent.
 
--  ``root_finding``: This module utilizes our custom library for
+-  ``rootfinding``: This module utilizes our custom library for
    autodifferentiation to find roots of a given :math:`\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}`
    or :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}` function. It includes 
    ``DeriveAlive.Var`` class-specific methods for Newton's method.
@@ -64,12 +61,19 @@ Basic modules and their functionality
 Test Suite
 --------------------------------
 
-Our test suite for ``DeriveAlive`` is currently in a test file called
-``test_DeriveAlive.py`` in its own ``tests`` folder. 
+All test files live in ``tests/`` folder.
 
-Our test suite for ``root_finding`` and  ``optimization`` are also in
-``tests`` folder, currently in a test file called ``test_root_finding.py``
-in the same ``tests`` folder.
+-  ``test_DeriveAlive``: This is a test suite for ``DeriveAlive``. It includes tests
+   for scalar functions and vector functions to ensure that the ``DeriveAlive`` module
+   properly calculates values of scalar functions and gradients with
+   respect to scalar inputs, and vector functions and gradients with
+   respect to vector inputs.
+
+-  ``test_rootfinding``: This is a test suite for ``rootfinding``.
+
+-  ``test_optimize``: This is a test suite for ``optimization``.
+
+-  ``test_spline``: This is a test suite for ``spline``.
 
 We use Travis CI mfor automatic testing for each push, and Coveralls for 
 line coverage metrics. We have already set up these integrations, with

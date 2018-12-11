@@ -278,7 +278,7 @@ class Var(object):
 
         >>> z = 2 - Var(3)
         >>> print(z)
-        Var([-1.], [-1])       
+        Var([-1.], [-1])
         """
 		return (-self).__add__(float(other))
 
@@ -486,7 +486,7 @@ class Var(object):
         ========   
         >>> x = Var(2.0)
         >>> z = 1 / x
-        >>> print(f)
+        >>> print(z)
         Var([0.5], [-0.25])
 
         >>> x = Var(3.0)
@@ -497,9 +497,9 @@ class Var(object):
         [3.   1.   1.   0.75],
         Jacobian:
         [[ 0.        ]
-        [-0.33333333]
-        [-0.33333333]
-        [ 0.        ]]
+         [-0.33333333]
+         [-0.33333333]
+         [ 0.        ]]
         """
 
 		# Check for ZeroDivisionError at start rather than nesting exception block
@@ -567,7 +567,7 @@ class Var(object):
         Examples
         ======== 
         >>> x = Var(-4.0)
-        >> z = abs(x)
+        >>> z = abs(x)
         >>> print(z)
         Var([4.], [-1])
         """
@@ -650,12 +650,12 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x < 4
-        array([True])
+        array([ True])
 
         >>> x = Var(3)
         >>> y = Var(5)
         >>> x < y
-        array([True])
+        array([ True])
         """
 		# Numpy internally checks if the dimensions of self and other match
 		try:
@@ -680,7 +680,7 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x <= 3
-        array([True])
+        array([ True])
         """
 		return self.__lt__(other) or self.__eq__(other)
 
@@ -701,12 +701,12 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x > 2
-        array([True])
+        array([ True])
 
         >>> x = Var(3)
         >>> y = Var(1)
         >>> x > y
-        array([True])
+        array([ True])
         """
 		try:
 			return self.val > other.val
@@ -730,7 +730,7 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x >= 3
-        array([True])
+        array([ True])
         """
 		return self.__gt__(other) or self.__eq__(other)
 

@@ -33,7 +33,7 @@ def test_GradientDescent():
 		for x_val in [-4, -2, 0, 2, 4]:
 			x0 = da.Var(x_val)
 			solution, x_path, f_path = opt.GradientDescent(f, x0)
-			# opt.plot_results(f, x_path, f_path, f_string)
+			opt.plot_results(f, x_path, f_path, f_string)
 
 			assert np.allclose(solution.val, [0])
 			assert np.allclose(solution.der, [0])
@@ -48,7 +48,7 @@ def test_GradientDescent():
 		for x_val in [-3, -1, 1, 3, 5]:
 			# Test initial guess without using da.Var type
 			solution, x_path, f_path = opt.GradientDescent(f, x_val)
-			# opt.plot_results(f, x_path, f_path, f_string)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-5, 5), y_lims=(-8, 8), animate=True)
 
 			assert np.allclose(solution.val, [1])
 			assert np.allclose(solution.der, [0])
@@ -62,9 +62,10 @@ def test_GradientDescent():
 		f_string = 'f(x) = sin(x)'
 
 		for x_val in [-3, -1, 1, 3]:
-			x0 = da.Var(x_val)
+			# Test case when 1D input is a list
+			x0 = [da.Var(x_val)]
 			solution, x_path, f_path = opt.GradientDescent(f, x0)
-			# opt.plot_results(f, x_path, f_path, f_string)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5))
 
 			multiple_of_three_halves_pi = (solution.val  % (2 * np.pi))
 			np.testing.assert_array_almost_equal(multiple_of_three_halves_pi, 1.5 * np.pi)				
@@ -89,7 +90,7 @@ def test_GradientDescent():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
 			xn, yn = solution.val
-			# opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
 
 			minimum = [1, 1]
 			assert np.allclose([xn, yn], minimum)
@@ -118,7 +119,7 @@ def test_GradientDescent():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars)
 			xn, yn = solution.val
-			# opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, animate=True)
 
 			minimum = [0, 0]
 			assert np.allclose([xn, yn], minimum)
@@ -186,7 +187,7 @@ def test_GradientDescent():
 		f_string = 'f(w_0, w_1, w_2) = (1/2m)\sum_{i=0}^m (w_0 + w_1x_{i1} + w_2x_{i2} - y_i)^2'
 
 		solution, w_path, f_path, f = opt.GradientDescent("mse", [0, 0, 0], data=dataset)
-		# opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True)
+		opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True, animate=True)
 		_assert_decreasing(f_path)
 
 	def case_7():
@@ -203,7 +204,7 @@ def test_GradientDescent():
 			y0 = da.Var(y_val, [0, 1])
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.3)
-			# opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
 
 			# Ensure that loss function is weakly decreasing
 			_assert_decreasing(f_path)
@@ -222,7 +223,7 @@ def test_GradientDescent():
 			y0 = da.Var(y_val, [0, 1])
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.01)
-			# opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
 
 			# Ensure that loss function is weakly decreasing
 			_assert_decreasing(f_path)

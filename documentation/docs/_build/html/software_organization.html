@@ -165,13 +165,15 @@
 |-- DeriveAlive/
 |   |-- DeriveAlive.py
 |   |-- __init__.py
-|   |-- optimization.py
-|   |-- root_finding.py
+|   |-- optimize.py
+|   |-- rootfinding.py
 |   `-- spline.py
 |-- demos/
-|   `-- Presentation.ipynb
+|   |-- Presentation.ipynb
+|   `-- surprise.py
 |-- documentation/
 |   |-- docs/
+|   |-- documentation.pdf
 |   |-- milestone1.pdf
 |   `-- milestone2.pdf
 |-- tests/
@@ -179,7 +181,8 @@
 |   |-- gradient_descent_demo.py
 |   |-- normalized.txt
 |   |-- test_DeriveAlive.py
-|   `-- test_root_finding.py
+|   |-- test_root_finding.py
+|   `-- test_spline.py
 |-- LICENSE
 |-- __init__.py
 |-- README.md
@@ -197,15 +200,10 @@ autodifferentiation. It includes functionality for a <code class="docutils liter
 that contains values and derivatives, as well as class-specific
 methods for the operations that our model implements (e.g., tangent,
 sine, power, exponentiation, addition, multiplication, and so on).</li>
-<li><code class="docutils literal"><span class="pre">test_DeriveAlive</span></code>: This is a test suite for our module
-(explanation in the following section). It currently includes tests
-for scalar functions to ensure that the <code class="docutils literal"><span class="pre">DeriveAlive</span></code> module
-properly calculates values of scalar functions and gradients with
-respect to scalar inputs.</li>
-<li><code class="docutils literal"><span class="pre">optimization</span></code>: This module utilizes our custom library for
+<li><code class="docutils literal"><span class="pre">optimize</span></code>: This module utilizes our custom library for
 autodifferentiation to perform optimization. It includes
 <code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for gradient descent.</li>
-<li><code class="docutils literal"><span class="pre">root_finding</span></code>: This module utilizes our custom library for
+<li><code class="docutils literal"><span class="pre">rootfinding</span></code>: This module utilizes our custom library for
 autodifferentiation to find roots of a given <span class="math">\(\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}\)</span>
 or <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span> function. It includes
 <code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for Newton’s method.</li>
@@ -217,11 +215,17 @@ spline generation.</li>
 </div>
 <div class="section" id="test-suite">
 <h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
-<p>Our test suite for <code class="docutils literal"><span class="pre">DeriveAlive</span></code> is currently in a test file called
-<code class="docutils literal"><span class="pre">test_DeriveAlive.py</span></code> in its own <code class="docutils literal"><span class="pre">tests</span></code> folder.</p>
-<p>Our test suite for <code class="docutils literal"><span class="pre">root_finding</span></code> and  <code class="docutils literal"><span class="pre">optimization</span></code> are also in
-<code class="docutils literal"><span class="pre">tests</span></code> folder, currently in a test file called <code class="docutils literal"><span class="pre">test_root_finding.py</span></code>
-in the same <code class="docutils literal"><span class="pre">tests</span></code> folder.</p>
+<p>All test files live in <code class="docutils literal"><span class="pre">tests/</span></code> folder.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">test_DeriveAlive</span></code>: This is a test suite for <code class="docutils literal"><span class="pre">DeriveAlive</span></code>. It includes tests
+for scalar functions and vector functions to ensure that the <code class="docutils literal"><span class="pre">DeriveAlive</span></code> module
+properly calculates values of scalar functions and gradients with
+respect to scalar inputs, and vector functions and gradients with
+respect to vector inputs.</li>
+<li><code class="docutils literal"><span class="pre">test_rootfinding</span></code>: This is a test suite for <code class="docutils literal"><span class="pre">rootfinding</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">test_optimize</span></code>: This is a test suite for <code class="docutils literal"><span class="pre">optimization</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">test_spline</span></code>: This is a test suite for <code class="docutils literal"><span class="pre">spline</span></code>.</li>
+</ul>
 <p>We use Travis CI mfor automatic testing for each push, and Coveralls for
 line coverage metrics. We have already set up these integrations, with
 badges included in the <code class="docutils literal"><span class="pre">README.md</span></code>. Users may run the test suite by
