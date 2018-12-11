@@ -64,13 +64,6 @@ API
 
 ``DeriveAlive.DeriveAlive``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. automodule:: DeriveAlive
-
-
-``DeriveAlive.spline``
-~~~~~~~~~~~~~~~~~~~~~~
-.. automodule:: spline
-
 
 -  Class attributes and methods:
 
@@ -195,4 +188,14 @@ API
       The structure of each elementary function is that it calculates
       the new value (based on the operation) and the new derivative, and
       then returns a new ``Var`` with the updated arguments.
+
+``DeriveAlive.optimization``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``DeriveAlive.root_finding``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+``DeriveAlive.spline``
+~~~~~~~~~~~~~~~~~~~~~~
 
