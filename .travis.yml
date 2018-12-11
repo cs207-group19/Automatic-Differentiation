@@ -6,6 +6,6 @@ before_install:
     - pip install coveralls
     - python setup.py install
 script:
-    - py.test
+    - python test_DeriveAlive.py
 after_success:
     - coveralls
