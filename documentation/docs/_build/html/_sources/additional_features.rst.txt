@@ -77,7 +77,7 @@ Implementation
 
          -  ``var_path``: a numpy array (:math:`\mathbb{R}^{n \times m}`), where :math:`n = min(iters, t)` is the number of steps of the algorithm and :math:`m` if the dimension of the root, where rows of the array are steps taken in consecutive order.
 
-         -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
+         -  ``g_path``: a numpy array (:math:`\mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
 
 -  External dependencies
 

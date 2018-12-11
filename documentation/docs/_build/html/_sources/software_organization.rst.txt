@@ -23,10 +23,9 @@ Current directory structure
     |   `-- milestone2.pdf
     |-- tests/
     |   |-- __init__.py
-    |   |-- gradient_descent_demo.py
-    |   |-- normalized.txt
     |   |-- test_DeriveAlive.py
-    |   |-- test_root_finding.py
+    |   |-- test_optimize.py
+    |   |-- test_rootfinding.py
     |   `-- test_spline.py
     |-- LICENSE
     |-- __init__.py
@@ -46,12 +45,23 @@ Basic modules and their functionality
 
 -  ``optimize``: This module utilizes our custom library for
    autodifferentiation to perform optimization. It includes 
-   ``DeriveAlive.Var`` class-specific methods for gradient descent.
+   ``DeriveAlive.Var`` class-specific methods for gradient descent. Users can define a custom function to optimize, where this function is :math:`\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}`
+   or :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`. If the function is :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`, it must take as input a list of :math:`m` variables. Our suggestion is to extract the variables from this list on the first line of the user-defined function, and then use them individually. For example, if :math:`f` is a function of three variables (i.e. a vector of scalars), then write the following: 
+
+   .. code:block::python
+     :linenos:
+      def f(variables):
+          x, y, z = variables 
+          # Use x, y, z individually
+
+   Furthermore, ``optimize`` allows for dataset compatability with regression optimization. A user can input a numpy matrix with :math:`m` rows and :math:`n` columns, where :math:`n >= 2` and :math:`m >= 1`. The first :math:`n - 1` columns denote the features of the data, and the final column represents the labels. The user must specify the function to optimize as "mse". Then, the function will find a local minimum of the mean squared error objective function. 
+
+   Finally, the module allows for static and animated plots in 2D to 4D using ``plot_results``.
 
 -  ``rootfinding``: This module utilizes our custom library for
    autodifferentiation to find roots of a given :math:`\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}`
    or :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}` function. It includes 
-   ``DeriveAlive.Var`` class-specific methods for Newton's method.
+   ``DeriveAlive.Var`` class-specific methods for Newton's method. It also allows the user to visualize static or animated results in 2D to 4D using ``plot_results``.
 
 -  ``spline``: This module utilizes our custom library for
    autodifferentiation to draw quadratic splins of a given scalar function.

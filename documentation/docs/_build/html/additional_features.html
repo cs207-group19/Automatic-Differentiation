@@ -243,7 +243,7 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">root</span></code>: da.Var <span class="math">\(\in \mathbb{R}^m\)</span>. The <cite>val</cite> attribute contains a numpy array of the root that the algorithm found in <span class="math">\(min(iters, t)\)</span> iterations (<span class="math">\(iters, t\)</span> defined above). The <cite>der</cite> attribute contains the Jacobian value at the specified root.</li>
 <li><code class="docutils literal"><span class="pre">var_path</span></code>: a numpy array (<span class="math">\(\mathbb{R}^{n \times m}\)</span>), where <span class="math">\(n = min(iters, t)\)</span> is the number of steps of the algorithm and <span class="math">\(m\)</span> if the dimension of the root, where rows of the array are steps taken in consecutive order.</li>
-<li><code class="docutils literal"><span class="pre">g_path</span></code>: a numpy array (<span class="math">\(mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math">\(f\)</span> at each guess in <code class="docutils literal"><span class="pre">var_path</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">g_path</span></code>: a numpy array (<span class="math">\(\mathbb{R}^{n \times 1}\)</span>), containing the consecutive steps of the output of <span class="math">\(f\)</span> at each guess in <code class="docutils literal"><span class="pre">var_path</span></code>.</li>
 </ul>
 </li>
 </ul>
