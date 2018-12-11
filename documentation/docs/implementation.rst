@@ -91,6 +91,11 @@ API
          the user input, with values and derivatives stored as numpy
          arrays.
 
+      -  ``__repr__``: overload the print format, prints self in the 
+         form of ``Var([val], [der])`` when self is a scalar or constant;
+         prints self in the form of ``Values([val]) Jacobian([der])`` 
+         when self is a vector.
+
       -  ``__add__``: overload add function to handle addition of
          ``Var`` class objects and addition of and non-\ ``Var``
          objects.
@@ -124,12 +129,27 @@ API
       -  ``__eq__``: return ``True`` if two ``Var`` objects have the
          same value and derivative, ``False`` otherwise.
 
+      -  ``__ne__``: return ``False`` if two ``Var`` objects have the
+         same value and derivative, ``True`` otherwise.
+
+      -  ``__lt__``: return ``True`` if the value of ``Var`` object is 
+         less than an integer / a float / the value of ``Var`` object, 
+         ``False`` otherwise.
+
+      -  ``__le__``: return ``True`` if the value of ``Var`` object is 
+         less than or equal to an integer / a float / the value of 
+         ``Var`` object, ``False`` otherwise.
+
+      -  ``__gt__``: return ``True`` if the value of ``Var`` object is 
+         greater than an integer / a float / the value of ``Var`` object, 
+         ``False`` otherwise.
+
+      -  ``__ge__``: return ``True`` if the value of ``Var`` object is 
+         greater than or equal to an integer / a float / the value of 
+         ``Var`` object, ``False`` otherwise.
+
       -  ``__pow__``, ``__rpow__``, ``pow``: extend power functions to
          ``Var`` class objects.
-
-      -  ``log``: extend logarithmic functions to ``Var`` class objects.
-
-      -  ``exp``: extend exponential functions to ``Var`` class objects.
 
       -  ``sin``, ``cos``, ``tan``: extend trigonometric functions to
          ``Var`` class objects.
@@ -139,6 +159,16 @@ API
 
       -  ``sinh``, ``cosh``, ``tanh``: extend hyperbolic functions to
          ``Var`` class objects.
+
+      - ``sqrt``: return the square root of ``Var`` class objects.
+
+      -  ``log``: extend logarithmic functions with custom base input
+         to ``Var`` class objects.
+
+      -  ``exp``: extend exponential functions to ``Var`` class objects.
+
+      -  ``logistic``: return the logistic function value with input of
+         ``Var`` objects.
 
 -  External dependencies:
 
@@ -156,10 +186,9 @@ API
       complex functional testing. We plan to use this for a
       comprehensive test suite.
 
-   -  | ``setuptools`` - This package allows us to create a package out
+   -  ``setuptools`` - This package allows us to create a package out
         of our project for easy distribution. See more information on
-        packaging instructions here:
-      | https://packaging.python.org/tutorials/packaging-projects/.
+        packaging instructions here: https://packaging.python.org/tutorials/packaging-projects/.
 
    -  Test suites: Travis CI, Coveralls
 
@@ -189,13 +218,69 @@ API
       the new value (based on the operation) and the new derivative, and
       then returns a new ``Var`` with the updated arguments.
 
+``DeriveAlive.rootfinding``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Detailed methods with inputs and return information are listed in Additional Features - Root Finding.
+
+-  Methods:
+
+      -  ``NewtonRoot``: return a root of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`
+
+
+-  External dependencies:
+
+   -  ``DeriveAlive``
+
+   -  ``NumPy``
+
+   -  ``matplotlib.pyplot``
+
+   -  Test suites: Travis CI, Coveralls
+
 ``DeriveAlive.optimization``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``DeriveAlive.root_finding``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Detailed methods with inputs and return information are listed in Additional Features - Optimization.
+
+-  Methods:
+
+      -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum.
+
+
+-  External dependencies:
+
+   -  ``DeriveAlive``
+
+   -  ``NumPy``
+
+   -  ``matplotlib.pyplot``
+
+   -  Test suites: Travis CI, Coveralls
 
 
 ``DeriveAlive.spline``
 ~~~~~~~~~~~~~~~~~~~~~~
 
+Detailed methods with inputs and return information are listed in Additional Features - Quadratic Splines.
+
+-  Methods:
+
+      -  ``quad_spline_coeff``: calculate the coefficients of quadratic splines.
+
+      - ``spline_points``: get the coordinates of points on the corresponding splines.
+
+      - ``quad_spline_plot``: plot the original function and the corresponding splines.
+
+      - ``spline_error``: calculate the average absolute error of the spline and the original function at one point.
+
+
+-  External dependencies:
+
+   -  ``DeriveAlive``
+
+   -  ``NumPy``
+
+   -  ``matplotlib.pyplot``
+
+   -  Test suites: Travis CI, Coveralls
