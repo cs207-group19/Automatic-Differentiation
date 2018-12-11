@@ -9,141 +9,6 @@ import DeriveAlive.rootfinding as rf
 import DeriveAlive.DeriveAlive as da
 import numpy as np
 
-# Comment out for testing on Travis CI
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-import matplotlib.animation as animation
-
-def plot_results(f, x_path, f_path, f_string, x_lims=None, y_lims=None, num_points=50, 
-				 threedim=False, fourdim=False, animate=False, speed=500):
-	if x_lims:
-		x_min, x_max = x_lims
-		x_range = np.linspace(x_min, x_max, num_points)
-	else:
-		x_range = np.linspace(-10, 10, num_points)
-
-	if y_lims:
-		y_min, y_max = y_lims
-	
-	# Plot function and path of points
-	if threedim:
-		xs, ys = x_path[:, 0], x_path[:, 1]
-		fs = f_path
-		x0, y0 = np.round(xs[0], 4), np.round(ys[0], 4)
-		xn, yn = np.round(xs[-1], 4), np.round(ys[-1], 4)
-
-		fig = plt.figure(figsize=(10, 6))
-		ax = fig.add_subplot(111, projection='3d')			
-		ax.set_title(r'Finding root(s) of ${}$'.format(f_string))
-
-		# Plot surface
-		X, Y = np.meshgrid(x_range, x_range)
-		zs = np.array([f([x, y]) for x, y in zip(np.ravel(X), np.ravel(Y))])
-		Z = zs.reshape(X.shape)
-		ax.plot_surface(X, Y, Z, color='0.5', alpha=0.5)	
-
-		# Plot start and end
-		ax.scatter(xs[0], ys[0], fs[0], c='red', marker='o', linewidth=6, label='start: {}'.format((x0, y0)))
-		ax.scatter(xs[-1], ys[-1], fs[-1], c='green', marker='o', linewidth=6, label='end: {}'.format((xn, yn)))
-		ax.set_xlabel('x')
-		ax.set_ylabel('y')
-		ax.set_zlabel('f(x,y)')
-		
-		if animate and len(x_path) > 2:
-			line, = ax.plot(xs, ys, fs, 'b-o', label='path')
-
-			def update(num, x, y, z, line):
-			    line.set_data(x[:num], y[:num])
-			    line.set_3d_properties(z[:num])
-			    if x_lims and y_lims:
-			    	line.axes.axis([x_min, x_max, y_min, y_max])
-			    return line,
-
-			ani = animation.FuncAnimation(fig, update, len(x_path), fargs=[xs, ys, f_path, line],
-			                              interval=speed, blit=True, repeat_delay=500, repeat=True)
-
-		else:
-			ax.plot(xs, ys, fs, 'b-o', label='path')
-
-		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.5))
-		plt.show()
-
-	elif fourdim:
-		if animate:
-			print ("Sorry, animation is not supported for 4D plots.")
-
-		# Other cmaps: cm.PiYG, cm.tab20c, cm.twilight, cm.nipy_spectral
-		cm_type = cm.RdYlGn_r 
-		fig = plt.figure(figsize=(10, 6))
-		ax = fig.add_subplot(111, projection='3d')
-		xs, ys, zs = x_path[:, 0], x_path[:, 1], x_path[:, 2]
-		fs = f_path
-		x0, y0, z0 = np.round(xs[0], 4), np.round(ys[0], 4), np.round(zs[0], 4)
-		xn, yn, zn = np.round(x_path[-1], 4)
-		ax.scatter(xs, ys, zs, c=fs, cmap=cm_type)
-		ax.plot3D(xs, ys, zs, '-')
-		ax.scatter(xs[0], ys[0], zs[0], c='red', marker='o', linewidth=6, label='start: {}'.format((x0, y0, z0)))
-		ax.scatter(xs[-1], ys[-1], zs[-1], c='green', marker='o', linewidth=6, label='end: {}'.format((xn, yn, zn)))
-
-		m = cm.ScalarMappable(cmap=cm_type)
-		m.set_array(fs)
-		cbar = plt.colorbar(m)
-		ax.set_xlabel('x')
-		ax.set_ylabel('y')
-		ax.set_zlabel('z')
-		ax.set_title(r'Finding root(s) of ${}$'.format(f_string))
-
-		# Place legend
-		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.85))
-		plt.show()
-
-	else:
-		x0, f0 = np.round(x_path[0], 4), np.round(f_path[0], 4)
-		xn, fn = np.round(x_path[-1], 4), np.round(f_path[-1], 4)
-
-		if animate and len(x_path) > 2:
-			fig, ax = plt.subplots()
-			ax.plot(x_range, np.zeros(num_points), '0.7')
-			ax.set_title(r'Finding root(s) of ${}$'.format(f_string))
-			ax.plot(x_range, f(x_range), 'k-', label=r'${}$'.format(f_string))
-			plt.plot(x0, f0, 'ro', label='start: {}'.format(x0))
-			plt.plot(xn, fn, 'go', label='end: {}'.format(xn))
-
-			line, = ax.plot(x_path, f_path, 'b-o', label='path')
-
-			def update(num, x, y, line):
-			    line.set_data(x[:num], y[:num])
-			    if x_lims and y_lims:
-			    	line.axes.axis([x_min, x_max, y_min, y_max])
-			    return line,
-
-			ani = animation.FuncAnimation(fig, update, len(x_path), fargs=[x_path, f_path, line],
-			                              interval=200, blit=True, repeat_delay=500, repeat=True)
-
-			ax.legend()
-			ax.set_xlabel('x')
-			ax.set_ylabel('f(x)')
-			plt.show()
-		else:
-			plt.figure()
-			plt.plot(x_range, np.zeros(num_points), '0.7')
-			plt.title(r'Finding root(s) of ${}$'.format(f_string))
-			plt.plot(x_range, f(x_range), 'k-', label=r'${}$'.format(f_string))
-			plt.plot(x_path, f_path, 'b-o', label='path')
-			plt.plot(x0, f0, 'ro', label='start: {}'.format(x0))
-			plt.plot(xn, fn, 'go', label='end: {}'.format(xn))	
-
-			# Plot details
-			if x_lims:
-				plt.xlim(x_min, x_max)
-			if y_lims:
-				plt.ylim(y_min, y_max)
-			plt.xlabel('x')
-			plt.ylabel('f(x)')
-			plt.legend()
-			plt.show()
-
 
 def test_NewtonRoot_r1_to_r1():
 	'''Integration tests for scalar to scalar functions.'''
@@ -160,7 +25,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in np.arange(-2, 2.1, 1):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root = [0]
 			der = [0]
@@ -179,7 +44,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(-1, 4):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root_1, der_1 = [0], [-2]
 			root_2, der_2 = [2], [2]
@@ -198,7 +63,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(-7, 2, 2):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root_1 = [-3 + np.sqrt(2)]
 			root_2 = [-3 - np.sqrt(2)]
@@ -216,7 +81,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(2, 7):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root = [4 + np.cbrt(3)]
 			np.testing.assert_array_almost_equal(solution.val, root)	
@@ -233,7 +98,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in [np.pi - 0.25, np.pi, 1.5 * np.pi, 2 * np.pi - 0.25, 2 * np.pi + 0.25]:
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
 
 			root_multiple_of_pi = (solution.val / np.pi) % 1
 			np.testing.assert_array_almost_equal(root_multiple_of_pi, [0.])	
@@ -251,7 +116,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in np.arange(-0.75, 0.8, 0.25):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
 
 			root = [0.166402]
 			der = [4.62465]
@@ -285,7 +150,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = -y
 			der = [1, 1]
@@ -307,7 +172,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = +-y
 			der = [2 * xn, -2 * yn]
@@ -329,7 +194,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = y = 0
 			der = [0, 0]
@@ -350,7 +215,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x_val, y_val]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25)	
+			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25)	
 			
 			# root: x = +- 2(sqrt(y^2 + 1))/sqrt(2y - 1)
 			value = 2 * np.sqrt(yn ** 2 + 1) / (np.sqrt(2 * yn - 1))
@@ -376,7 +241,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			# plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			# rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
 
 			# root: x = 1 +- sqrt(-(y + 1)^2)
 			inner = -(yn + 1) ** 2
@@ -405,7 +270,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
 
 			root = [0, 0, 0]
 			assert np.allclose(solution.val, root)
@@ -430,7 +295,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
 
 			# root: z = -y -z +- sqrt(3)
 			root_1 = -yn - zn - np.sqrt(3)
@@ -461,7 +326,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			# plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			# rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
 
 			# root: x = +- (zn^2)^(1 / (yn^2))
 			root_1 = (zn ** 2) ** (1 / (yn ** 2))
@@ -487,6 +352,7 @@ def test_NewtonRoot_rm_to_r1():
 	case_7()
 	# case_8()
 	print ("All Newton root vector to scalar cases passed!")
+
 
 print ("Testing root finding and optimization suite.")
 test_NewtonRoot_r1_to_r1()
