@@ -153,13 +153,26 @@
             
   <div class="section" id="future">
 <h1>Future<a class="headerlink" href="#future" title="Permalink to this headline">¶</a></h1>
-<p>Currently, the software can handle scalar-to-scalar, vector-to-scalar,
-scalar-to-vector, and vector-to-vector functions. In the
-future, we will expand the module to handle vector-to-vector functions
-(and scalar-to-vector and vector-to-scalar), and also be able to trace
-the Jacobian at each step. In the present state of the project, we have
-not stored the derivative with respect to multiple input variables,
-since there is just one input variable in the scalar-to-scalar case.</p>
+<p>Currently, our <code class="docutils literal"><span class="pre">DeriveAlive</span></code>  can handle scalar to scalar, scalar to vector, vector to scalar and vector to vector functions.  The further improvement for the software can be expected as follows:</p>
+<ul class="simple">
+<li>Now our users have to define each input variable themselves when performing vector to vector or vector to scalar functions, e.g they would like to use <code class="docutils literal"><span class="pre">DeriveAlive</span></code> for <span class="math">\(f(x,y,z)\)</span>, they have to define:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>It is obvious that it wouldn’t be convenient for our users to do this when they have high dimension day (i.e. 100 dimensions, they have to input [1, 0, ….,0], …, 100 times!). In the future, we would like them to define in this way:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt;&gt;&gt; x = da.Var([2],’3, 1’)
+&gt;&gt;&gt; y = da.Var([3],’3, 2’)
+&gt;&gt;&gt; z = da.Var([4],’3, 3’)
+</pre></div>
+</div>
+<p>where, the first element in the string is the dimension of the input vector (here 100), and the second element is the position of the ‘1’ in the initialized Jacobian matrix.
+This improvement will make our software more user-friendly and easier to work with.</p>
+<ul class="simple">
+<li>Now our <code class="docutils literal"><span class="pre">DeriveAlive</span></code> can work perfectly with the forward mode, we are expecting the implement the reverse mode also. This improvement will allow our users to play with Neural Network models using backpropagation.</li>
+</ul>
 </div>
 
 

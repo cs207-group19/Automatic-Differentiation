@@ -71,7 +71,7 @@ Declare Variables
       Var([1], [1])
 
       # Denote a scalar function
-      >>> f = 2*x + np.sin(x)
+      >>> f = 2 * x + np.sin(x)
       >>> f
       Var([2.84147098], [2.54030231])
 
@@ -90,7 +90,7 @@ Declare Variables
       Var([6], [1 1 1])
 
       # Suppose we want to denote an R^3 to R^3 function
-      >>> f = da.Var([x, y**2, z**4])
+      >>> f = da.Var([x, y ** 2, z ** 4])
       >>> f
           Values:
           [ 1  4 81],
@@ -153,7 +153,7 @@ Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value 
 
       # Expect value of [1. 2.4674011], jacobian of [[0], [3.14159265]]
       >>> x = da.Var([np.pi/2], [1])
-      >>> f = da.Var([np.sin(x), x**2])
+      >>> f = da.Var([np.sin(x), x ** 2])
       >>> f
           Values:
           [1.        2.4674011],
@@ -172,7 +172,7 @@ Consider the case :math:`f(x,y,z) = (\sin(x), 4y + z^3)`. We want to calculate t
       >>> x = da.Var([np.pi/2], [1, 0, 0])
       >>> y = da.Var([3], [0, 1, 0])
       >>> z = da.Var([-2], [0, 0, 1])
-      >>> f = da.Var([np.sin(x), 4*y+z**3])
+      >>> f = da.Var([np.sin(x), 4 * y + z ** 3])
       >>> f
       Values:
       [1. 4.],

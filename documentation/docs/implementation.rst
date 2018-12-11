@@ -1,14 +1,14 @@
 Implementation
 ==============
 
-We plan to implement the forward mode of autodifferentiation with the
-following choices:
+Forward Mode Implementation
+---------------------------
 
 -  Variable domain: The variables are defined as real numbers, hence any
    calculations or results involving complex numbers will be excluded
    from the package.
 
--  Type of user input: Regardless of the input type (e.g., a float or a
+-  Type of user input: Regardless of the input type (e.g., an int, a float or a
    list or a numpy array), the ``Var`` class will automatically convert
    the input into a numpy array. This will provide flexibility in the
    future for implementing vector to vector functions.
@@ -35,16 +35,14 @@ following choices:
       separately. Each trace ``Var`` has a numpy array of derivatives
       where the length of the array is the number of input variables in
       the function. In the vector-vector case, if we have a function
-      :math:`f: \mathbb{R}^m \rightarrow \mathbb{R}^n`, we can process
+      :math:`f: \mathbb{R}^m \rightarrow \mathbb{R}^n` or :math:`f: \mathbb{R}^1 \rightarrow \mathbb{R}^n`, we can process
       this as :math:`f = [f_1, f_2, \ldots, f_n]`, where each
       :math:`f_i` is a function
       :math:`f_i: \mathbb{R}^m \rightarrow \mathbb{R}`. Our
       implementation can act as a wrapper over these functions, and we
       can evaluate each :math:`f_i` independently, so long as we define
-      :math:`f_i` in terms of the :math:`m` inputs. Currently, the
-      module supports scalar to scalar functions, but we have expanded
-      several parts of the implementation to include arrays so that
-      providing vector to vector functions will be a smooth transition.
+      :math:`f_i` in terms of the :math:`m` inputs. : Currently, the module 
+      supports both scalar to scalar and vector to vector functions.
 
 -  Our implementation plan currently includes 1 class which accounts for
    trace variables and derivatives with respect to each input variable.
@@ -69,6 +67,9 @@ API
 .. automodule:: DeriveAlive
 
 
+``DeriveAlive.spline``
+~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: spline
 
 
 -  Class attributes and methods:
