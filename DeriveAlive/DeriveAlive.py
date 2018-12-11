@@ -278,7 +278,7 @@ class Var(object):
 
         >>> z = 2 - Var(3)
         >>> print(z)
-        Var([-1.], [-1])       
+        Var([-1.], [-1])
         """
 		return (-self).__add__(float(other))
 
@@ -486,7 +486,7 @@ class Var(object):
         ========   
         >>> x = Var(2.0)
         >>> z = 1 / x
-        >>> print(f)
+        >>> print(z)
         Var([0.5], [-0.25])
 
         >>> x = Var(3.0)
@@ -567,7 +567,7 @@ class Var(object):
         Examples
         ======== 
         >>> x = Var(-4.0)
-        >> z = abs(x)
+        >>> z = abs(x)
         >>> print(z)
         Var([4.], [-1])
         """
@@ -680,7 +680,7 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x <= 3
-        array([True])
+        array([ True])
         """
 		return self.__lt__(other) or self.__eq__(other)
 
@@ -706,7 +706,7 @@ class Var(object):
         >>> x = Var(3)
         >>> y = Var(1)
         >>> x > y
-        array([True])
+        array([ True])
         """
 		try:
 			return self.val > other.val
@@ -730,7 +730,7 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x >= 3
-        array([True])
+        array([ True])
         """
 		return self.__gt__(other) or self.__eq__(other)
 
