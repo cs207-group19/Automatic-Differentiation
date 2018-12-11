@@ -48,7 +48,7 @@ def test_GradientDescent():
 		for x_val in [-3, -1, 1, 3, 5]:
 			# Test initial guess without using da.Var type
 			solution, x_path, f_path = opt.GradientDescent(f, x_val)
-			opt.plot_results(f, x_path, f_path, f_string, animate=True)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-5, 5), y_lims=(-8, 8), animate=True)
 
 			assert np.allclose(solution.val, [1])
 			assert np.allclose(solution.der, [0])
