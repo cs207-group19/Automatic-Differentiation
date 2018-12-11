@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../DeriveAlive/')
 
-import spline as sp
+import DeriveAlive.spline as sp
 import DeriveAlive.DeriveAlive as da
 import numpy as np
 import matplotlib.pyplot as plt
