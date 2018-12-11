@@ -1,4 +1,4 @@
-import DeriveAlive as da # This path is subject to change
+import DeriveAlive.DeriveAlive as da # This path is subject to change
 import numpy as np
 
 # Comment out for testing on Travis CI

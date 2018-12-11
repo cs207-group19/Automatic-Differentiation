@@ -6,7 +6,6 @@ import sys
 sys.path.append('../')
 import DeriveAlive.DeriveAlive as da
 import DeriveAlive.spline as sp
-#import DeriveAlive as da
 import numpy as np
 
 # Comment out for testing on Travis CI
