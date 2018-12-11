@@ -46,7 +46,7 @@ def test_NewtonRoot_r1_to_r1():
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
 
 			if val == 1:
-				fig = rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+				fig = rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)
 
 			root_1, der_1 = [0], [-2]
 			root_2, der_2 = [2], [2]
@@ -63,7 +63,8 @@ def test_NewtonRoot_r1_to_r1():
 		f_string = 'f(x) = -(x+3)^2 + 2'
 
 		for val in range(-7, 2, 2):
-			x0 = [da.Var(val)]
+			# Test non-Var input
+			x0 = val
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
 			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
@@ -196,7 +197,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, animate=True)	
 
 			# root: x = y = 0
 			der = [0, 0]
@@ -272,7 +273,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True, animate=True)
 
 			root = [0, 0, 0]
 			assert np.allclose(solution.val, root)
