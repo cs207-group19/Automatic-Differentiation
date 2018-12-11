@@ -1,8 +1,8 @@
 import sys
-sys.path.append('../DeriveAlive')
+sys.path.append('../DeriveAlive/')
 
 import spline as sp
-import DeriveAlive as da
+import DeriveAlive.DeriveAlive as da
 import numpy as np
 import matplotlib.pyplot as plt
 from copy import deepcopy
@@ -28,7 +28,7 @@ logo.append(spline_points1)
 original.append(ks1)
 
 def f2(var):
-	return (1/0.5**2) * var**2 - 1
+	return -1 + (1/0.5**2) * var**2
 
 xMin2 = -0.5
 xMax2 = 0
@@ -59,7 +59,7 @@ logo.append(spline_points3)
 original.append(ks3)
 
 def f4(var):
-	return (0.5/0.5**2) * var**2 - 1
+	return -1 + (0.5/0.5**2) * var**2
 
 xMin4 = 0
 xMax4 = 0.5
@@ -81,7 +81,7 @@ second letter
 '''
 
 def f5(var):
-	return (-0.5/0.5**2) * (var-1.5)**2 + 1
+	return 1 + (-0.5/0.5**2) * (-1.5+var)**2
 
 xMin5 = 1.5
 xMax5 = 2
@@ -99,7 +99,7 @@ logo.append(spline_points5)
 original.append(ks5)
 
 def f6(var):
-	return (0.5/0.5**2) * (var-1.5)**2 - 1
+	return -1 + (0.5/0.5**2) * (-1.5+var)**2
 
 xMin6 = 1.5
 xMax6 = 2
@@ -117,7 +117,7 @@ logo.append(spline_points6)
 original.append(ks6)
 
 def f7(var):
-	return (-0.5/0.5**2) * (var-1.5)**2 + 1
+	return (-0.5/0.5**2) * (-1.5+var)**2 + 1
 
 xMin7 = 1
 xMax7 = 1.5
@@ -130,7 +130,7 @@ logo.append(spline_points7)
 original.append(ks7)
 
 def f8(var):
-	return (0.5/0.5**2) * (-1*var+1.5)**2 - 1
+	return -1 + (0.5/0.5**2) * (-1.5+var)**2
 
 xMin8 = 1
 xMax8 = 1.5
@@ -143,7 +143,7 @@ logo.append(spline_points8)
 original.append(ks8)
 
 def f9(var):
-	return (0.5/0.5**2) * (-1*var+1.5)**2
+	return (0.5/0.5**2) * (-1.5+var)**2
 
 xMin9 = 1
 xMax9 = 1.5
@@ -156,7 +156,7 @@ logo.append(spline_points9)
 original.append(ks9)
 
 def f10(var):
-	return (-0.5/0.5**2) * (var-1.5)**2
+	return (-0.5/0.5**2) * (-1.5+var)**2
 
 xMin10 = 1.5
 xMax10 = 2
@@ -178,7 +178,7 @@ third letter
 '''
 
 def f11(var):
-	return (-0.5/0.5**2) * (var-3)**2 + 1
+	return (-0.5/0.5**2) * (-3+var)**2 + 1
 
 xMin11 = 2.5
 xMax11 = 3
@@ -191,7 +191,7 @@ logo.append(spline_points11)
 original.append(ks11)
 
 def f12(var):
-	return (-0.5/0.5**2) * (var-3)**2 + 1
+	return (-0.5/0.5**2) * (-3+var)**2 + 1
 
 xMin12 = 3
 xMax12 = 3.5
@@ -209,7 +209,7 @@ logo.append(spline_points12)
 original.append(ks12)
 
 def f13(var):
-    return 1.5*var - 4.75
+    return -4.75 + 1.5*var
 
 xMin13 = 2.5333
 xMax13 = 3.5
@@ -239,7 +239,7 @@ fourth letter
 '''
 
 def f15(var):
-    return (-1/0.5**2) * (var-4.5)**2 + 1
+    return (-1/0.5**2) * (-4.5+var)**2 + 1
 
 xMin15 = 4
 xMax15 = 4.5
@@ -252,7 +252,7 @@ logo.append(spline_points15)
 original.append(ks15)
 
 def f16(var):
-    return (1/0.5**2) * (var-4.5)**2 - 1
+    return -1 + (1/0.5**2) * (-4.5+var)**2
 
 xMin16 = 4
 xMax16 = 4.5
@@ -265,7 +265,7 @@ logo.append(spline_points16)
 original.append(ks16)
 
 def f17(var):
-    return (-1/0.5**2) * (var-4.5)**2 + 1
+    return (-1/0.5**2) * (-4.5+var)**2 + 1
 
 xMin17 = 4.5
 xMax17 = 5
@@ -283,7 +283,7 @@ logo.append(spline_points17)
 original.append(ks17)
 
 def f18(var):
-    return (1/0.5**2) * (var-4.5)**2 - 1
+    return -1 + (1/0.5**2) * (-4.5+var)**2
 
 xMin18 = 4.5
 xMax18 = 5
@@ -318,7 +318,7 @@ logo.append(spline_points19)
 original.append(ks19)
 
 def f20(var):
-    return (-2/(-0.75)**2) * (var-6.5)**2 + 1
+    return (-2/(-0.75)**2) * (-6.5+var)**2 + 1
 
 xMin20 = 5.75
 xMax20 = 6.5
