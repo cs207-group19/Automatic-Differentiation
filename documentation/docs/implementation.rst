@@ -247,6 +247,8 @@ Detailed methods with inputs and return information are listed in Additional Fea
 
       -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum.
 
+      -  ``plot_results``: See docstring.
+
 
 -  External dependencies:
 
