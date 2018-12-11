@@ -497,9 +497,9 @@ class Var(object):
         [3.   1.   1.   0.75],
         Jacobian:
         [[ 0.        ]
-        [-0.33333333]
-        [-0.33333333]
-        [ 0.        ]]
+         [-0.33333333]
+         [-0.33333333]
+         [ 0.        ]]
         """
 
 		# Check for ZeroDivisionError at start rather than nesting exception block
@@ -650,12 +650,12 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x < 4
-        array([True])
+        array([ True])
 
         >>> x = Var(3)
         >>> y = Var(5)
         >>> x < y
-        array([True])
+        array([ True])
         """
 		# Numpy internally checks if the dimensions of self and other match
 		try:
@@ -701,7 +701,7 @@ class Var(object):
         ======== 
         >>> x = Var(3)
         >>> x > 2
-        array([True])
+        array([ True])
 
         >>> x = Var(3)
         >>> y = Var(1)
