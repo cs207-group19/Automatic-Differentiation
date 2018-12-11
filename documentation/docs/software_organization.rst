@@ -10,7 +10,7 @@ Current directory structure
     |-- DeriveAlive/
     |   |-- DeriveAlive.py
     |   |-- __init__.py
-    |   |-- optimization.py    
+    |   |-- optimize.py    
     |   |-- rootfinding.py
     |   `-- spline.py
     |-- demos/
@@ -44,7 +44,7 @@ Basic modules and their functionality
    methods for the operations that our model implements (e.g., tangent,
    sine, power, exponentiation, addition, multiplication, and so on).
 
--  ``optimization``: This module utilizes our custom library for
+-  ``optimize``: This module utilizes our custom library for
    autodifferentiation to perform optimization. It includes 
    ``DeriveAlive.Var`` class-specific methods for gradient descent.
 
@@ -71,7 +71,7 @@ All test files live in ``tests/`` folder.
 
 -  ``test_rootfinding``: This is a test suite for ``rootfinding``.
 
--  ``test_optimization``: This is a test suite for ``optimization``.
+-  ``test_optimize``: This is a test suite for ``optimization``.
 
 -  ``test_spline``: This is a test suite for ``spline``.
 

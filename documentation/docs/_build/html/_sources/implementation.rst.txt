@@ -238,7 +238,7 @@ Detailed methods with inputs and return information are listed in Additional Fea
 
    -  Test suites: Travis CI, Coveralls
 
-``DeriveAlive.optimization``
+``DeriveAlive.optimize``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Detailed methods with inputs and return information are listed in Additional Features - Optimization.
