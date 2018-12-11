@@ -20,8 +20,8 @@ It is obvious that it wouldn’t be convenient for our users to do this when the
 ::
 
       >>> x = da.Var([2],’3, 1’)
-	    >>> y = da.Var([3],’3, 2’)
-	    >>> z = da.Var([4],’3, 3’)
+      >>> y = da.Var([3],’3, 2’)
+      >>> z = da.Var([4],’3, 3’)
 
 
 where, the first element in the string is the dimension of the input vector (here 100), and the second element is the position of the ‘1’ in the initialized Jacobian matrix.
