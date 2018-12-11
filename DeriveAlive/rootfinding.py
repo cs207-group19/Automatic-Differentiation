@@ -221,7 +221,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 		Example
 		-------
-		>>> solution, var_path, f_path = rf.NewtonRoot(f, x, ...)
+		>>> solution, var_path, f_path = NewtonRoot(f, x, ...)
 		>>> f_string = 'f(x,y) = 3x^{5 + 4x} + cos(x)'
 		>>> plot_results(f, var_path, f_path, f_string, threedim=True)
 
