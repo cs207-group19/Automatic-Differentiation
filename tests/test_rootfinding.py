@@ -25,7 +25,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in np.arange(-2, 2.1, 1):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-            rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+            # rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root = [0]
 			der = [0]
@@ -44,7 +44,9 @@ def test_NewtonRoot_r1_to_r1():
 		for val in range(-1, 4):
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			# rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+
+			if val == 1:
+				fig = rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 			root_1, der_1 = [0], [-2]
 			root_2, der_2 = [2], [2]
