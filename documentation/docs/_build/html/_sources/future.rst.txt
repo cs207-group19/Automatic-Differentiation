@@ -33,4 +33,4 @@ Module Extension
 
 Now our ``DeriveAlive`` can work perfectly with the forward mode, we are expecting the implement the reverse mode also. This improvement will allow our users to play with Neural Network models using backpropagation.
 
-We also want to extend the quadratic spline suite to a cubic spline suite or even higher order splines, which would utilize higher order derivatives to be implemented using autodifferentiation.
+We also want to extend the quadratic spline suite to a cubic spline suite or even higher order splines, which would utilize higher order derivatives to be implemented using autodifferentiation. And allow user to draw any custom plots with this module.
