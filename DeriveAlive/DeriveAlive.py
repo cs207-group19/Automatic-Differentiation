@@ -92,12 +92,21 @@ class Var(object):
 				self.val = np.hstack((new_values))
 				self.der = np.vstack((new_derivatives))
 
-		# Convert values of -0.0 to 0.0 in derivative
+		# Convert values of -0.0 or <1e-12 to 0.0 in self.val
+		if len(self.val.shape):
+			shape = self.val.shape
+			val_vals = self.val.flatten()
+			for i, val_val in enumerate(val_vals):
+				if val_val == -0.0 or abs(val_val) < 1e-12:
+					val_vals[i] = 0.0
+			self.val = np.reshape(val_vals, shape)
+
+		# Convert values of -0.0 or <1e-12 to 0.0 in self.der
 		if len(self.der.shape):
 			shape = self.der.shape
 			der_vals = self.der.flatten()
 			for i, der_val in enumerate(der_vals):
-				if der_val == -0.0:
+				if der_val == -0.0 or abs(der_val) < 1e-12:
 					der_vals[i] = 0.0
 			self.der = np.reshape(der_vals, shape)
 
@@ -857,7 +866,7 @@ class Var(object):
         >>> y = Var(0, [0, 1])
         >>> z = 3 * np.sin(x) + 2 * np.sin(y)
         >>> print(z)
-        Var([3.], [1.8369702e-16 2.0000000e+00])
+        Var([3.], [0. 2.])
         """
 		val = np.sin(self.val)
 		if len(self.der.shape):
