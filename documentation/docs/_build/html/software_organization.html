@@ -85,8 +85,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Software Organization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#current-directory-structure">Current directory structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-modules-and-their-functionality">Basic modules and their functionality</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#where-will-your-test-suite-live">Where will your test suite live?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-can-someone-install-your-package">How can someone install your package?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-using-pypi-and-github">Installation using PyPI and GitHub</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
@@ -165,17 +165,18 @@
 |-- DeriveAlive/
 |   |-- DeriveAlive.py
 |   |-- __init__.py
-|   `-- root_finding.py
+|   |-- optimization.py
+|   |-- root_finding.py
+|   `-- spline.py
 |-- demos/
-|   `-- spline
-|       |-- spline.py
-|       `-- surprise.py
+|   `-- Presentation.ipynb
 |-- documentation/
 |   |-- docs/
 |   |-- milestone1.pdf
 |   `-- milestone2.pdf
 |-- tests/
 |   |-- __init__.py
+|   |-- gradient_descent_demo.py
 |   |-- normalized.txt
 |   |-- test_DeriveAlive.py
 |   `-- test_root_finding.py
@@ -201,67 +202,37 @@ sine, power, exponentiation, addition, multiplication, and so on).</li>
 for scalar functions to ensure that the <code class="docutils literal"><span class="pre">DeriveAlive</span></code> module
 properly calculates values of scalar functions and gradients with
 respect to scalar inputs.</li>
+<li><code class="docutils literal"><span class="pre">optimization</span></code>: This module utilizes our custom library for
+autodifferentiation to perform optimization. It includes
+<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for gradient descent.</li>
+<li><code class="docutils literal"><span class="pre">root_finding</span></code>: This module utilizes our custom library for
+autodifferentiation to find roots of a given <span class="math">\(\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}\)</span>
+or <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span> function. It includes
+<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for Newton’s method.</li>
+<li><code class="docutils literal"><span class="pre">spline</span></code>: This module utilizes our custom library for
+autodifferentiation to draw quadratic splins of a given scalar function.
+It includes  <code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for quadratic
+spline generation.</li>
 </ul>
 </div>
-<div class="section" id="where-will-your-test-suite-live">
-<h2>Where will your test suite live?<a class="headerlink" href="#where-will-your-test-suite-live" title="Permalink to this headline">¶</a></h2>
-<p>Our test suite is currently in a test file called
-<code class="docutils literal"><span class="pre">test_DeriveAlive.py</span></code> in its own <code class="docutils literal"><span class="pre">tests</span></code> folder. We use Travis CI
-for automatic testing for each push, and Coveralls for line coverage
-metrics. We have already set up these integrations, with badges included
-in the <code class="docutils literal"><span class="pre">README.md</span></code>. Users may run the test suite by navigating to the
-<code class="docutils literal"><span class="pre">tests/</span></code> folder and running the command <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">test_DeriveAlive.py</span></code>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>Our test suite for <code class="docutils literal"><span class="pre">DeriveAlive</span></code> is currently in a test file called
+<code class="docutils literal"><span class="pre">test_DeriveAlive.py</span></code> in its own <code class="docutils literal"><span class="pre">tests</span></code> folder.</p>
+<p>Our test suite for <code class="docutils literal"><span class="pre">root_finding</span></code> and  <code class="docutils literal"><span class="pre">optimization</span></code> are also in
+<code class="docutils literal"><span class="pre">tests</span></code> folder, currently in a test file called <code class="docutils literal"><span class="pre">test_root_finding.py</span></code>
+in the same <code class="docutils literal"><span class="pre">tests</span></code> folder.</p>
+<p>We use Travis CI mfor automatic testing for each push, and Coveralls for
+line coverage metrics. We have already set up these integrations, with
+badges included in the <code class="docutils literal"><span class="pre">README.md</span></code>. Users may run the test suite by
+navigating to the <code class="docutils literal"><span class="pre">tests/</span></code> folder and running the command <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">test_DeriveAlive.py</span></code>
 from the command line (or <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">tests</span></code> if the user is outside the
 <code class="docutils literal"><span class="pre">tests/</span></code> folder).</p>
 </div>
-<div class="section" id="how-can-someone-install-your-package">
-<h2>How can someone install your package?<a class="headerlink" href="#how-can-someone-install-your-package" title="Permalink to this headline">¶</a></h2>
-<p>We provide two ways for our package installation: GitHub and PyPI.</p>
+<div class="section" id="installation-using-pypi-and-github">
+<h2>Installation using PyPI and GitHub<a class="headerlink" href="#installation-using-pypi-and-github" title="Permalink to this headline">¶</a></h2>
+<p>We provide two ways for our package installation: PyPI and GitHub.</p>
 <ul>
-<li><p class="first">Installation from GitHub</p>
-<ul>
-<li><p class="first">Download the package from GitHub to your folder via these commands
-in the terminal:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">test_cs207</span>
-<span class="n">cd</span> <span class="n">test_cs207</span><span class="o">/</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">group19</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">.</span><span class="n">git</span>
-<span class="n">cd</span> <span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">/</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Create a virtual environment and activate it</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># If you don&#39;t have virtualenv, install it</span>
-<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">virtualenv</span>
-<span class="c1"># Create virtual environment</span>
-<span class="n">virtualenv</span> <span class="n">env</span>
-<span class="c1"># Activate your virtual environment</span>
-<span class="n">source</span> <span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Install required packages and run module tests in <code class="docutils literal"><span class="pre">tests/</span></code></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">pytest</span> <span class="n">tests</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Use DeriveAlive Python package (see demo in Section 2.2)</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
-<span class="n">Var</span><span class="p">([</span><span class="mf">1.57079633</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">])</span>
-<span class="o">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">quit</span><span class="p">()</span>
-
-<span class="c1"># deactivate virtual environment</span>
-<span class="n">deactivate</span>
-</pre></div>
-</div>
-</li>
-</ul>
-</li>
 <li><p class="first">Installation using PyPI</p>
 <div class="line-block">
 <div class="line">We also utilized the Python Package Index (PyPI) for distributing
@@ -295,6 +266,50 @@ wheels. The url to the project is
 </div>
 </li>
 <li><p class="first">Use DeriveAlive Python package # (see demo in Section 2.2)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">Var</span><span class="p">([</span><span class="mf">1.57079633</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">])</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">quit</span><span class="p">()</span>
+
+<span class="c1"># deactivate virtual environment</span>
+<span class="n">deactivate</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Installation from GitHub</p>
+<ul>
+<li><p class="first">Download the package from GitHub to your folder via these commands
+in the terminal:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">test_cs207</span>
+<span class="n">cd</span> <span class="n">test_cs207</span><span class="o">/</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">group19</span><span class="o">/</span><span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">cs207</span><span class="o">-</span><span class="n">FinalProject</span><span class="o">/</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a virtual environment and activate it</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># If you don&#39;t have virtualenv, install it</span>
+<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">virtualenv</span>
+<span class="c1"># Create virtual environment</span>
+<span class="n">virtualenv</span> <span class="n">env</span>
+<span class="c1"># Activate your virtual environment</span>
+<span class="n">source</span> <span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install required packages and run module tests in <code class="docutils literal"><span class="pre">tests/</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">pytest</span> <span class="n">tests</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Use DeriveAlive Python package (see demo in Section 2.2)</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>

@@ -84,8 +84,12 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#forward-mode-implementation">Forward Mode Implementation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#api">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-DeriveAlive"><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-derivealive"><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-optimization"><code class="docutils literal"><span class="pre">DeriveAlive.optimization</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-root-finding"><code class="docutils literal"><span class="pre">DeriveAlive.root_finding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivealive-spline"><code class="docutils literal"><span class="pre">DeriveAlive.spline</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -159,13 +163,13 @@
             
   <div class="section" id="implementation">
 <h1>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h1>
-<p>We plan to implement the forward mode of autodifferentiation with the
-following choices:</p>
+<div class="section" id="forward-mode-implementation">
+<h2>Forward Mode Implementation<a class="headerlink" href="#forward-mode-implementation" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Variable domain: The variables are defined as real numbers, hence any
 calculations or results involving complex numbers will be excluded
 from the package.</li>
-<li>Type of user input: Regardless of the input type (e.g., a float or a
+<li>Type of user input: Regardless of the input type (e.g., an int, a float or a
 list or a numpy array), the <code class="docutils literal"><span class="pre">Var</span></code> class will automatically convert
 the input into a numpy array. This will provide flexibility in the
 future for implementing vector to vector functions.</li>
@@ -188,16 +192,14 @@ apply entire functions to the array, rather than to each entry
 separately. Each trace <code class="docutils literal"><span class="pre">Var</span></code> has a numpy array of derivatives
 where the length of the array is the number of input variables in
 the function. In the vector-vector case, if we have a function
-<span class="math">\(f: \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span>, we can process
+<span class="math">\(f: \mathbb{R}^m \rightarrow \mathbb{R}^n\)</span> or <span class="math">\(f: \mathbb{R}^1 \rightarrow \mathbb{R}^n\)</span>, we can process
 this as <span class="math">\(f = [f_1, f_2, \ldots, f_n]\)</span>, where each
 <span class="math">\(f_i\)</span> is a function
 <span class="math">\(f_i: \mathbb{R}^m \rightarrow \mathbb{R}\)</span>. Our
 implementation can act as a wrapper over these functions, and we
 can evaluate each <span class="math">\(f_i\)</span> independently, so long as we define
-<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. Currently, the
-module supports scalar to scalar functions, but we have expanded
-several parts of the implementation to include arrays so that
-providing vector to vector functions will be a smooth transition.</li>
+<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. : Currently, the module
+supports both scalar to scalar and vector to vector functions.</li>
 </ul>
 </li>
 <li>Our implementation plan currently includes 1 class which accounts for
@@ -216,396 +218,11 @@ future project extensions.</li>
 </ul>
 </li>
 </ul>
+</div>
 <div class="section" id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="module-DeriveAlive">
-<span id="derivealive-derivealive"></span><h3><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code><a class="headerlink" href="#module-DeriveAlive" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt id="DeriveAlive.Var">
-<em class="property">class </em><code class="descclassname">DeriveAlive.</code><code class="descname">Var</code><span class="sig-paren">(</span><em>values, der=[1]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Var class supporting custom operations for Automatic Differentiation (AD).</p>
-<dl class="attribute">
-<dt id="DeriveAlive.Var.val">
-<code class="descname">val</code><a class="headerlink" href="#DeriveAlive.Var.val" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>numpy.ndarray</em> – The value of user defined function(s) F evaluated at x.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="DeriveAlive.Var.der">
-<code class="descname">der</code><a class="headerlink" href="#DeriveAlive.Var.der" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>numpy.ndarray</em> – The corresponding derivative, gradient, or Jacobian of user defined
-functions(s).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.arccos">
-<code class="descname">arccos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.arccos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.arccos" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the arccosine of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">arccosine of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">        &gt;&gt;&gt; y = da.Var(0.5, [0, 1])</span>
-<span class="go">        &gt;&gt;&gt; z = 3 * np.arccos(x) + 2 * np.arccos(y)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([6.80678408], [-3.         -2.30940108])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.arcsin">
-<code class="descname">arcsin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.arcsin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.arcsin" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the arcsine of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">arcsine of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
-<span class="go">        &gt;&gt;&gt; z = 3 * np.arcsin(x) + 2 * np.arcsin(y)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([0.], [3. 2.])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.arctan">
-<code class="descname">arctan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.arctan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.arctan" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the arctan of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">arctan of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">        &gt;&gt;&gt; y = da.Var(np.pi/2, [0, 1])</span>
-<span class="go">        &gt;&gt;&gt; z = 3 * np.arctan(x) + 2 * np.arctan(y)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([3.39871247], [2.4        0.57680088])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.cos">
-<code class="descname">cos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.cos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.cos" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the cosine of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">cosine of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([2.], [-3.  0.])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.cosh">
-<code class="descname">cosh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.cosh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.cosh" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the cosh of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">cosh of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([6.6292419], [-3.52560358  0.        ])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.exp">
-<code class="descname">exp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.exp" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Return the exponetial of self</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Var object that is the exponetial of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="go">        &gt;&gt;&gt; z = np.exp(x)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([2.71828183], [2.71828183])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.log">
-<code class="descname">log</code><span class="sig-paren">(</span><em>base</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.log" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Return the log base of self</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>self</strong> (<em>Var object</em>) – </li>
-<li><strong>base</strong> (<em>int</em>) – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Var object that is log base of self</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>Use as Var.log(base) with customer defined base</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">        &gt;&gt;&gt; z =  x.log(10)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([1.], [0.04342945])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.pow">
-<code class="descname">pow</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.pow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.pow" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Return power calculation of self to the power n in the form of self.pow(n)</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>self</strong> (<em>Var object</em>) – </li>
-<li><strong>n</strong> (<em>real number</em>) – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Var object that is self raised to the power n</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([16], [8])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.sin">
-<code class="descname">sin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.sin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.sin" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the sine of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">sine of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([3.], [1.8369702e-16 2.0000000e+00])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.sinh">
-<code class="descname">sinh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.sinh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.sinh" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the sinh of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">sinh of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([-3.52560358], [4.6292419 2.       ])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.sqrt">
-<code class="descname">sqrt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.sqrt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.sqrt" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Return squred root of self</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Var object that is self raised to the power n</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([2.], [0.25])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.tan">
-<code class="descname">tan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.tan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.tan" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the tangent of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tangent of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-<span class="go">Var([6.46410162], [6. 8.])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="DeriveAlive.Var.tanh">
-<code class="descname">tanh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DeriveAlive.html#Var.tanh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#DeriveAlive.Var.tanh" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Returns the tanh of Var object</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Var object</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tanh of self</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">        &gt;&gt;&gt; y = da.Var(0, [0, 1])</span>
-<span class="go">        &gt;&gt;&gt; z = 3 * np.tanh(x) + 2 * np.tanh(y)</span>
-<span class="go">        &gt;&gt;&gt; print(z)</span>
-<span class="go">        Var([-2.28478247], [1.25992302 2.        ])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="derivealive-derivealive">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.DeriveAlive</span></code><a class="headerlink" href="#derivealive-derivealive" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Class attributes and methods:</p>
 <ul class="simple">
@@ -718,6 +335,15 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 </ul>
 </li>
 </ul>
+</div>
+<div class="section" id="derivealive-optimization">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.optimization</span></code><a class="headerlink" href="#derivealive-optimization" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="derivealive-root-finding">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.root_finding</span></code><a class="headerlink" href="#derivealive-root-finding" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="derivealive-spline">
+<h3><code class="docutils literal"><span class="pre">DeriveAlive.spline</span></code><a class="headerlink" href="#derivealive-spline" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>

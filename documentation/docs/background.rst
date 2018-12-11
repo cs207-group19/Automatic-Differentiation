@@ -64,8 +64,8 @@ which can be a function of :math:`m` variables. The gradient of
 The Computational Graph
 -----------------------
 
-The computational graph lets us visualize what happens during the
-evaluation trace. The following example is based on Lectures 9 and 10.
+Let us visualize what happens during the evaluation trace. The following 
+example is based on Lectures 9 and 10.
 Consider the function:
 
 .. math:: f\left(x\right) = x - \exp\left(-2\sin^{2}\left(4x\right)\right)
