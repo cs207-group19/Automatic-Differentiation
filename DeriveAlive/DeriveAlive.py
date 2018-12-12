@@ -64,11 +64,15 @@ class Var(object):
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
 		if len(values) == 1:
-			if isinstance(der, float) or isinstance(der, int):
-				der = [der]
+			if isinstance(values[0], Var):
+				self.val = values[0].val
+				self.der = values[0].der
+			else:
+				if isinstance(der, float) or isinstance(der, int):
+					der = [der]
 
-			self.val = np.array(values)
-			self.der = np.array(der)
+				self.val = np.array(values)
+				self.der = np.array(der)
 		else:
 			all_non_Vars = len(list(filter(lambda x: isinstance(x, Var), values))) == 0
 			if all_non_Vars:
@@ -144,6 +148,7 @@ class Var(object):
 		[[1 0]
 		 [0 1]]
 		"""
+
 		val = val_copy = np.copy(self.val)
 		der = der_copy = np.copy(self.der)
 
