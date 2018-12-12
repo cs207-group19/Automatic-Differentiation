@@ -95,7 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
@@ -214,6 +214,10 @@
 <span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Constant (scalar or vector): User must initialize derivative to ‘None’. Otherwise, the variable will be denoted as an  <span class="math">\(\mathbb{R}^1\)</span> variable with derivative [1].</p>
+</div>
 <ul class="simple">
 <li>Denote scalar variables and functions</li>
 </ul>
@@ -231,6 +235,11 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
 <span class="n">Var</span><span class="p">([</span><span class="mf">2.84147098</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.54030231</span><span class="p">])</span>
+
+<span class="c1"># Define a callable scalar function:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">function</span> <span class="n">f</span> <span class="n">at</span> <span class="mh">0x116080950</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -245,6 +254,13 @@
 <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
 <span class="n">Var</span><span class="p">([</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Alternatively, the user can define the R^3 to R^1 function</span>
+<span class="c1"># by explicitly defining a da.Var vector with one entry:</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span>
+<span class="n">Var</span><span class="p">([</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># Suppose we want to denote an R^3 to R^3 function</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z</span> <span class="o">**</span> <span class="mi">4</span><span class="p">])</span>

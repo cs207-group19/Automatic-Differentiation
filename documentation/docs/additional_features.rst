@@ -1,5 +1,5 @@
 
-Additional features
+Additional Features
 ===================
 
 Root finding
@@ -87,6 +87,98 @@ Implementation
 
    -  ``matplotlib.pyplot``
 
+Demo
+~~~~~
+
+Case 1: :math:`f = sin(x)` with starting point :math:`x_0= \frac{3\pi}{2}`. Note: Newton method is not guaranteed to converge when :math:`f\prime(x_0)= 0`. But in our case, we use flip coin to determine which direction we want to go in order to get stuck at this point, and choose a derivative of :math:`\pm1`.
+
+::
+
+        # define f function
+        >>> f_string = 'f(x) = sin(x)'
+
+        >>> def f(x):
+                return np.sin(x)
+
+        >>> # Start at 3*pi/2 
+        >>> x0 = 3 * np.pi / 2
+
+            # finding the root
+        >>> for val in [np.pi - 0.25, np.pi, 1.5 * np.pi, 2 * np.pi - 0.25, 2 * np.pi + 0.25]:
+                solution, x_path, y_path = rf.NewtonRoot(f, x0)
+
+            # visualize the trace
+        >>> x_lims = -2 * np.pi, 3 * np.pi
+        >>> y_lims = -2, 2
+        >>> rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+
+.. image:: images/7_2_3_1.png
+  :width: 600
+
+Case 2:  :math:`f = x - \exp(-2\sin(4x)sin(4x)+0.3` with starting point :math:`x_0 = 0`.
+
+::
+
+        # define f function
+        f_string = 'f(x) = x - e^{-2 * sin(4x) * sin(4x)} + 0.3'
+
+        >>> def f(x):
+                return x - np.exp(-2.0 * np.sin(4.0 * x) * np.sin(4.0 * x)) + 0.3
+
+        # start at 0
+        >>> x0 = 0
+
+        # finding the root
+        >>> for val in np.arange(-0.75, 0.8, 0.25):
+                solution, x_path, y_path = rf.NewtonRoot(f, x0)
+
+        # visualize the trace
+        >>> x_lims = -2, 2
+        >>> y_lims = -2, 2
+        >>> rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+
+Case 3: :math:`f(x, y) = x^2 + 4y^2-2x^2y +4` with starting points :math:`x_0 =-8.0, y_0 = -5.0`.
+
+::
+
+        # define f function
+        >>> f_string = 'f(x, y) = x^2 + 4y^2 -2x^2y + 4'
+
+        >>> def f(variables):
+                x, y = variables
+                return x ** 2 + 4 * y ** 2 - 2 * (x ** 2) * y + 4
+
+        # start at x0=−8.0,y0= −5
+        >>> x0 = -8.0
+        >>> y0 = -5.0
+        >>> init_vars = [x0, y0]
+
+        # finding the root and visualize the trace
+        >>> solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
+        >>> rf.plot_results(f, xy_path, f_path, f_string, threedim=True)
+
+Case 4: :math:`f(x, y, z) = x^2 + y^2 + z^2` with starting points :math:`x_0 =1, y_0 = -2, z_0 = 5`.
+
+::
+
+        # define f function
+        >>> f_string = 'f(x, y, z) = x^2 + y^2 + z^2'
+
+        >>> def f(variables):
+                x, y, z = variables
+                return x ** 2 + y ** 2 + z ** 2 + np.sin(x) + np.sin(y) + np.sin(z)
+
+        # start at 
+        >>> x0= 1
+        >>> y0= -2
+        >>> z0= 5
+        >>> init_vars = [x0, y0, z0]
+
+        # finding the root and visualize the trace
+        >>> solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
+        >>> m = len(solution.val)
+        >>> rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True) 
+
 Optimization
 ------------
 
@@ -100,7 +192,13 @@ Here is a visualization of Gradient Descent on a convex function of 2 variables:
 .. image:: images/gradient_descent.png
   :width: 600
 
-BFGS, short for "Broyden–Fletcher–Goldfarb–Shanno algorithm", 
+BFGS, short for "Broyden–Fletcher–Goldfarb–Shanno algorithm", seeks a stationary point of a function, i.e. where the gradient is zero. In quasi-Newton methods, the Hessian matrix of second derivatives is not computed. Instead, the Hessian matrix is approximated using updates specified by gradient evaluations (or approximate gradient evaluations). 
+
+Here is a pseudocode of the implementation of BFGS.
+
+.. image:: images/bfgs.png
+  :width: 600
+
 
 Implementation
 ~~~~~~~~~~~~~~
@@ -161,6 +259,131 @@ Implementation
    -  ``NumPy``
 
    -  ``matplotlib.pyplot``
+
+Demo
+~~~~
+
+::
+
+        >>> import DeriveAlive.optimize as opt
+        >>> import numpy as np
+        >>> import matplotlib.pyplot as plt
+
+Case 1: Minimize quartic function :math:`f(x) = x^4`. Get stuck in local minimum.
+
+::
+
+        >>> def f(x):
+                return x ** 4 + 2 * (x ** 3) - 12 * (x ** 2) - 2 * x + 6
+
+            # Function string to include in plot
+        >>> f_string = 'f(x) = x^4 + 2x^3 -12x^2 -2x + 6'
+
+        >>> x0 = 4
+        >>> solution, xy_path, f_path = opt.GradientDescent(f, x0, iters=1000, eta=0.002)
+        >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-6, 5), y_lims=(-100, 70))
+
+Case 2: Minimize Rosenbrock's function :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2`. Global minimum: 0 at :math:`(x,y)=(1, 1)`.
+
+::
+
+        # Rosenbrock function with leading coefficient of 4
+        >>> def f(variables):
+                x, y = variables
+                return 4 * (y - (x ** 2)) ** 2 + (1 - x) ** 2
+
+        # Function string to include in plot
+        >>> f_string = 'f(x, y) = 4(y - x^2)^2 + (1 - x)^2'
+
+        >>> x_val, y_val = -6, -6
+        >>> init_vars = [x_val, y_val]
+        >>> solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
+        >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
+
+
+
+::
+
+        >>> x_val, y_val = -2, 5
+        >>> init_vars = [x_val, y_val]
+        >>> solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
+        >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
+
+
+Case 3: Minimize Easom's function: :math:`f(x, y) = -cos(x)cos(y)exp(-((x - \pi)^2 + (y - \pi)^2))`. Global minimum: -1 at :math:`(x,y)=(\pi, \pi)`.
+
+::
+
+        # Easom's function
+        >>> def f(variables):
+                x, y = variables
+                return -np.cos(x) * np.cos(y) * np.exp(-((x - np.pi) ** 2 + (y - np.pi) ** 2))
+
+        # Function string to include in plot
+        >>> f_string = 'f(x, y) = -\cos(x)\cos(y)\exp(-((x-\pi)^2 + (y-\pi)^2))'
+
+        # Initial guess
+        >>> x0 = 1.5
+        >>> y0 = 1.75
+        >>> init_vars = [x0, y0]
+
+        # Visulaize gradient descent
+        solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.3)
+        opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
+
+Case 4: Machine Learning application: minimize mean squared error in regression
+
+.. math:: \begin{align}
+          \hat{y_i} &= \textbf{w}^\top \textbf{x}_i \\
+          MSE(X, y) &= \frac{1}{m} \sum_{i=1}^m (\textbf{w}^\top\textbf{x}_i - y_i)^2
+
+where :math:`\textbf{w}` contains an extra dimension to fit the intercept of the features.
+Example dataset
+Standardized dataset: 47 homes from Portland, Oregon
+Features: area (square feet), number of bedrooms
+Output: price (in thousands of dollars)
+
+::
+
+        >>> f = "mse"
+        >>> init_vars = [0, 0, 0]
+
+        # Function string to include in plot
+        >>> f_string = 'f(w_0, w_1, w_2) = (1/2m)\sum_{i=0}^m (w_0 + w_1x_{i1} + w_2x_{i2} - y_i)^2'
+
+        # Visulaize gradient descent
+        >>> solution, w_path, f_path, f = opt.GradientDescent(f, init_vars, iters=2500, data=data)
+        >>> print ("Gradient descent optimized weights:\n{}".format(solution.val))
+        >>> opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True)
+
+Case 5: Find stationary point of :math:`f(x) = sin(x)`. Note: BFGS finds stationary point, which can be maximum, not minimum.
+
+::
+
+        >>> def f(x):
+                return np.sin(x)
+
+        >>> f_string = 'f(x) = sin(x)'
+
+        >>> x0 = -1
+        >>> solution, x_path, f_path = opt.BFGS(f, x0)
+        >>> anim = opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5), bfgs=True)
+
+Case 6: Find stationary point of Rosenbrock function: :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2`. Stationary point: 0 at :math:`(x,y)=(1, 1)`.
+
+::
+
+        >>> def f(variables):
+                x, y = variables
+                return 4 * (y - (x ** 2)) ** 2 + (1 - x) ** 2
+
+        >>> f_string = 'f(x, y) = 4(y - x^2)^2 + (1 - x)^2'
+
+        >>> x0, y0 = -6, -6
+        >>> init_vars = [x0, y0]
+        >>> solution, xy_path, f_path = opt.BFGS(f, init_vars, iters=25000)
+        >>> xn, yn = solution.val
+        >>> anim = opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, bfgs=True)
 
 Quadratic Splines
 -----------------
@@ -292,11 +515,11 @@ Demo
 
 ::
 
-        >>> import spline as sp
+        >>> import DeriveAlive.spline as sp
         >>> import numpy as np
         >>> import matplotlib.pyplot as plt
 
-Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
+Case 1: Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
 10 intervals.
 
 ::
@@ -320,7 +543,7 @@ Plot the quadratic spline of :math:`f_1(x) = 10^x, x \in [-1, 1]` with
 .. image:: images/7_3_3_1.png
   :width: 600       
 
-Plot the quadratic spline of :math:`f_2(x) = x^3, x \in [-1, 1]` with 10 intervals.
+Case 2: Plot the quadratic spline of :math:`f_2(x) = x^3, x \in [-1, 1]` with 10 intervals.
 
 ::
 
@@ -343,7 +566,7 @@ Plot the quadratic spline of :math:`f_2(x) = x^3, x \in [-1, 1]` with 10 interva
 .. image:: images/7_3_3_2.png
   :width: 600       
 
-Plot the quadratic spline of :math:`f_3(x) = \sin(x), x \in [-1,1]` and :math:`x \in [-\pi, \pi]` with 5 intervals and 10 intervals.
+Case 3: Plot the quadratic spline of :math:`f_3(x) = \sin(x), x \in [-1,1]` and :math:`x \in [-\pi, \pi]` with 5 intervals and 10 intervals.
 
 ::
 
@@ -386,7 +609,7 @@ Plot the quadratic spline of :math:`f_3(x) = \sin(x), x \in [-1,1]` and :math:`x
 
 .. note:: We can see that the quadratic splines do not work that well with linear-ish functions. While adding more intervals may help to make the approximated splines better.
 
-Here we demonstrate that the more intervals will make the splines approximations better using a :math:`log-log` plot of the absolute average error with respect to :math: \frac{1}{N}` with :math:`f(x) = 10^x, x \in [-\pi, \pi]` at intervals from 5 to 100.
+Casee 4: Here we demonstrate that the more intervals will make the splines approximations better using a :math:`log-log` plot of the absolute average error with respect to :math: \frac{1}{N}` with :math:`f(x) = 10^x, x \in [-\pi, \pi]` at intervals from 5 to 100.
 
 ::
 
@@ -462,11 +685,11 @@ Drawing with Splines
 
 - :math:`f_{14}(x) = -1, x \in [2.5, 3.5]`
 
-- :math:`f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]`
+- :math:`f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4.5]`
 
-- :math:`f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]`
+- :math:`f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4.5]`
 
-- :math:`f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]`
+- :math:`f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4.5]`
 
 - :math:`f_{18}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]`
 

@@ -105,4 +105,4 @@ Elementary Functions     Example
      hyperbolics         :math:`\sinh(x)`
 ======================== ============
 
-.. note:: Background for additional features, `Newton's root finding method <http://www.python.org/>`_, `Gradient Descent <http://www.python.org/>`_, `BFGS <http://www.python.org/>`_, `quadratic splines <http://www.python.org/>`_,  can be found in Additional Features.
+.. note:: Background for additional features, `Newton's root finding method <https://cs-207-final-project-group-19.readthedocs.io/en/latest/additional_features.html#background>`_, `Gradient Descent & BFGS <https://cs-207-final-project-group-19.readthedocs.io/en/latest/additional_features.html#id1>`_, `quadratic splines <https://cs-207-final-project-group-19.readthedocs.io/en/latest/additional_features.html#id3>`_,  can be found in `Additional Features<https://cs-207-final-project-group-19.readthedocs.io/en/latest/additional_features.html#>`_.

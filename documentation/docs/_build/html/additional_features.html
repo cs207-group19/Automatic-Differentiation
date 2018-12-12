@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Additional features &mdash; DeriveAlive  documentation</title>
+  <title>Additional Features &mdash; DeriveAlive  documentation</title>
   
 
   
@@ -84,21 +84,23 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Additional features</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Additional Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#root-finding">Root finding</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demo">Demo</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#optimization">Optimization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Background</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Demo</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#quadratic-splines">Quadratic Splines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Background</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#demo">Demo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Demo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#drawing-with-splines">Drawing with Splines</a></li>
 </ul>
 </li>
@@ -151,7 +153,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Additional features</li>
+      <li>Additional Features</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -171,7 +173,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="additional-features">
-<h1>Additional features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h1>
+<h1>Additional Features<a class="headerlink" href="#additional-features" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="root-finding">
 <h2>Root finding<a class="headerlink" href="#root-finding" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="background">
@@ -259,6 +261,88 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 </li>
 </ul>
 </div>
+<div class="section" id="demo">
+<h3>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h3>
+<p>Case 1: <span class="math">\(f = sin(x)\)</span> with starting point <span class="math">\(x_0= \frac{3\pi}{2}\)</span>. Note: Newton method is not guaranteed to converge when <span class="math">\(f\prime(x_0)= 0\)</span>. But in our case, we use flip coin to determine which direction we want to go in order to get stuck at this point, and choose a derivative of <span class="math">\(\pm1\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># define f function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x) = sin(x)&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Start at 3*pi/2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># finding the root</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">]:</span>
+        <span class="n">solution</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">y_path</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">NewtonRoot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+
+    <span class="c1"># visualize the trace</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x_lims</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">y_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/7_2_3_1.png"><img alt="_images/7_2_3_1.png" src="_images/7_2_3_1.png" style="width: 600px;" /></a>
+<p>Case 2:  <span class="math">\(f = x - \exp(-2\sin(4x)sin(4x)+0.3\)</span> with starting point <span class="math">\(x_0 = 0\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># define f function</span>
+<span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x) = x - e^{-2 * sin(4x) * sin(4x)} + 0.3&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.3</span>
+
+<span class="c1"># start at 0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># finding the root</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">):</span>
+        <span class="n">solution</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">y_path</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">NewtonRoot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+
+<span class="c1"># visualize the trace</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x_lims</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">y_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 3: <span class="math">\(f(x, y) = x^2 + 4y^2-2x^2y +4\)</span> with starting points <span class="math">\(x_0 =-8.0, y_0 = -5.0\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># define f function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x, y) = x^2 + 4y^2 -2x^2y + 4&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">variables</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">4</span>
+
+<span class="c1"># start at x0=−8.0,y0= −5</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">8.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
+
+<span class="c1"># finding the root and visualize the trace</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">NewtonRoot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 4: <span class="math">\(f(x, y, z) = x^2 + y^2 + z^2\)</span> with starting points <span class="math">\(x_0 =1, y_0 = -2, z_0 = 5\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># define f function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x, y, z) = x^2 + y^2 + z^2&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">variables</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">z</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="c1"># start at</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span><span class="o">=</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y0</span><span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z0</span><span class="o">=</span> <span class="mi">5</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span><span class="p">]</span>
+
+<span class="c1"># finding the root and visualize the trace</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solution</span><span class="p">,</span> <span class="n">xyz_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">NewtonRoot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rf</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xyz_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">fourdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="optimization">
 <h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h2>
@@ -267,7 +351,9 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 <p>Gradient Descent is used to find the local minimum of a function <span class="math">\(f\)</span> by taking locally optimum steps in the direction of steepest descent. A common application is in machine learning when a user desires to find optimal weights to minimize a loss function.</p>
 <p>Here is a visualization of Gradient Descent on a convex function of 2 variables:</p>
 <a class="reference internal image-reference" href="_images/gradient_descent.png"><img alt="_images/gradient_descent.png" src="_images/gradient_descent.png" style="width: 600px;" /></a>
-<p>BFGS, short for “Broyden–Fletcher–Goldfarb–Shanno algorithm”,</p>
+<p>BFGS, short for “Broyden–Fletcher–Goldfarb–Shanno algorithm”, seeks a stationary point of a function, i.e. where the gradient is zero. In quasi-Newton methods, the Hessian matrix of second derivatives is not computed. Instead, the Hessian matrix is approximated using updates specified by gradient evaluations (or approximate gradient evaluations).</p>
+<p>Here is a pseudocode of the implementation of BFGS.</p>
+<a class="reference internal image-reference" href="_images/bfgs.png"><img alt="_images/bfgs.png" src="_images/bfgs.png" style="width: 600px;" /></a>
 </div>
 <div class="section" id="id2">
 <h3>Implementation<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
@@ -325,11 +411,118 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 </li>
 </ul>
 </div>
+<div class="section" id="id3">
+<h3>Demo<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">DeriveAlive.optimize</span> <span class="k">as</span> <span class="nn">opt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<p>Case 1: Minimize quartic function <span class="math">\(f(x) = x^4\)</span>. Get stuck in local minimum.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="go">        return x ** 4 + 2 * (x ** 3) - 12 * (x ** 2) - 2 * x + 6</span>
+
+<span class="go">    # Function string to include in plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x) = x^4 + 2x^3 -12x^2 -2x + 6&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GradientDescent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Case 2: Minimize Rosenbrock’s function <span class="math">\(f(x, y) = 4(y - x^2)^2 + (1 - x)^2\)</span>. Global minimum: 0 at <span class="math">\((x,y)=(1, 1)\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Rosenbrock function with leading coefficient of 4</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">variables</span>
+        <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># Function string to include in plot</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x, y) = 4(y - x^2)^2 + (1 - x)^2&#39;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GradientDescent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GradientDescent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 3: Minimize Easom’s function: <span class="math">\(f(x, y) = -cos(x)cos(y)exp(-((x - \pi)^2 + (y - \pi)^2))\)</span>. Global minimum: -1 at <span class="math">\((x,y)=(\pi, \pi)\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Easom&#39;s function</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">variables</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Function string to include in plot</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x, y) = -\cos(x)\cos(y)\exp(-((x-\pi)^2 + (y-\pi)^2))&#39;</span>
+
+<span class="c1"># Initial guess</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y0</span> <span class="o">=</span> <span class="mf">1.75</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
+
+<span class="c1"># Visulaize gradient descent</span>
+<span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GradientDescent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 4: Machine Learning application: minimize mean squared error in regression</p>
+<div class="math">
+\[\begin{split}\begin{align}
+\hat{y_i} &amp;= \textbf{w}^\top \textbf{x}_i \\
+MSE(X, y) &amp;= \frac{1}{m} \sum_{i=1}^m (\textbf{w}^\top\textbf{x}_i - y_i)^2\end{split}\]</div>
+<p>where <span class="math">\(\textbf{w}\)</span> contains an extra dimension to fit the intercept of the features.
+Example dataset
+Standardized dataset: 47 homes from Portland, Oregon
+Features: area (square feet), number of bedrooms
+Output: price (in thousands of dollars)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="s2">&quot;mse&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="go"># Function string to include in plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(w_0, w_1, w_2) = (1/2m)\sum_{i=0}^m (w_0 + w_1x_</span><span class="si">{i1}</span><span class="s1"> + w_2x_</span><span class="si">{i2}</span><span class="s1"> - y_i)^2&#39;</span>
+
+<span class="go"># Visulaize gradient descent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span><span class="p">,</span> <span class="n">w_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">GradientDescent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">2500</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Gradient descent optimized weights:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">w_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">fourdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 5: Find stationary point of <span class="math">\(f(x) = sin(x)\)</span>. Note: BFGS finds stationary point, which can be maximum, not minimum.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="go">        return np.sin(x)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x) = sin(x)&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">BFGS</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anim</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span> <span class="n">bfgs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Case 6: Find stationary point of Rosenbrock function: <span class="math">\(f(x, y) = 4(y - x^2)^2 + (1 - x)^2\)</span>. Stationary point: 0 at <span class="math">\((x,y)=(1, 1)\)</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+<span class="go">        x, y = variables</span>
+<span class="go">        return 4 * (y - (x ** 2)) ** 2 + (1 - x) ** 2</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_string</span> <span class="o">=</span> <span class="s1">&#39;f(x, y) = 4(y - x^2)^2 + (1 - x)^2&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">init_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solution</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">BFGS</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">init_vars</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">25000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xn</span><span class="p">,</span> <span class="n">yn</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">val</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anim</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">y_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bfgs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="quadratic-splines">
 <h2>Quadratic Splines<a class="headerlink" href="#quadratic-splines" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>Background<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Background<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">The <code class="docutils literal"><span class="pre">DeriveAlive</span></code> package can be used to calculate quadratic splines
 since it automatically returns the first derivative of a function at a
@@ -360,8 +553,8 @@ that <span class="math">\(s_{k-1}(kh)= s_k(kh)\)</span> for <span class="math">\
 <p>Since there are <span class="math">\(3N\)</span> constraints for <span class="math">\(3N\)</span> degrees of
 freedom, there is a unique solution.</p>
 </div>
-<div class="section" id="id4">
-<h3>Implementation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Implementation<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Methods<ul>
 <li><code class="docutils literal"><span class="pre">quad_spline_coeff</span></code>: calculate the coefficients of quadratic
@@ -443,14 +636,14 @@ original function on one given interval</li>
 </li>
 </ul>
 </div>
-<div class="section" id="demo">
-<h3>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">spline</span> <span class="k">as</span> <span class="nn">sp</span>
+<div class="section" id="id6">
+<h3>Demo<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">DeriveAlive.spline</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
-<p>Plot the quadratic spline of <span class="math">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
+<p>Case 1: Plot the quadratic spline of <span class="math">\(f_1(x) = 10^x, x \in [-1, 1]\)</span> with
 10 intervals.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f1</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return 10**var</span>
@@ -470,7 +663,7 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_1.png"><img alt="_images/7_3_3_1.png" src="_images/7_3_3_1.png" style="width: 600px;" /></a>
-<p>Plot the quadratic spline of <span class="math">\(f_2(x) = x^3, x \in [-1, 1]\)</span> with 10 intervals.</p>
+<p>Case 2: Plot the quadratic spline of <span class="math">\(f_2(x) = x^3, x \in [-1, 1]\)</span> with 10 intervals.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f2</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return var**3</span>
 
@@ -489,7 +682,7 @@ original function on one given interval</li>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/7_3_3_2.png"><img alt="_images/7_3_3_2.png" src="_images/7_3_3_2.png" style="width: 600px;" /></a>
-<p>Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]\)</span> and <span class="math">\(x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
+<p>Case 3: Plot the quadratic spline of <span class="math">\(f_3(x) = \sin(x), x \in [-1,1]\)</span> and <span class="math">\(x \in [-\pi, \pi]\)</span> with 5 intervals and 10 intervals.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f3</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return np.sin(var)</span>
 
@@ -527,7 +720,7 @@ original function on one given interval</li>
 <p class="first admonition-title">Note</p>
 <p class="last">We can see that the quadratic splines do not work that well with linear-ish functions. While adding more intervals may help to make the approximated splines better.</p>
 </div>
-<p>Here we demonstrate that the more intervals will make the splines approximations better using a <span class="math">\(log-log\)</span> plot of the absolute average error with respect to :math: frac{1}{N}` with <span class="math">\(f(x) = 10^x, x \in [-\pi, \pi]\)</span> at intervals from 5 to 100.</p>
+<p>Casee 4: Here we demonstrate that the more intervals will make the splines approximations better using a <span class="math">\(log-log\)</span> plot of the absolute average error with respect to :math: frac{1}{N}` with <span class="math">\(f(x) = 10^x, x \in [-\pi, \pi]\)</span> at intervals from 5 to 100.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 <span class="go">        return 10 ** var</span>
 
@@ -590,9 +783,9 @@ original function on one given interval</li>
 <li><span class="math">\(f_{12}(x) = \frac{-1}{0.5} (x-3)^2 + 1, x \in [3, 3.5]\)</span></li>
 <li><span class="math">\(f_{13}(x) = 1.5x - 4.75, x \in [2.5, 3.5]\)</span></li>
 <li><span class="math">\(f_{14}(x) = -1, x \in [2.5, 3.5]\)</span></li>
-<li><span class="math">\(f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
-<li><span class="math">\(f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4,5]\)</span></li>
-<li><span class="math">\(f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4,5]\)</span></li>
+<li><span class="math">\(f_{15}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4.5]\)</span></li>
+<li><span class="math">\(f_{16}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4, 4.5]\)</span></li>
+<li><span class="math">\(f_{17}(x) = \frac{-1}{0.5^2} (x-4.5)^2 + 1, x \in [4, 4.5]\)</span></li>
 <li><span class="math">\(f_{18}(x) = \frac{1}{0.5^2} (x-4.5)^2 - 1, x \in [4.5, 5]\)</span></li>
 <li><span class="math">\(f_{19}(x) = 1, x \in [5.5, 6.5]\)</span></li>
 <li><span class="math">\(f_{20}(x) = \frac{-1}{(-0.75)^2} (x-6.5)^2 + 1, x \in [5.75, 6.5]\)</span></li>

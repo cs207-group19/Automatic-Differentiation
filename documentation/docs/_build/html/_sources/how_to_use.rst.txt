@@ -32,7 +32,6 @@ How to install
               pytest tests
 
 
-
 Basic demo
 ----------
 
@@ -54,6 +53,8 @@ Declare Variables
       >>> a
       Var([1], None)
 
+.. note:: Constant (scalar or vector): User must initialize derivative to 'None'. Otherwise, the variable will be denoted as an  :math:`\mathbb{R}^1` variable with derivative [1].
+
 - Denote scalar variables and functions
 
 ::
@@ -73,6 +74,11 @@ Declare Variables
       >>> f
       Var([2.84147098], [2.54030231])
 
+      # Define a callable scalar function:
+      >>> def f(x):
+              return 2 * x + np.sin(x)
+      <function f at 0x116080950>
+
 - Denote vector variables and functions
 
 ::
@@ -86,6 +92,13 @@ Declare Variables
       f = x + y + z
       >>> f
       Var([6], [1 1 1])
+
+      # Alternatively, the user can define the R^3 to R^1 function 
+      # by explicitly defining a da.Var vector with one entry:
+
+      >>> g = da.Var([2 * x + x * y])
+      >>> g
+      Var([4], [4 1 0])
 
       # Suppose we want to denote an R^3 to R^3 function
       >>> f = da.Var([x, y ** 2, z ** 4])
