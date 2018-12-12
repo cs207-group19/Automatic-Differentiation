@@ -402,4 +402,4 @@ def test_BFGS():
 
 print ("Testing optimization suite.")
 test_GradientDescent()
-# test_BFGS()
+test_BFGS()
