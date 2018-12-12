@@ -168,7 +168,7 @@ def NewtonRoot(f, x, tol=1e-10, iters=2000, der_shift=1):
 
 
 def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_points=100, 
-				 threedim=False, fourdim=False, animate=False, speed=500):
+				 threedim=False, fourdim=False, animate=False, speed=500, hide=False):
 	""" Plot the results of NewtonRoot. Use the return values (var_path, f_path) from
 	    NewtonRoot when plotting your results to show the steps of the algorithm.
 		
@@ -221,6 +221,9 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			  once returned, call anim.to_jshtml() to display within ipynb. 
 
 		"""
+	# if hide:
+	# 	plt.close('all')
+
 	if x_lims:
 		x_min, x_max = x_lims
 		x_range = np.linspace(x_min, x_max, num_points)
@@ -274,7 +277,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			ax.plot(xs, ys, fs, 'b-o', label='path')
 
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.5))
-		plt.show()
+		if not hide:
+			plt.show()
 
 	elif fourdim:
 		if animate:
@@ -304,7 +308,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 		# Place legend
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.85))
-		plt.show()
+		if not hide:
+			plt.show()
 
 	else:
 		x0, f0 = np.round(var_path[0], 4), np.round(f_path[0], 4)
@@ -331,7 +336,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			ax.legend()
 			ax.set_xlabel('x')
 			ax.set_ylabel('f(x)')
-			plt.show()
+			if not hide:
+				plt.show()
 		else:
 			plt.figure()
 			plt.plot(x_range, np.zeros(num_points), '0.7')
@@ -349,5 +355,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			plt.xlabel('x')
 			plt.ylabel('f(x)')
 			plt.legend()
-			plt.show()
+			if not hide:
+				plt.show()
+
 	return anim

@@ -8,6 +8,7 @@ sys.path.append('../')
 import DeriveAlive.optimize as opt
 import DeriveAlive.DeriveAlive as da
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def _assert_decreasing(nums, eps=0.01):
@@ -24,7 +25,7 @@ def test_GradientDescent():
 
 	def case_1():
 		'''Simple quadratic function with minimum at x = 0.'''
-
+		
 		def f(x):
 			return x ** 2
 
@@ -33,10 +34,12 @@ def test_GradientDescent():
 		for x_val in [-4, -2, 0, 2, 4]:
 			x0 = da.Var(x_val)
 			solution, x_path, f_path = opt.GradientDescent(f, x0)
-			opt.plot_results(f, x_path, f_path, f_string)
+			opt.plot_results(f, x_path, f_path, f_string, hide=True)
 
 			assert np.allclose(solution.val, [0])
 			assert np.allclose(solution.der, [0])
+
+		plt.close('all')
 
 	def case_2():
 
@@ -48,10 +51,12 @@ def test_GradientDescent():
 		for x_val in [-3, -1, 1, 3, 5]:
 			# Test initial guess without using da.Var type
 			solution, x_path, f_path = opt.GradientDescent(f, x_val)
-			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-3, 5), y_lims=(2, 10), animate=True)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-3, 5), y_lims=(2, 10), animate=True, hide=True)
 
 			assert np.allclose(solution.val, [1])
 			assert np.allclose(solution.der, [0])
+
+		plt.close('all')		
 
 
 	def case_3():
@@ -65,12 +70,13 @@ def test_GradientDescent():
 			# Test case when 1D input is a list
 			x0 = [da.Var(x_val)]
 			solution, x_path, f_path = opt.GradientDescent(f, x0)
-			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5))
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5), hide=True)
 
 			multiple_of_three_halves_pi = (solution.val  % (2 * np.pi))
 			np.testing.assert_array_almost_equal(multiple_of_three_halves_pi, 1.5 * np.pi)				
 			np.testing.assert_array_almost_equal(solution.der, [0])
 
+		plt.close('all')		
 
 	def case_4():
 		'''Minimize Rosenbrock function: f(x, y) = 4(y - x^2)^2 + (1 - x)^2.
@@ -90,7 +96,7 @@ def test_GradientDescent():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
 			xn, yn = solution.val
-			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, hide=True)
 
 			minimum = [1, 1]
 			assert np.allclose([xn, yn], minimum)
@@ -100,6 +106,8 @@ def test_GradientDescent():
 			der_x = 2 * (8 * (xn ** 3) - 8 * xn * yn + xn - 1)
 			der_y = 8 * (yn - (xn ** 2))
 			assert np.allclose(solution.der, [der_x, der_y])
+
+		plt.close('all')
 
 	def case_5():
 		'''Minimize bowl function: f(x, y) = x^2 + y^2 + 2.
@@ -119,15 +127,18 @@ def test_GradientDescent():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars)
 			xn, yn = solution.val
-			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, animate=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True, animate=True, hide=True)
 
 			minimum = [0, 0]
 			assert np.allclose([xn, yn], minimum)
 
 			der = [0, 0]
 			assert np.allclose(solution.der, der)
+
+		plt.close('all')
 	
 	def case_6():
+
 		'''Minimize cost function of ML regression demo.
 
 		Note that we hardcode the dataset, since Travis CI does not recognize .txt files in the repository.
@@ -187,8 +198,10 @@ def test_GradientDescent():
 		f_string = 'f(w_0, w_1, w_2) = (1/2m)\sum_{i=0}^m (w_0 + w_1x_{i1} + w_2x_{i2} - y_i)^2'
 
 		solution, w_path, f_path, f = opt.GradientDescent("mse", [0, 0, 0], data=dataset)
-		opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True, animate=True)
+		opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True, animate=True, hide=True)
 		_assert_decreasing(f_path)
+
+		plt.close('all')
 
 	def case_7():
 		'''Minimize Easom's function.'''
@@ -204,10 +217,12 @@ def test_GradientDescent():
 			y0 = da.Var(y_val, [0, 1])
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.3)
-			opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, threedim=True, hide=True)
 
 			# Ensure that loss function is weakly decreasing
 			_assert_decreasing(f_path)
+
+		plt.close('all')
 
 	def case_8():
 		'''Minimize Himmelblau's function.'''
@@ -223,10 +238,12 @@ def test_GradientDescent():
 			y0 = da.Var(y_val, [0, 1])
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.01)
-			opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
+			opt.plot_results(f, xy_path, f_path, f_string, threedim=True, hide=True)
 
 			# Ensure that loss function is weakly decreasing
 			_assert_decreasing(f_path)
+
+		plt.close('all')
 
 	case_1()
 	case_2()
@@ -253,10 +270,12 @@ def test_BFGS():
 		for x_val in [-4, -2, 0, 2, 4]:
 			x0 = da.Var(x_val)
 			solution, x_path, f_path = opt.BFGS(f, x0)
-			opt.plot_results(f, x_path, f_path, f_string, bfgs=True)
+			opt.plot_results(f, x_path, f_path, f_string, bfgs=True, hide=True)
 
 			assert np.allclose(solution.val, [0])
 			assert np.allclose(solution.der, [0])
+
+		plt.close('all')
 
 	def case_2():
 		'''Stationary point (minimum) at x = 1.'''
@@ -269,10 +288,12 @@ def test_BFGS():
 		for x_val in [-3, -1, 1, 3, 5]:
 			# Test initial guess without using da.Var type
 			solution, x_path, f_path = opt.BFGS(f, x_val)
-			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-3, 5), y_lims=(2, 10), animate=True, bfgs=True)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-3, 5), y_lims=(2, 10), animate=True, bfgs=True, hide=True)
 
 			assert np.allclose(solution.val, [1])
 			assert np.allclose(solution.der, [0])
+
+		plt.close('all')
 
 
 	def case_3():
@@ -287,13 +308,15 @@ def test_BFGS():
 			# Test case when 1D input is a list
 			x0 = [da.Var(x_val)]
 			solution, x_path, f_path = opt.BFGS(f, x0)
-			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5), bfgs=True)
+			opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5), bfgs=True, hide=True)
 
 			# BFGS finds a stationary point, which are every pi offset from pi/2
 			first = solution.val - (np.pi / 2)
 			multiple_of_one_half_pi = ((abs(solution.val) - (np.pi / 2)) % (np.pi))
 			np.testing.assert_array_almost_equal(multiple_of_one_half_pi, [0])				
 			np.testing.assert_array_almost_equal(solution.der, [0])
+
+		plt.close('all')
 
 
 	def case_4():
@@ -314,7 +337,7 @@ def test_BFGS():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.BFGS(f, init_vars, iters=25000)
 			xn, yn = solution.val
-			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, animate=True, bfgs=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, animate=True, bfgs=True, hide=True)
 
 			minimum = [1, 1]
 			assert np.allclose([xn, yn], minimum)
@@ -324,6 +347,8 @@ def test_BFGS():
 			der_x = 2 * (8 * (xn ** 3) - 8 * xn * yn + xn - 1)
 			der_y = 8 * (yn - (xn ** 2))
 			assert np.allclose(solution.der, [der_x, der_y])
+
+		plt.close('all')
 
 	def case_5():
 		'''Find stationary point of bowl function: f(x, y) = x^2 + y^2 + 2.
@@ -343,13 +368,15 @@ def test_BFGS():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = opt.BFGS(f, init_vars)
 			xn, yn = solution.val
-			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, animate=True, bfgs=True)
+			opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, animate=True, bfgs=True, hide=True)
 
 			minimum = [0, 0]
 			assert np.allclose([xn, yn], minimum)
 
 			der = [0, 0]
 			assert np.allclose(solution.der, der)
+
+		plt.close('all')
 	
 	def case_6():
 		'''Find stationary point of Easom's function. Stationary points include (pi, pi), (pi/2, pi/2).'''
@@ -364,10 +391,12 @@ def test_BFGS():
 		y0 = 2.5
 		init_vars = [x0, y0]
 		solution, xy_path, f_path = opt.BFGS(f, init_vars, iters=10000)
-		opt.plot_results(f, xy_path, f_path, f_string, threedim=True, bfgs=True)
+		opt.plot_results(f, xy_path, f_path, f_string, threedim=True, bfgs=True, hide=True)
 
 		xn, yn = solution.val
 		assert (np.allclose(xn, np.pi) and np.allclose(yn, np.pi))
+
+		plt.close('all')
 
 	def case_7():
 		'''Find stationary point of Himmelblau's function.'''
@@ -382,13 +411,15 @@ def test_BFGS():
 		y0 = 5
 		init_vars = [x0, y0]
 		solution, xy_path, f_path = opt.BFGS(f, init_vars, iters=10000)
-		opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True, bfgs=True)
+		opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True, bfgs=True, hide=True)
 
 		xn, yn = solution.val
 		assert ((np.allclose(xn, 3) and np.allclose(yn, 2)) or (
 				 np.allclose(xn, -2.805118) and np.allclose(yn, 3.131312)) or (
 				 np.allclose(xn, -3.779310) and np.allclose(yn, -3.283186)) or (
 				 np.allclose(xn, 3.584428) and np.allclose(yn, -1.848126)))
+
+		plt.close('all')
 
 	case_1()
 	case_2()
@@ -397,7 +428,7 @@ def test_BFGS():
 	case_5()
 	case_6()
 	case_7()
-	print ("All gradient descent tests passed!")
+	print ("All BFGS tests passed!")
 
 
 print ("Testing optimization suite.")
