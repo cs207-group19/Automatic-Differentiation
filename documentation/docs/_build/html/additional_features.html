@@ -451,7 +451,7 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">plot_results</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">xy_path</span><span class="p">,</span> <span class="n">f_path</span><span class="p">,</span> <span class="n">f_string</span><span class="p">,</span> <span class="n">x_lims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">7.5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="n">threedim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Case 3: Minimize Easom’s function: <span class="math">\(f(x, y) = -cos(x)cos(y)exp(-((x - \pi)^2 + (y - \pi)^2))\)</span>. Global minimum: -1 at <span class="math">\((x,y)=(\pi, \pi)\)</span>.</p>
+<p>Case 3: Minimize Easom’s function: <span class="math">\(f(x, y) = -\cos(x)\cos(y)\exp(-((x - \pi)^2 + (y - \pi)^2))\)</span>. Global minimum: -1 at <span class="math">\((x,y)=(\pi, \pi)\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Easom&#39;s function</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">variables</span>
@@ -474,7 +474,8 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 <div class="math">
 \[\begin{split}\begin{align}
 \hat{y_i} &amp;= \textbf{w}^\top \textbf{x}_i \\
-MSE(X, y) &amp;= \frac{1}{m} \sum_{i=1}^m (\textbf{w}^\top\textbf{x}_i - y_i)^2\end{split}\]</div>
+MSE(X, y) &amp;= \frac{1}{m} \sum_{i=1}^m (\textbf{w}^\top\textbf{x}_i - y_i)^2
+\end{align}\end{split}\]</div>
 <p>where <span class="math">\(\textbf{w}\)</span> contains an extra dimension to fit the intercept of the features.
 Example dataset
 Standardized dataset: 47 homes from Portland, Oregon

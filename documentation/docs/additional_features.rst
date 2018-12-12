@@ -310,7 +310,7 @@ Case 2: Minimize Rosenbrock's function :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2
         >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
 
 
-Case 3: Minimize Easom's function: :math:`f(x, y) = -cos(x)cos(y)exp(-((x - \pi)^2 + (y - \pi)^2))`. Global minimum: -1 at :math:`(x,y)=(\pi, \pi)`.
+Case 3: Minimize Easom's function: :math:`f(x, y) = -\cos(x)\cos(y)\exp(-((x - \pi)^2 + (y - \pi)^2))`. Global minimum: -1 at :math:`(x,y)=(\pi, \pi)`.
 
 ::
 
@@ -336,6 +336,7 @@ Case 4: Machine Learning application: minimize mean squared error in regression
 .. math:: \begin{align}
           \hat{y_i} &= \textbf{w}^\top \textbf{x}_i \\
           MSE(X, y) &= \frac{1}{m} \sum_{i=1}^m (\textbf{w}^\top\textbf{x}_i - y_i)^2
+          \end{align}
 
 where :math:`\textbf{w}` contains an extra dimension to fit the intercept of the features.
 Example dataset
