@@ -1294,7 +1294,7 @@ class Var(object):
 		Var([0.73105858], [0.19661193])
 
 		# Vector of constants
-		>>> y = da.Var([1, 2, 3, 4], None)
+		>>> y = Var([1, 2, 3, 4], None)
 		>>> w = y.logistic()
 		>>> print(w)
 		Values:
