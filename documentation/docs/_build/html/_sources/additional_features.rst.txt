@@ -100,6 +100,8 @@ Here is a visualization of Gradient Descent on a convex function of 2 variables:
 .. image:: images/gradient_descent.png
   :width: 600
 
+BFGS, short for "Broyden–Fletcher–Goldfarb–Shanno algorithm", 
+
 Implementation
 ~~~~~~~~~~~~~~
 
@@ -177,7 +179,8 @@ Background
   :math:`s_k(x)=a_kx^2+b_kx+c_k` is a quadratic, and hence the spline
   has :math:`3N` degrees of freedom in total.
   
-| The spline coefficients satisfy the following constraints:
+| Example: :math:`f(x) = 10^x, x \in [0,1]`, with :math:`N=10` intervals, 
+  the spline coefficients satisfy the following constraints:
 
 -  Each :math:`s_k(x)` should match the function values at both of its
    endpoints, so that :math:`s_k(kh)=f(kh)` and

@@ -1288,3 +1288,50 @@ class Var(object):
 		else:
 			der = None
 		return Var(val, der)
+
+	def logistic(self):
+		""" 
+		Return the logistic function evaluation (sigmoid): f(x) = 1 / (1 + e^{-x})
+
+		Parameters
+		==========
+		self: Var object
+		
+		Returns
+		=======
+		z: Var object that is the logistic evaluation of self
+
+		Examples
+		========= 
+		# Scalar variable
+		>>> x = Var(1)
+		>>> z = x.logistic()
+		>>> print(z)
+		Var([0.73105858], [0.19661193])
+
+		# Vector of constants
+		>>> y = Var([1, 2, 3, 4], None)
+		>>> w = y.logistic()
+		>>> print(w)
+		Values:
+		[0.73105858 0.88079708 0.95257413 0.98201379],
+		Jacobian:
+		None
+		"""
+
+		# Case for constant scalar or vector with no derivative
+		if len(self.der.shape) == 0:
+			val = 1 / (1 + np.exp(-self.val))
+			der = None
+			return Var(val, der)
+		
+		val = 1 / (1 + np.exp(-self.val))
+		der = np.exp(self.val) / ((1 + np.exp(self.val)) ** 2)
+
+		if len(self.der.shape) > 1:
+			new_der = np.reshape(der, [-1, 1])
+		else:
+			new_der = der
+		
+		final_der = new_der * self.der
+		return Var(val, final_der)

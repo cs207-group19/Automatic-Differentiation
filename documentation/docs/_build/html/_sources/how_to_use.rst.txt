@@ -38,8 +38,6 @@ Basic demo
 
 ::
 
-      # Install at command line using installation instructions in Section 4.4
-      pip install DeriveAlive
       python
       >>> import DeriveAlive.DeriveAlive as da
       >>> import numpy as np

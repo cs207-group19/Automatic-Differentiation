@@ -76,8 +76,8 @@ API
 
    -  We have overloaded elementary mathematical operations such as
       addition, subtraction, multiplication, division, sine, pow, log,
-      etc. that take in :math:`1` ``Var`` type, or :math:`2` types, or
-      :math:`1` and :math:`1` constant, and return a new ``Var`` (i.e.
+      etc. that take in 1 ``Var`` type, or 2 types, or
+      1 ``Var`` type and 1 constant, and return a new ``Var`` (i.e.
       the next “trace" variable). All other operations on constants will
       use the standard Python library. In each ``Var``, we will store as
       attributes the value of the variable (which is calculated based on
@@ -186,9 +186,9 @@ API
       complex functional testing. We plan to use this for a
       comprehensive test suite.
 
-   -  ``setuptools`` - This package allows us to create a package out
-        of our project for easy distribution. See more information on
-        packaging instructions here: https://packaging.python.org/tutorials/packaging-projects/.
+   -  ``setuptools`` - This package allows us to create a package out of 
+      our project for easy distribution. See more information on
+      packaging instructions here: https://packaging.python.org/tutorials/packaging-projects/.
 
    -  Test suites: Travis CI, Coveralls
 
@@ -246,6 +246,8 @@ Detailed methods with inputs and return information are listed in Additional Fea
 -  Methods:
 
       -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum.
+
+      -  ``BFGS``: sovle for a local stationary point, i.e. :math:`\nabla f =0`, of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`.
 
       -  ``plot_results``: See docstring.
 

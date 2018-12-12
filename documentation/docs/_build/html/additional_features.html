@@ -267,6 +267,7 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 <p>Gradient Descent is used to find the local minimum of a function <span class="math">\(f\)</span> by taking locally optimum steps in the direction of steepest descent. A common application is in machine learning when a user desires to find optimal weights to minimize a loss function.</p>
 <p>Here is a visualization of Gradient Descent on a convex function of 2 variables:</p>
 <a class="reference internal image-reference" href="_images/gradient_descent.png"><img alt="_images/gradient_descent.png" src="_images/gradient_descent.png" style="width: 600px;" /></a>
+<p>BFGS, short for “Broyden–Fletcher–Goldfarb–Shanno algorithm”,</p>
 </div>
 <div class="section" id="id2">
 <h3>Implementation<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
@@ -343,7 +344,8 @@ range <span class="math">\([kh,(k+1)h]\)</span> for <span class="math">\(k=0,1,\
 has <span class="math">\(3N\)</span> degrees of freedom in total.</div>
 </div>
 <div class="line-block">
-<div class="line">The spline coefficients satisfy the following constraints:</div>
+<div class="line">Example: <span class="math">\(f(x) = 10^x, x \in [0,1]\)</span>, with <span class="math">\(N=10\)</span> intervals,
+the spline coefficients satisfy the following constraints:</div>
 </div>
 <ul class="simple">
 <li>Each <span class="math">\(s_k(x)\)</span> should match the function values at both of its

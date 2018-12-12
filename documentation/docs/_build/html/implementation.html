@@ -234,8 +234,8 @@ whether the values and derivatives are integers, floats, or lists,
 and transforms them into numpy arrays automatically.</li>
 <li>We have overloaded elementary mathematical operations such as
 addition, subtraction, multiplication, division, sine, pow, log,
-etc. that take in <span class="math">\(1\)</span> <code class="docutils literal"><span class="pre">Var</span></code> type, or <span class="math">\(2\)</span> types, or
-<span class="math">\(1\)</span> and <span class="math">\(1\)</span> constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
+etc. that take in 1 <code class="docutils literal"><span class="pre">Var</span></code> type, or 2 types, or
+1 <code class="docutils literal"><span class="pre">Var</span></code> type and 1 constant, and return a new <code class="docutils literal"><span class="pre">Var</span></code> (i.e.
 the next “trace” variable). All other operations on constants will
 use the standard Python library. In each <code class="docutils literal"><span class="pre">Var</span></code>, we will store as
 attributes the value of the variable (which is calculated based on
@@ -317,12 +317,9 @@ verify that they work exactly as shown.</li>
 tests, making it easy to write small tests, yet scales to support
 complex functional testing. We plan to use this for a
 comprehensive test suite.</li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">setuptools</span></code> - This package allows us to create a package out</dt>
-<dd>of our project for easy distribution. See more information on
-packaging instructions here: <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>.</dd>
-</dl>
-</li>
+<li><code class="docutils literal"><span class="pre">setuptools</span></code> - This package allows us to create a package out of
+our project for easy distribution. See more information on
+packaging instructions here: <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">https://packaging.python.org/tutorials/packaging-projects/</a>.</li>
 <li>Test suites: Travis CI, Coveralls</li>
 </ul>
 </li>
@@ -382,6 +379,7 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">GradientDescent</span></code>: solve for a local minimum of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>. If <span class="math">\(f\)</span> is a convex function, then the local minimum is a global minimum.</li>
+<li><code class="docutils literal"><span class="pre">BFGS</span></code>: sovle for a local stationary point, i.e. <span class="math">\(\nabla f =0\)</span>, of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>.</li>
 <li><code class="docutils literal"><span class="pre">plot_results</span></code>: See docstring.</li>
 </ul>
 </div></blockquote>
