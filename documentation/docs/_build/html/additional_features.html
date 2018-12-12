@@ -383,7 +383,7 @@ as a list. In this case, define <span class="math">\(f\)</span> as follows:</p>
 </pre></div>
 </td></tr></table></div>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math">\(f\)</span>. If <span class="math">\(f\)</span> is a scalar to scalar function (i.e. <span class="math">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal"><span class="pre">x</span></code> as follows:</p>
+<li><p class="first"><code class="docutils literal"><span class="pre">x</span></code>: List of da.Var objects. Inital guess for a root of <span class="math">\(f\)</span>. If <span class="math">\(f\)</span> is a scalar to scalar function (i.e. <span class="math">\(\mathbb{R}^1 \Rightarrow \mathbb{R}^1)\)</span>, and the initial guess for the root is 1, then x = [da.Var(1)]. If <span class="math">\(f\)</span> is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define <code class="docutils literal"><span class="pre">x</span></code> as follows:</p>
 </li>
 <li><p class="first"><code class="docutils literal"><span class="pre">iters</span></code>: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min <span class="math">\((t, iters)\)</span> iterations, where <span class="math">\(t\)</span> is the number of steps until <code class="docutils literal"><span class="pre">tol</span></code> is satisfied.</p>
 </li>

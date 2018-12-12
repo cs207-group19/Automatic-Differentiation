@@ -113,7 +113,7 @@ Case 1: :math:`f = sin(x)` with starting point :math:`x_0= \frac{3\pi}{2}`. Note
         >>> rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
 .. image:: images/7_2_3_1.png
-  :width: 600
+   :width: 600
 
 Case 2:  :math:`f = x - \exp(-2\sin(4x)sin(4x)+0.3` with starting point :math:`x_0 = 0`.
 
@@ -190,14 +190,14 @@ Gradient Descent is used to find the local minimum of a function :math:`f` by ta
 Here is a visualization of Gradient Descent on a convex function of 2 variables:
 
 .. image:: images/gradient_descent.png
-  :width: 600
+   :width: 600
 
 BFGS, short for "Broyden–Fletcher–Goldfarb–Shanno algorithm", seeks a stationary point of a function, i.e. where the gradient is zero. In quasi-Newton methods, the Hessian matrix of second derivatives is not computed. Instead, the Hessian matrix is approximated using updates specified by gradient evaluations (or approximate gradient evaluations). 
 
 Here is a pseudocode of the implementation of BFGS.
 
 .. image:: images/bfgs.png
-  :width: 600
+   :width: 600
 
 
 Implementation
@@ -231,7 +231,7 @@ Implementation
                    x, y, z = variables
                    return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
 
-         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as follows:
+         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1)`, and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as follows:
 
             .. code-blcok::python
                :linenos:
