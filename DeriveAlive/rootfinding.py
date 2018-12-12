@@ -217,7 +217,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			
 		Returns
 		-------
-		None
+		anim: matplotlib.animation.Animation object.
+			  once returned, call anim.to_jshtml() to display within ipynb. 
 
 		"""
 	if x_lims:
@@ -228,6 +229,9 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 	if y_lims:
 		y_min, y_max = y_lims
+
+	# Initialize returned animation object
+	anim = None
 	
 	# Plot function and path of points
 	if threedim:
@@ -263,7 +267,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			    	line.axes.axis([x_min, x_max, y_min, y_max])
 			    return line,
 
-			ani = animation.FuncAnimation(fig, update, len(var_path), fargs=[xs, ys, f_path, line],
+			anim = animation.FuncAnimation(fig, update, len(var_path), fargs=[xs, ys, f_path, line],
 			                              interval=speed, blit=True, repeat_delay=500, repeat=True)
 
 		else:
@@ -274,7 +278,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 	elif fourdim:
 		if animate:
-			print ("Sorry, animation is not supported for 4D plots.")
+			# print ("Sorry, animation is not supported for 4D plots.")
+			pass
 
 		# Other cmaps: cm.PiYG, cm.tab20c, cm.twilight, cm.nipy_spectral
 		cm_type = cm.RdYlGn_r 
@@ -321,9 +326,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			    	line.axes.axis([x_min, x_max, y_min, y_max])
 			    return line,
 
-			ani = animation.FuncAnimation(fig, update, len(var_path), fargs=[var_path, f_path, line],
+			anim = animation.FuncAnimation(fig, update, len(var_path), fargs=[var_path, f_path, line],
 			                              interval=200, blit=True, repeat_delay=500, repeat=True)
-
 			ax.legend()
 			ax.set_xlabel('x')
 			ax.set_ylabel('f(x)')
@@ -346,3 +350,4 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			plt.ylabel('f(x)')
 			plt.legend()
 			plt.show()
+	return anim
