@@ -144,8 +144,8 @@ class Var(object):
 	    [[1 0]
 	     [0 1]]
 	    """
-	    val_copy = np.copy(self.val)
-	    der_copy = np.copy(self.der)
+	    val = val_copy = np.copy(self.val)
+	    der = der_copy = np.copy(self.der)
 
 		# Convert values of -0.0 or <1e-12 to 0.0 in self.val
 		if len(val_copy.shape):
