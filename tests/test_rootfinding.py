@@ -66,7 +66,7 @@ def test_NewtonRoot_r1_to_r1():
 			# Test non-Var input
 			x0 = val
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)
 
 			root_1 = [-3 + np.sqrt(2)]
 			root_2 = [-3 - np.sqrt(2)]
@@ -101,7 +101,7 @@ def test_NewtonRoot_r1_to_r1():
 		for val in [np.pi - 0.25, np.pi, 1.5 * np.pi, 2 * np.pi - 0.25, 2 * np.pi + 0.25]:
 			x0 = [da.Var(val)]
 			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)	
 
 			root_multiple_of_pi = (solution.val / np.pi) % 1
 			np.testing.assert_array_almost_equal(root_multiple_of_pi, [0.])	
