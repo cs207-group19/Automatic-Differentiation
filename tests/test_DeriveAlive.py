@@ -425,7 +425,39 @@ def test_DeriveAlive_scalar_functions():
 			f4 = x4 ** 3
 			assert f4.val == [64.0]
 			assert f4.der == [48.0]
+
+			x = da.Var(2)
+			y = 2 * x
+			z1 = x ** y
+			assert z1.val == [16]
+			assert np.allclose(z1.der, [54.18070978])
+
+			z2 = y ** x
+			assert z2.val == [16]
+			assert np.allclose(z2.der, [38.18070978])
+
+			x = da.Var(2, [1, 0])
+			y = da.Var(3, [0, 1])
+			z1 = x ** y
+			assert z1.val == [8]
+			assert np.allclose(z1.der, [12., 5.54517744])
 		
+			z2 = y ** x
+			assert z2.val == [9]
+			assert np.allclose(z2.der, [9.8875106, 6.])
+
+			x = da.Var(2, None)
+			y = da.Var(3, None)
+			z = x ** y
+			assert z.val == [8]
+			assert len(z.der.shape) == 0
+
+			x_vec = da.Var([1, 2, 3], None)
+			y_vec = da.Var([2, 3, 4], None)
+			z_vec = x_vec ** y_vec
+			assert np.allclose(z_vec.val, [1, 8, 81])
+			assert len(z.der.shape) == 0
+
 		method_version()
 		dunder_version()
 
