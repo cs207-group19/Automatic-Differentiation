@@ -13,12 +13,12 @@ Newton root finding starts from an initial guess for :math:`x_1` and converges t
 - Algorithm (univariate case)
 
 for :math:`t` iterations or until step size < ``tol``:
-    :math:`x_{t+1} \Leftarrow x_{t} - \frac{f(x_t)}{f'(x_t)}`
+    :math:`x_{t+1} \leftarrow x_{t} - \frac{f(x_t)}{f'(x_t)}`
 
 - Algorithm (multivariate case)
 
 for :math:`t` iterations or until step size < ``tol``:
-    :math:`\textbf{x}_{t+1} \Leftarrow \textbf{x}_t - (J(f)(\textbf{x}_t))^{-1}f(\textbf{x}_t)`
+    :math:`\textbf{x}_{t+1} \leftarrow \textbf{x}_t - (J(f)(\textbf{x}_t))^{-1}f(\textbf{x}_t)`
 
 In the multivariate case, :math:`J(f)` is the Jacobian of :math:`f`. If :math:`J(f)` is non-square, we use the pseudoinverse.
 
@@ -37,7 +37,7 @@ Implementation
 
       -  input:
 
-         -  ``f``: function of interest, callable. If :math:`f` is a scalar to scalar function, then define :math: `f` as follows:
+         -  ``f``: function of interest, callable. If :math:`f` is a scalar to scalar function, then define :math:`f` as follows:
 
             .. code-block:: python
                :linenos:
@@ -57,15 +57,12 @@ Implementation
                    x, y, z = variables
                    return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
          
-         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1), and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as:
+         -  ``x``: int, float, or da.Var (univariate), or list of int, float, or da.Var objects (multivariate). Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1)`, and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then the user can define ``x`` as:
 
             .. code-block:: python
                :linenos:
 
-               x0 = da.Var(1, [1, 0, 0])
-               y0 = da.Var(2, [0, 1, 0])
-               z0 = da.Var(3, [0, 0, 1])
-               x = [x0, y0, z0]               
+               x = [1, 2, 3]               
 
          -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
 
@@ -90,7 +87,11 @@ Implementation
 Demo
 ~~~~~
 
-Case 1: :math:`f = sin(x)` with starting point :math:`x_0= \frac{3\pi}{2}`. Note: Newton method is not guaranteed to converge when :math:`f\prime(x_0)= 0`. But in our case, we use flip coin to determine which direction we want to go in order to get stuck at this point, and choose a derivative of :math:`\pm1`.
+::
+
+        >>> from DeriveAlive import rootfinding as rf
+
+Case 1: :math:`f = sin(x)` with starting point :math:`x_0= \frac{3\pi}{2}`. Note: Newton method is not guaranteed to converge when :math:`f\prime(x_0)= 0`. In our case, if the current guess has derivative of 0, we randomly set the derivative to be :math:`\pm1` and move in that directino to avoid getting stuck and avoid calculating an update step that has an extreme magnitude (which would occur if the derivative is very close to 0).
 
 ::
 
@@ -137,6 +138,9 @@ Case 2:  :math:`f = x - \exp(-2\sin(4x)sin(4x)+0.3` with starting point :math:`x
         >>> y_lims = -2, 2
         >>> rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
 
+.. image:: images/7_2_3_2.png
+   :width: 600
+
 Case 3: :math:`f(x, y) = x^2 + 4y^2-2x^2y +4` with starting points :math:`x_0 =-8.0, y_0 = -5.0`.
 
 ::
@@ -156,6 +160,9 @@ Case 3: :math:`f(x, y) = x^2 + 4y^2-2x^2y +4` with starting points :math:`x_0 =-
         # finding the root and visualize the trace
         >>> solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
         >>> rf.plot_results(f, xy_path, f_path, f_string, threedim=True)
+
+.. image:: images/7_2_3_3.png
+   :width: 600
 
 Case 4: :math:`f(x, y, z) = x^2 + y^2 + z^2` with starting points :math:`x_0 =1, y_0 = -2, z_0 = 5`.
 
@@ -178,6 +185,9 @@ Case 4: :math:`f(x, y, z) = x^2 + y^2 + z^2` with starting points :math:`x_0 =1,
         >>> solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
         >>> m = len(solution.val)
         >>> rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True) 
+
+.. image:: images/7_2_3_4.png
+   :width: 600
 
 Optimization
 ------------
@@ -211,7 +221,7 @@ Implementation
 
          -  ``f``: function of interest, callable. In machine learning applications, this should be the cost function. For example, if solving for optimal weights to minimize a cost function :math:`f`, then :math:`f` can be defined as :math:`\frac{1}{2m}` times the sum of :math:`m` squared residuals.
 
-            If :math:`f` is a scalar to scalar function, then define :math:'f' as follows:
+            If :math:`f` is a scalar to scalar function, then define :math:`f` as follows:
 
             .. code-block:: python
                :linenos:
@@ -231,14 +241,12 @@ Implementation
                    x, y, z = variables
                    return x ** 2 + y ** 2 + z ** 2 + np.sin(x)
 
-         -  ``x``: List of da.Var objects. Inital guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1)`, and the initial guess for the root is 1, then x = [da.Var(1)]. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then define ``x`` as follows:
+         -  ``x``: int, float, or da.Var (univariate), or list of int, float, or da.Var objects (multivariate). Initial guess for a root of :math:`f`. If :math:`f` is a scalar to scalar function (i.e. :math:`\mathbb{R}^1 \Rightarrow \mathbb{R}^1)`, and the initial guess for the root is 1, then a valid x is x = 1. If :math:`f` is a function of multiple scalars, with initial guess for the root as (1, 2, 3), then a valid definition of ``x`` is as follows:
 
-            .. code-blcok::python
+            .. code-block::python
                :linenos:
-               >>> x0 = da.Var(1, [1, 0, 0])
-               >>> y0 = da.Var(2, [0, 1, 0])
-               >>> z0 = da.Var(3, [0, 0, 1])
-               >>> x = [x0, y0, z0]
+
+               >>> x = [1, 2, 3]
 
          -  ``iters``: int, optional, default=2000. The maximum number of iterations to run the Newton root finding algorithm. The algorithm will run for min :math:`(t, iters)` iterations, where :math:`t` is the number of steps until ``tol`` is satisfied.
 
@@ -250,7 +258,7 @@ Implementation
 
          -  ``var_path``: a numpy array (:math:`\mathbb{R}^{n \times m}`), where :math:`n = min(iters, t)` is the number of steps of the algorithm and :math:`m` if the dimension of the minimum, where rows of the array are steps taken in consecutive order.
 
-         -  ``g_path``: a numpy array (:math:`mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
+         -  ``g_path``: a numpy array (:math:`\mathbb{R}^{n \times 1}`), containing the consecutive steps of the output of :math:`f` at each guess in ``var_path``.
 
 -  External dependencies
 
@@ -283,6 +291,9 @@ Case 1: Minimize quartic function :math:`f(x) = x^4`. Get stuck in local minimum
         >>> solution, xy_path, f_path = opt.GradientDescent(f, x0, iters=1000, eta=0.002)
         >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-6, 5), y_lims=(-100, 70))
 
+.. image:: images/7_2_3_5.png
+   :width: 600
+
 Case 2: Minimize Rosenbrock's function :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2`. Global minimum: 0 at :math:`(x,y)=(1, 1)`.
 
 ::
@@ -300,7 +311,8 @@ Case 2: Minimize Rosenbrock's function :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2
         >>> solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
         >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
 
-
+.. image:: images/7_2_3_6.png
+   :width: 600
 
 ::
 
@@ -309,6 +321,8 @@ Case 2: Minimize Rosenbrock's function :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2
         >>> solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=25000, eta=0.002)
         >>> opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), threedim=True)
 
+.. image:: images/7_2_3_7.png
+   :width: 600
 
 Case 3: Minimize Easom's function: :math:`f(x, y) = -\cos(x)\cos(y)\exp(-((x - \pi)^2 + (y - \pi)^2))`. Global minimum: -1 at :math:`(x,y)=(\pi, \pi)`.
 
@@ -331,6 +345,9 @@ Case 3: Minimize Easom's function: :math:`f(x, y) = -\cos(x)\cos(y)\exp(-((x - \
         solution, xy_path, f_path = opt.GradientDescent(f, init_vars, iters=10000, eta=0.3)
         opt.plot_results(f, xy_path, f_path, f_string, threedim=True)
 
+.. image:: images/7_2_3_8.png
+   :width: 600
+
 Case 4: Machine Learning application: minimize mean squared error in regression
 
 .. math:: \begin{align}
@@ -339,10 +356,7 @@ Case 4: Machine Learning application: minimize mean squared error in regression
           \end{align}
 
 where :math:`\textbf{w}` contains an extra dimension to fit the intercept of the features.
-Example dataset
-Standardized dataset: 47 homes from Portland, Oregon
-Features: area (square feet), number of bedrooms
-Output: price (in thousands of dollars)
+- Example dataset (standardized): 47 homes from Portland, Oregon. Features: area (square feet), number of bedrooms. Output: price (in thousands of dollars).
 
 ::
 
@@ -356,8 +370,16 @@ Output: price (in thousands of dollars)
         >>> solution, w_path, f_path, f = opt.GradientDescent(f, init_vars, iters=2500, data=data)
         >>> print ("Gradient descent optimized weights:\n{}".format(solution.val))
         >>> opt.plot_results(f, w_path, f_path, f_string, x_lims=(-7.5, 7.5), fourdim=True)
+        Gradient descent optimized weights:
+        [340.41265957 110.62984204  -6.64826603]
 
-Case 5: Find stationary point of :math:`f(x) = sin(x)`. Note: BFGS finds stationary point, which can be maximum, not minimum.
+.. image:: images/7_2_3_9.png
+   :width: 600
+
+.. image:: images/7_2_3_10.png
+   :width: 600
+
+Case 5: Find stationary point of :math:`f(x) = \sin(x)`. Note: BFGS finds stationary point, which can be maximum, not minimum.
 
 ::
 
@@ -369,6 +391,9 @@ Case 5: Find stationary point of :math:`f(x) = sin(x)`. Note: BFGS finds station
         >>> x0 = -1
         >>> solution, x_path, f_path = opt.BFGS(f, x0)
         >>> anim = opt.plot_results(f, x_path, f_path, f_string, x_lims=(-2 * np.pi, 2 * np.pi), y_lims=(-1.5, 1.5), bfgs=True)
+
+.. image:: images/7_2_3_11.png
+   :width: 600
 
 Case 6: Find stationary point of Rosenbrock function: :math:`f(x, y) = 4(y - x^2)^2 + (1 - x)^2`. Stationary point: 0 at :math:`(x,y)=(1, 1)`.
 
@@ -385,6 +410,9 @@ Case 6: Find stationary point of Rosenbrock function: :math:`f(x, y) = 4(y - x^2
         >>> solution, xy_path, f_path = opt.BFGS(f, init_vars, iters=25000)
         >>> xn, yn = solution.val
         >>> anim = opt.plot_results(f, xy_path, f_path, f_string, x_lims=(-7.5, 7.5), y_lims=(-7.5, 7.5), threedim=True, bfgs=True)
+
+.. image:: images/7_2_3_12.png
+   :width: 600
 
 Quadratic Splines
 -----------------

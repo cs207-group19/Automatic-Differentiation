@@ -199,8 +199,12 @@
 <div class="section" id="basic-demo">
 <h2>Basic demo<a class="headerlink" href="#basic-demo" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">DeriveAlive</span> <span class="k">import</span> <span class="n">DeriveAlive</span> <span class="k">as</span> <span class="n">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">DeriveAlive</span> <span class="k">import</span> <span class="n">rootfinding</span> <span class="k">as</span> <span class="n">rf</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">DeriveAlive</span> <span class="k">import</span> <span class="n">optimize</span> <span class="k">as</span> <span class="n">opt</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">DeriveAlive</span> <span class="k">import</span> <span class="n">spline</span> <span class="k">as</span> <span class="n">sp</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 <div class="section" id="declare-variables">
@@ -249,6 +253,12 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Alternatively, users can use the following notation to declare the same variables</span>
+<span class="c1"># &#39;x,y&#39;: x denotes the length of the derivative, y denotes the position of the 1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;3,0&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;3,1&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;3,2&#39;</span><span class="p">)</span>
 
 <span class="c1"># Suppose we want to denote an R^3 to R^1 function</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
@@ -308,13 +318,13 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
 <span class="p">[</span><span class="mf">3.71828183</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">der</span><span class="p">)</span>
-<span class="p">[</span><span class="mf">6.12323400e-17</span>  <span class="mf">2.71828183e+00</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">0.</span>         <span class="mf">2.71828183</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="demo-3">
 <h3>Demo 3: <span class="math">\(\mathbb{R}^1 \rightarrow \mathbb{R}^n\)</span><a class="headerlink" href="#demo-3" title="Permalink to this headline">¶</a></h3>
-<p>Consider the case <span class="math">\(f(x) = (\sin(x), x^2)\)</span>. We want to calculate the value and the jacobian of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
+<p>Consider the case <span class="math">\(f(x) = (\sin(x), x^2)\)</span>. We want to calculate the value and the Jacobian of <span class="math">\(f(x)\)</span> at <span class="math">\(x=\frac{\pi}{2}\)</span>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Expect value of [1. 2.4674011], jacobian of [[0], [3.14159265]]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">])</span>
@@ -322,8 +332,8 @@
     <span class="n">Values</span><span class="p">:</span>
     <span class="p">[</span><span class="mf">1.</span>        <span class="mf">2.4674011</span><span class="p">],</span>
     <span class="n">Jacobian</span><span class="p">:</span>
-    <span class="p">[[</span><span class="mf">6.12323400e-17</span><span class="p">]</span>
-     <span class="p">[</span><span class="mf">3.14159265e+00</span><span class="p">]]</span>
+    <span class="p">[[</span><span class="mf">0.</span>        <span class="p">]</span>
+     <span class="p">[</span><span class="mf">3.14159265</span><span class="p">]]</span>
 </pre></div>
 </div>
 </div>
@@ -339,10 +349,11 @@
 <span class="n">Values</span><span class="p">:</span>
 <span class="p">[</span><span class="mf">1.</span> <span class="mf">4.</span><span class="p">],</span>
 <span class="n">Jacobian</span><span class="p">:</span>
-<span class="p">[[</span><span class="mf">6.123234e-17</span> <span class="mf">0.000000e+00</span> <span class="mf">0.000000e+00</span><span class="p">]</span>
- <span class="p">[</span><span class="mf">0.000000e+00</span> <span class="mf">4.000000e+00</span> <span class="mf">1.200000e+01</span><span class="p">]]</span>
+<span class="p">[[</span> <span class="mf">0.</span>  <span class="mf">0.</span>  <span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>  <span class="mf">4.</span> <span class="mf">12.</span><span class="p">]]</span>
 </pre></div>
 </div>
+<p>..Note:: Demos for additional features are listed in the corresponding additional features tab.</p>
 </div>
 </div>
 </div>

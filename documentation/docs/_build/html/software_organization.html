@@ -90,7 +90,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
@@ -193,27 +193,21 @@
 </div>
 <div class="section" id="basic-modules-and-their-functionality">
 <h2>Basic modules and their functionality<a class="headerlink" href="#basic-modules-and-their-functionality" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">DeriveAlive</span></code>: This module contains our custom library for
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DeriveAlive</span></code>: This module contains our custom library for
 autodifferentiation. It includes functionality for a <code class="docutils literal"><span class="pre">Var</span></code> class
 that contains values and derivatives, as well as class-specific
 methods for the operations that our model implements (e.g., tangent,
-sine, power, exponentiation, addition, multiplication, and so on).</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">optimize</span></code>: This module utilizes our custom library for
+sine, power, exponentiation, addition, multiplication, and so on).</li>
+<li><code class="docutils literal"><span class="pre">optimize</span></code>: This module utilizes our custom library for
 autodifferentiation to perform optimization. It includes
-<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for gradient descent and BFGS. Users can define a custom function to optimize, where this function is <span class="math">\(\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}\)</span> or <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span>. If the function is <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span>, it must take as input a list of <span class="math">\(m\)</span> variables. Our suggestion is to extract the variables from this list on the first line of the user-defined function, and then use them individually. For example, if <span class="math">\(f\)</span> is a function of three variables (i.e. a vector of scalars), then write the following:</p>
-<p>Furthermore, <code class="docutils literal"><span class="pre">optimize</span></code> allows for dataset compatability with regression optimization. A user can input a numpy matrix with <span class="math">\(m\)</span> rows and <span class="math">\(n\)</span> columns, where <span class="math">\(n &gt;= 2\)</span> and <span class="math">\(m &gt;= 1\)</span>. The first <span class="math">\(n - 1\)</span> columns denote the features of the data, and the final column represents the labels. The user must specify the function to optimize as “mse”. Then, the function will find a local minimum of the mean squared error objective function.</p>
-<p>Finally, the module allows for static and animated plots in 2D to 4D using <code class="docutils literal"><span class="pre">plot_results</span></code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">rootfinding</span></code>: This module utilizes our custom library for
+<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods. Users can define a custom function to optimize, where this function is <span class="math">\(\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}\)</span> or <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span>. If the function is <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span>, it must take as input a list of <span class="math">\(m\)</span> variables. Our suggestion is to extract the variables from this list on the first line of the user-defined function, and then use them individually. Furthermore, <code class="docutils literal"><span class="pre">optimize</span></code> allows for dataset compatability with regression optimization. A user can input a numpy matrix with <span class="math">\(m\)</span> rows and <span class="math">\(n\)</span> columns, where <span class="math">\(n &gt;= 2\)</span> and <span class="math">\(m &gt;= 1\)</span>. The first <span class="math">\(n - 1\)</span> columns denote the features of the data, and the final column represents the labels. The user must specify the function to optimize as “mse”. Then, the function will find a local minimum of the mean squared error objective function. Finally, the module allows for static and animated plots in 2D to 4D using <code class="docutils literal"><span class="pre">plot_results</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">rootfinding</span></code>: This module utilizes our custom library for
 autodifferentiation to find roots of a given <span class="math">\(\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}\)</span>
 or <span class="math">\(\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}\)</span> function. It includes
-<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for Newton’s method. It also allows the user to visualize static or animated results in 2D to 4D using <code class="docutils literal"><span class="pre">plot_results</span></code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal"><span class="pre">spline</span></code>: This module utilizes our custom library for
-autodifferentiation to draw quadratic splines and return corresponding coefficients for quadratic functions of a given scalar function. It includes  <code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for quadratic spline generation.</p>
-</li>
+<code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for Newton’s method. It also allows the user to visualize static or animated results in 2D to 4D using <code class="docutils literal"><span class="pre">plot_results</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">spline</span></code>: This module utilizes our custom library for
+autodifferentiation to draw quadratic splines and return corresponding coefficients for quadratic functions of a given scalar function. It includes  <code class="docutils literal"><span class="pre">DeriveAlive.Var</span></code> class-specific methods for quadratic spline generation.</li>
 </ul>
 </div>
 <div class="section" id="test-suite">
@@ -232,7 +226,7 @@ respect to vector inputs.</li>
 <p>We use Travis CI mfor automatic testing for each push, and Coveralls for
 line coverage metrics. We have already set up these integrations, with
 badges included in the <code class="docutils literal"><span class="pre">README.md</span></code>. Users may run the test suite by
-navigating to the <code class="docutils literal"><span class="pre">tests/</span></code> folder and running the command <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">test_DeriveAlive.py</span></code>
+navigating to the <code class="docutils literal"><span class="pre">tests/</span></code> folder and running the command <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">test_&lt;module&gt;.py</span></code>
 from the command line (or <code class="docutils literal"><span class="pre">pytest</span> <span class="pre">tests</span></code> if the user is outside the
 <code class="docutils literal"><span class="pre">tests/</span></code> folder).</p>
 </div>
@@ -281,7 +275,7 @@ wheels. The url to the project is
 <li><p class="first">Use DeriveAlive Python package # (see demo in Section 2.2)</p>
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">DeriveAlive.DeriveAlive</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">DeriveAlive</span> <span class="k">import</span> <span class="n">DeriveAlive</span> <span class="k">as</span> <span class="n">da</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>

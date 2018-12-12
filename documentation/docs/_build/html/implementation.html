@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Additional features" href="additional_features.html" />
+    <link rel="next" title="Additional Features" href="additional_features.html" />
     <link rel="prev" title="Software Organization" href="software_organization.html" /> 
 
   
@@ -94,7 +94,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
@@ -171,21 +171,11 @@ calculations or results involving complex numbers will be excluded
 from the package.</li>
 <li>Type of user input: Regardless of the input type (e.g., an int, a float or a
 list or a numpy array), the <code class="docutils literal"><span class="pre">Var</span></code> class will automatically convert
-the input into a numpy array. This will provide flexibility in the
-future for implementing vector to vector functions.</li>
+the input into a numpy array.</li>
 <li>Core data structures: The core data structures will be classes, lists
 and numpy arrays.<ul>
 <li>Classes will help us provide an API for differentiation and custom
 functions, including custom methods for our elementary functions.</li>
-<li>Lists will help us maintain the collection of trace variables and
-output functions (in the case of multi-output models) from the
-computation graph in order. For example, if we have a function
-<span class="math">\(f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2\)</span>, then we store
-<span class="math">\(f = [f1, f2]\)</span>, where we have defined <span class="math">\(f1\)</span> and
-<span class="math">\(f2\)</span> as functions of <span class="math">\(x\)</span>, and we simply process the
-functions in order. Depending on the extensions we choose for the
-project, we may use lists to store the parents of each node in the
-graph.</li>
 <li>Numpy arrays are the main data structure during the calculation.
 We store the list of derivatives as a numpy array so that we can
 apply entire functions to the array, rather than to each entry
@@ -198,23 +188,18 @@ this as <span class="math">\(f = [f_1, f_2, \ldots, f_n]\)</span>, where each
 <span class="math">\(f_i: \mathbb{R}^m \rightarrow \mathbb{R}\)</span>. Our
 implementation can act as a wrapper over these functions, and we
 can evaluate each <span class="math">\(f_i\)</span> independently, so long as we define
-<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. : Currently, the module
-supports both scalar to scalar and vector to vector functions.</li>
+<span class="math">\(f_i\)</span> in terms of the <span class="math">\(m\)</span> inputs. Currently, the module
+supports both scalar to scalar, scalar to vector, vector to scalar and vector to vector functions.</li>
 </ul>
 </li>
-<li>Our implementation plan currently includes 1 class which accounts for
+<li>Our implementation plan includes 1 class which accounts for
 trace variables and derivatives with respect to each input variable.<ul>
 <li><code class="docutils literal"><span class="pre">Var</span></code> class. The class instance itself has two main attributes:
-the value and the evaluated derivatives with respect to each
+the value and the evaluated derivatives (Jacobian) with respect to each
 input. Within the class we redefine the elementary functions and
 basic algebraic functions, including both evaluation and
 derivation. Since our computation graph includes “trace”
-variables, this class will account for each variable. Similar to a
-dual number, this class structure will allow us easy access to
-necessary attributes of each variable, such as the trace
-evaluation and the evaluated derivative with respect to each input
-variable. This trace table would also be of possible help in
-future project extensions.</li>
+variables, this class will account for each variable.</li>
 </ul>
 </li>
 </ul>
@@ -251,17 +236,17 @@ form of <code class="docutils literal"><span class="pre">Var([val],</span> <span
 prints self in the form of <code class="docutils literal"><span class="pre">Values([val])</span> <span class="pre">Jacobian([der])</span></code>
 when self is a vector.</li>
 <li><code class="docutils literal"><span class="pre">__add__</span></code>: overload add function to handle addition of
-<code class="docutils literal"><span class="pre">Var</span></code> class objects and addition of and non-<code class="docutils literal"><span class="pre">Var</span></code>
+<code class="docutils literal"><span class="pre">Var</span></code> class objects and addition of <code class="docutils literal"><span class="pre">Var</span></code> and non-<code class="docutils literal"><span class="pre">Var</span></code>
 objects.</li>
 <li><code class="docutils literal"><span class="pre">__radd__</span></code>: preserve addition commutative property.</li>
 <li><code class="docutils literal"><span class="pre">__sub__</span></code>: overload subtraction function to handle
 subtraction of <code class="docutils literal"><span class="pre">Var</span></code> class objects and subtraction between
-and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
+<code class="docutils literal"><span class="pre">Var</span></code> and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
 <li><code class="docutils literal"><span class="pre">__rsub__</span></code>: allow subtraction for <span class="math">\(a - \texttt{Var}\)</span>
 case where a is a float or an integer.</li>
 <li><code class="docutils literal"><span class="pre">__mul__</span></code>: overload multiplication function to handle
 multiplication of <code class="docutils literal"><span class="pre">Var</span></code> class objects and multiplication
-between and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
+between <code class="docutils literal"><span class="pre">Var</span></code> and non-<code class="docutils literal"><span class="pre">Var</span></code> objects.</li>
 <li><code class="docutils literal"><span class="pre">__rmul__</span></code>: preserve multiplication commutative property.</li>
 <li><code class="docutils literal"><span class="pre">__truediv__</span></code>: overload division function to handle division
 of <code class="docutils literal"><span class="pre">Var</span></code> class objects over floats or integers.</li>
@@ -358,6 +343,7 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">NewtonRoot</span></code>: return a root of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span></li>
+<li><code class="docutils literal"><span class="pre">plot_results</span></code>: See docstring.</li>
 </ul>
 </div></blockquote>
 </li>
@@ -379,13 +365,20 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">GradientDescent</span></code>: solve for a local minimum of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>. If <span class="math">\(f\)</span> is a convex function, then the local minimum is a global minimum.</li>
-<li><code class="docutils literal"><span class="pre">BFGS</span></code>: sovle for a local stationary point, i.e. <span class="math">\(\nabla f =0\)</span>, of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>.</li>
-<li><code class="docutils literal"><span class="pre">plot_results</span></code>: See docstring.</li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">External dependencies:</p>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Supports data set compatibility and mean squared error optimization.</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">BFGS</span></code>: sovle for a local stationary point, i.e. <span class="math">\(\nabla f =0\)</span>, of a function <span class="math">\(f: \mathbb{R}^m \Rightarrow \mathbb{R}^1\)</span>.</li>
+<li><code class="docutils literal"><span class="pre">plot_results</span></code>: See docstring.</li>
+</ul>
+</div>
 <ul class="simple">
+<li>External dependencies:<ul>
 <li><code class="docutils literal"><span class="pre">DeriveAlive</span></code></li>
 <li><code class="docutils literal"><span class="pre">NumPy</span></code></li>
 <li><code class="docutils literal"><span class="pre">matplotlib.pyplot</span></code></li>
@@ -429,7 +422,7 @@ then returns a new <code class="docutils literal"><span class="pre">Var</span></
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="additional_features.html" class="btn btn-neutral float-right" title="Additional features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="additional_features.html" class="btn btn-neutral float-right" title="Additional Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="software_organization.html" class="btn btn-neutral" title="Software Organization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

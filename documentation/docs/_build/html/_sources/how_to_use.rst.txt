@@ -38,8 +38,12 @@ Basic demo
 ::
 
       python
-      >>> import DeriveAlive.DeriveAlive as da
+      >>> from DeriveAlive import DeriveAlive as da
+      >>> from DeriveAlive import rootfinding as rf
+      >>> from DeriveAlive import optimize as opt
+      >>> from DeriveAlive import spline as sp
       >>> import numpy as np
+      >>> import matplotlib.pyplot as plt
 
 Declare Variables
 ~~~~~~~~~~~~~~~~~
@@ -87,6 +91,12 @@ Declare Variables
       >>> x = da.Var([1], [1, 0, 0])
       >>> y = da.Var([2], [0, 1, 0])
       >>> z = da.Var([3], [0, 0, 1])
+
+      # Alternatively, users can use the following notation to declare the same variables
+      # 'x,y': x denotes the length of the derivative, y denotes the position of the 1
+      >>> x = da.Var([1], '3,0')
+      >>> y = da.Var([2], '3,1')
+      >>> z = da.Var([3], '3,2')
 
       # Suppose we want to denote an R^3 to R^1 function
       f = x + y + z
@@ -153,12 +163,12 @@ Consider the case :math:`f(x,y) = \sin(x) + \exp(y)`. We want to calculate the v
       >>> print(f.val)
       [3.71828183]
       >>> print(f.der)
-      [6.12323400e-17  2.71828183e+00]
+      [0.         2.71828183]
 
 Demo 3: :math:`\mathbb{R}^1 \rightarrow \mathbb{R}^n`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value and the jacobian of :math:`f(x)` at :math:`x=\frac{\pi}{2}`.
+Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value and the Jacobian of :math:`f(x)` at :math:`x=\frac{\pi}{2}`.
 
 ::
 
@@ -169,8 +179,8 @@ Consider the case :math:`f(x) = (\sin(x), x^2)`. We want to calculate the value 
           Values:
           [1.        2.4674011],
           Jacobian:
-          [[6.12323400e-17]
-           [3.14159265e+00]]
+          [[0.        ]
+           [3.14159265]]
 
 Demo 4: :math:`\mathbb{R}^m \rightarrow \mathbb{R}^n`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,5 +198,7 @@ Consider the case :math:`f(x,y,z) = (\sin(x), 4y + z^3)`. We want to calculate t
       Values:
       [1. 4.],
       Jacobian:
-      [[6.123234e-17 0.000000e+00 0.000000e+00]
-       [0.000000e+00 4.000000e+00 1.200000e+01]]
+      [[ 0.  0.  0.]
+       [ 0.  4. 12.]]
+
+..Note:: Demos for additional features are listed in the corresponding additional features tab.

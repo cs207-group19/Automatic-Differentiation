@@ -10,24 +10,13 @@ Forward Mode Implementation
 
 -  Type of user input: Regardless of the input type (e.g., an int, a float or a
    list or a numpy array), the ``Var`` class will automatically convert
-   the input into a numpy array. This will provide flexibility in the
-   future for implementing vector to vector functions.
+   the input into a numpy array.
 
 -  Core data structures: The core data structures will be classes, lists
    and numpy arrays.
 
    -  Classes will help us provide an API for differentiation and custom
       functions, including custom methods for our elementary functions.
-
-   -  Lists will help us maintain the collection of trace variables and
-      output functions (in the case of multi-output models) from the
-      computation graph in order. For example, if we have a function
-      :math:`f(x): \mathbb{R}^1 \rightarrow \mathbb{R}^2`, then we store
-      :math:`f = [f1, f2]`, where we have defined :math:`f1` and
-      :math:`f2` as functions of :math:`x`, and we simply process the
-      functions in order. Depending on the extensions we choose for the
-      project, we may use lists to store the parents of each node in the
-      graph.
 
    -  Numpy arrays are the main data structure during the calculation.
       We store the list of derivatives as a numpy array so that we can
@@ -41,23 +30,18 @@ Forward Mode Implementation
       :math:`f_i: \mathbb{R}^m \rightarrow \mathbb{R}`. Our
       implementation can act as a wrapper over these functions, and we
       can evaluate each :math:`f_i` independently, so long as we define
-      :math:`f_i` in terms of the :math:`m` inputs. : Currently, the module 
-      supports both scalar to scalar and vector to vector functions.
+      :math:`f_i` in terms of the :math:`m` inputs. Currently, the module 
+      supports both scalar to scalar, scalar to vector, vector to scalar and vector to vector functions.
 
--  Our implementation plan currently includes 1 class which accounts for
+-  Our implementation plan includes 1 class which accounts for
    trace variables and derivatives with respect to each input variable.
 
    -  ``Var`` class. The class instance itself has two main attributes:
-      the value and the evaluated derivatives with respect to each
+      the value and the evaluated derivatives (Jacobian) with respect to each
       input. Within the class we redefine the elementary functions and
       basic algebraic functions, including both evaluation and
       derivation. Since our computation graph includes “trace"
-      variables, this class will account for each variable. Similar to a
-      dual number, this class structure will allow us easy access to
-      necessary attributes of each variable, such as the trace
-      evaluation and the evaluated derivative with respect to each input
-      variable. This trace table would also be of possible help in
-      future project extensions.
+      variables, this class will account for each variable.
 
 API
 ---
@@ -97,21 +81,21 @@ API
          when self is a vector.
 
       -  ``__add__``: overload add function to handle addition of
-         ``Var`` class objects and addition of and non-\ ``Var``
+         ``Var`` class objects and addition of ``Var`` and non-\ ``Var``
          objects.
 
       -  ``__radd__``: preserve addition commutative property.
 
       -  ``__sub__``: overload subtraction function to handle
          subtraction of ``Var`` class objects and subtraction between
-         and non-\ ``Var`` objects.
+         ``Var`` and non-\ ``Var`` objects.
 
       -  ``__rsub__``: allow subtraction for :math:`a - \texttt{Var}`
          case where a is a float or an integer.
 
       -  ``__mul__``: overload multiplication function to handle
          multiplication of ``Var`` class objects and multiplication
-         between and non-\ ``Var`` objects.
+         between ``Var`` and non-\ ``Var`` objects.
 
       -  ``__rmul__``: preserve multiplication commutative property.
 
@@ -227,6 +211,8 @@ Detailed methods with inputs and return information are listed in Additional Fea
 
       -  ``NewtonRoot``: return a root of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`
 
+      -  ``plot_results``: See docstring.
+
 
 -  External dependencies:
 
@@ -245,7 +231,9 @@ Detailed methods with inputs and return information are listed in Additional Fea
 
 -  Methods:
 
-      -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum.
+      -  ``GradientDescent``: solve for a local minimum of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`. If :math:`f` is a convex function, then the local minimum is a global minimum. 
+
+.. note:: Supports data set compatibility and mean squared error optimization.
 
       -  ``BFGS``: sovle for a local stationary point, i.e. :math:`\nabla f =0`, of a function :math:`f: \mathbb{R}^m \Rightarrow \mathbb{R}^1`.
 
