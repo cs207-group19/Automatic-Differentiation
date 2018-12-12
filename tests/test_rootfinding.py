@@ -311,40 +311,7 @@ def test_NewtonRoot_rm_to_r1():
 			value = 2 * (xn + yn + zn)
 			der = [value, value, value]
 			assert np.allclose(solution.der, der)	
-
-	def case_8():
-		'''Find the roots of a more complicated function from R^3 to R^1.'''
-
-		def f(variables):
-			x, y, z = variables
-			return x ** (y ** 2) - z ** 2
-
-		f_string = 'f(x, y, z) = x^(y^2) - z^2'
-
-		for x_val, y_val, z_val in [[1, -2, 5], [2, 4, -5]]:
-			x0 = da.Var(x_val, [1, 0, 0])
-			y0 = da.Var(y_val, [0, 1, 0])
-			z0 = da.Var(z_val, [0, 0, 1])
-			init_vars = [x0, y0, z0]
-			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
-			m = len(solution.val)
-			xn, yn, zn = solution.val
-			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
-
-			# root: x = +- (zn^2)^(1 / (yn^2))
-			root_1 = (zn ** 2) ** (1 / (yn ** 2))
-			root_2 = -root_1
-			assert (np.allclose(xn, root_1) or np.allclose(xn, root_2))
-
-			# dfdx = y^2 * x^{y^2 - 1}
-			# dfdy = 2yx^{y^2} * log(x)
-			# dfdz = -2z
-			der = [yn ** 2 * (xn ** ((yn ** 2) - 1)), 
-				   2 * yn * (xn ** (yn ** 2)) * np.log(xn), 
-				   -2 * zn]
-
-			# TODO: add check for derivative once __pow__ is updated.
-			# assert np.allclose(solution.der, der)			
+		
 
 	case_1()
 	case_2()
