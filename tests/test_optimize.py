@@ -73,7 +73,7 @@ def test_GradientDescent():
 
 
 	def case_4():
-		'''Minimize Rosenbrock function: f(x, y) = 100(y - x^2)^2 + (1 - x)^2.
+		'''Minimize Rosenbrock function: f(x, y) = 4(y - x^2)^2 + (1 - x)^2.
 
 		The global minimum is 0 when (x, y) = (1, 1).
 		'''

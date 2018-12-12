@@ -195,7 +195,7 @@ def test_NewtonRoot_rm_to_r1():
 			x0 = da.Var(x_val, [1, 0])
 			y0 = da.Var(y_val, [0, 1])
 			init_vars = [x0, y0]
-			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
+			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars, iters=4000)
 			xn, yn = solution.val
 			rf.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True)	
 
