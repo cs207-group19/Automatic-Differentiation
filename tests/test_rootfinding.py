@@ -8,6 +8,7 @@ sys.path.append('../')
 import DeriveAlive.rootfinding as rf
 import DeriveAlive.DeriveAlive as da
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def test_NewtonRoot_r1_to_r1():
@@ -22,15 +23,17 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -4, 4
 		f_string = 'f(x) = x^2'
 
-		for val in np.arange(-2, 2.1, 1):
-			x0 = [da.Var(val)]
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+		x0 = [da.Var(-2)]
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, hide=True)
 
-			root = [0]
-			der = [0]
-			np.testing.assert_array_almost_equal(solution.val, root, decimal=4)
-			np.testing.assert_array_almost_equal(solution.der, der, decimal=4)
+		root = [0]
+		der = [0]
+		np.testing.assert_array_almost_equal(solution.val, root, decimal=4)
+		np.testing.assert_array_almost_equal(solution.der, der, decimal=4)
+
+		plt.close('all')
+
 
 	def case_2():
 		'''Find root of concave up quadratic function.'''
@@ -41,17 +44,18 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -2, 8
 		f_string = 'f(x) = (x - 1)^2 - 1'
 
-		for val in range(-1, 4):
-			x0 = [da.Var(val)]
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		x0 = [da.Var(3)]
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
 
-			if val == 1:
-				fig = rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True, hide=True)
 
-			root_1, der_1 = [0], [-2]
-			root_2, der_2 = [2], [2]
-			assert ((np.allclose(solution.val, root_1) and np.allclose(solution.der, der_1)) or 
-					(np.allclose(solution.val, root_2) and np.allclose(solution.der, der_2)))			
+		root_1, der_1 = [0], [-2]
+		root_2, der_2 = [2], [2]
+		assert ((np.allclose(solution.val, root_1) and np.allclose(solution.der, der_1)) or 
+				(np.allclose(solution.val, root_2) and np.allclose(solution.der, der_2)))
+
+		plt.close('all')	
+
 
 	def case_3():
 		'''Find roots of concave down quadratic function.'''
@@ -62,15 +66,16 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -6, 6
 		f_string = 'f(x) = -(x+3)^2 + 2'
 
-		for val in range(-7, 2, 2):
-			# Test non-Var input
-			x0 = val
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)
+		# Test non-Var input
+		x0 = 1
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True, hide=True)
 
-			root_1 = [-3 + np.sqrt(2)]
-			root_2 = [-3 - np.sqrt(2)]
-			assert (np.allclose(solution.val, root_1) or np.allclose(solution.val, root_2))
+		root_1 = [-3 + np.sqrt(2)]
+		root_2 = [-3 - np.sqrt(2)]
+		assert (np.allclose(solution.val, root_1) or np.allclose(solution.val, root_2))
+
+		plt.close('all')
 			
 	def case_4():
 		'''Find roots of cubic function.'''
@@ -81,13 +86,15 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -12, 12
 		f_string = 'f(x) = (x - 4)^3 - 3'
 
-		for val in range(2, 7):
-			x0 = [da.Var(val)]
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)
+		x0 = 2.5
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, hide=True)
 
-			root = [4 + np.cbrt(3)]
-			np.testing.assert_array_almost_equal(solution.val, root)	
+		root = [4 + np.cbrt(3)]
+		np.testing.assert_array_almost_equal(solution.val, root)	
+
+		plt.close('all')
+
 
 	def case_5():
 		'''Find roots of sinusoidal wave.'''
@@ -98,13 +105,14 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -2, 2
 		f_string = 'f(x) = sin(x)'
 
-		for val in [np.pi - 0.25, np.pi, 1.5 * np.pi, 2 * np.pi - 0.25, 2 * np.pi + 0.25]:
-			x0 = [da.Var(val)]
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True)	
+		x0 = da.Var(2 * np.pi - 0.25)
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, animate=True, hide=True)	
 
-			root_multiple_of_pi = (solution.val / np.pi) % 1
-			np.testing.assert_array_almost_equal(root_multiple_of_pi, [0.])	
+		root_multiple_of_pi = (solution.val / np.pi) % 1
+		np.testing.assert_array_almost_equal(root_multiple_of_pi, [0.])	
+
+		plt.close('all')
 
 	def case_6():
 		'''Find roots of complicated scalar function.'''
@@ -116,16 +124,16 @@ def test_NewtonRoot_r1_to_r1():
 		y_lims = -2, 2
 		f_string = 'f(x) = x - e^{-2 * sin(4x) * sin(4x)} + 0.3'
 
-		for val in np.arange(-0.75, 0.8, 0.25):
-			x0 = [da.Var(val)]
-			solution, x_path, y_path = rf.NewtonRoot(f, x0)
-			rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims)	
+		x0 = 0.0
+		solution, x_path, y_path = rf.NewtonRoot(f, x0)
+		rf.plot_results(f, x_path, y_path, f_string, x_lims, y_lims, hide=True)	
 
-			root = [0.166402]
-			der = [4.62465]
-			np.testing.assert_array_almost_equal(solution.val, root, decimal=4)
-			np.testing.assert_array_almost_equal(solution.der, der, decimal=4)		
+		root = [0.166402]
+		der = [4.62465]
+		np.testing.assert_array_almost_equal(solution.val, root, decimal=4)
+		np.testing.assert_array_almost_equal(solution.der, der, decimal=4)		
 
+		plt.close('all')
 
 	case_1()
 	case_2()
@@ -153,12 +161,16 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, hide=True)
+			# fig.show()	
 
 			# root: x = -y
 			der = [1, 1]
 			np.testing.assert_array_almost_equal(xn, -yn)
 			np.testing.assert_array_almost_equal(solution.der, der)
+
+		plt.close('all')
+
 
 	def case_2():
 		'''Find a root of z(x, y) = x^2 - y^2, i.e. x = +-y.'''
@@ -175,12 +187,15 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, animate=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, animate=True, hide=True)	
 
 			# root: x = +-y
 			der = [2 * xn, -2 * yn]
 			assert (np.allclose(xn, yn) or np.allclose(xn, -yn))
 			assert np.allclose(solution.der, der)
+
+		plt.close('all')
+
 
 	def case_3():
 		'''Find global mininum and root at (0, 0) for f(x, y) = x^2 + y^2.'''
@@ -197,12 +212,15 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars, iters=4000)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, x_lims=(-10, 10), y_lims=(-10, 10), threedim=True, animate=True, hide=True)	
 
 			# root: x = y = 0
 			der = [0, 0]
 			assert (np.allclose(xn, 0) and np.allclose(xn, 0))
 			assert np.allclose(solution.der, der)
+
+		plt.close('all')
+
 
 	def case_4():
 		'''Complicated function.'''
@@ -218,7 +236,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x_val, y_val]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, speed=25, hide=True)	
 			
 			# root: x = +- 2(sqrt(y^2 + 1))/sqrt(2y - 1)
 			value = 2 * np.sqrt(yn ** 2 + 1) / (np.sqrt(2 * yn - 1))
@@ -229,6 +247,9 @@ def test_NewtonRoot_rm_to_r1():
 			der_x = xn * (2 - 4 * yn)
 			der_y = 8 * yn - (2 * (xn ** 2))
 			assert np.allclose(solution.der, [der_x, der_y])
+
+		plt.close('all')
+
 		
 	def case_5():
 		
@@ -244,7 +265,7 @@ def test_NewtonRoot_rm_to_r1():
 			init_vars = [x0, y0]
 			solution, xy_path, f_path = rf.NewtonRoot(f, init_vars)
 			xn, yn = solution.val
-			rf.plot_results(f, xy_path, f_path, f_string, threedim=True)	
+			rf.plot_results(f, xy_path, f_path, f_string, threedim=True, hide=True)	
 
 			# root: x = 1 +- sqrt(-(y + 1)^2)
 			inner = -(yn + 1) ** 2
@@ -257,7 +278,10 @@ def test_NewtonRoot_rm_to_r1():
 			# dfdx = 2(x - 1)
 			# dfdy = 2(y + 1)
 			der = [2 * (xn - 1), 2 * (yn + 1)]
-			assert np.allclose(solution.der, der)				
+			assert np.allclose(solution.der, der)
+
+		plt.close('all')
+
 
 	def case_6():
 		'''Find the roots of a function from R^3 to R^1.'''
@@ -273,7 +297,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True, animate=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True, animate=True, hide=True)
 
 			root = [0, 0, 0]
 			assert np.allclose(solution.val, root)
@@ -282,7 +306,9 @@ def test_NewtonRoot_rm_to_r1():
 			# dfdy = 2y
 			# dfdz = 2z
 			der = [2 * xn, 2 * yn, 2 * zn]
-			assert np.allclose(solution.der, der)	
+			assert np.allclose(solution.der, der)
+
+		plt.close('all')
 
 	def case_7():
 		'''Find the roots of a more complicated function from R^3 to R^1.'''
@@ -298,7 +324,7 @@ def test_NewtonRoot_rm_to_r1():
 			solution, xyz_path, f_path = rf.NewtonRoot(f, init_vars)
 			m = len(solution.val)
 			xn, yn, zn = solution.val
-			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True)
+			rf.plot_results(f, xyz_path, f_path, f_string, fourdim=True, hide=True)
 
 			# root: z = -y -z +- sqrt(3)
 			root_1 = -yn - zn - np.sqrt(3)
@@ -310,7 +336,10 @@ def test_NewtonRoot_rm_to_r1():
 			# dfdz = 2(x + y + z)
 			value = 2 * (xn + yn + zn)
 			der = [value, value, value]
-			assert np.allclose(solution.der, der)	
+			assert np.allclose(solution.der, der)
+
+		plt.close('all')
+
 		
 
 	case_1()
@@ -320,7 +349,6 @@ def test_NewtonRoot_rm_to_r1():
 	case_5()
 	case_6()
 	case_7()
-	# case_8()
 	print ("All Newton root vector to scalar cases passed!")
 
 

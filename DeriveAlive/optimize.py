@@ -333,7 +333,7 @@ def BFGS(f, x, iters=10, tol=1e-10):
 
 
 def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_points=100, 
-				 threedim=False, fourdim=False, animate=False, speed=1, bfgs=False):
+				 threedim=False, fourdim=False, animate=False, speed=1, bfgs=False, hide=False):
 	""" Plot the results of GradientDescent. Use the return values (var_path, f_path) from
 		GradientDescent when plotting your results to show the steps of the algorithm.
 		
@@ -447,7 +447,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 				plt.ylim(y_min, y_max)
 
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.5))
-		plt.show()
+		if not hide:
+			plt.show()
 
 	elif fourdim:
 		if animate:
@@ -477,7 +478,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 		# Place legend
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.85))
-		plt.show()
+		if not hide:
+			plt.show()
 
 		# Plot objective function
 		plt.figure()
@@ -485,7 +487,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 		plt.title('Loss function vs. number of iterations')
 		plt.xlabel('Iterations')
 		plt.ylabel('Loss function')
-		plt.show()
+		if not hide:
+			plt.show()
 
 	else:
 		x0, f0 = np.round(var_path[0], 4), np.round(f_path[0], 4)
@@ -512,7 +515,8 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			ax.legend()
 			ax.set_xlabel('x')
 			ax.set_ylabel('f(x)')
-			plt.show()
+			if not hide:
+				plt.show()
 		else:
 			plt.figure()
 			plt.title(r'Finding {} of ${}$'.format('stationary point' if bfgs else 'minimum', f_string))
@@ -529,5 +533,6 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			plt.xlabel('x')
 			plt.ylabel('f(x)')
 			plt.legend()
-			plt.show()
+			if not hide:
+				plt.show()
 	return anim
