@@ -6,33 +6,33 @@ Current directory structure
 
 ::
 
-    cs207-FinalProject/
-    |-- DeriveAlive/
-    |   |-- DeriveAlive.py
-    |   |-- __init__.py
-    |   |-- optimize.py    
-    |   |-- rootfinding.py
-    |   `-- spline.py
-    |-- demos/
-    |   |-- Presentation.ipynb
-    |   `-- surprise.py
-    |-- documentation/
-    |   |-- docs/
-    |   |-- documentation.pdf
-    |   |-- milestone1.pdf
-    |   `-- milestone2.pdf
-    |-- tests/
-    |   |-- __init__.py
-    |   |-- test_DeriveAlive.py
-    |   |-- test_optimize.py
-    |   |-- test_rootfinding.py
-    |   `-- test_spline.py
-    |-- LICENSE
-    |-- __init__.py
-    |-- README.md
-    |-- requirements.txt
-    |-- setup.cfg
-    `-- setup.py
+	cs207-FinalProject/
+	|-- DeriveAlive/
+	|   |-- DeriveAlive.py
+	|   |-- __init__.py
+	|   |-- optimize.py    
+	|   |-- rootfinding.py
+	|   `-- spline.py
+	|-- demos/
+	|   |-- Presentation.ipynb
+	|   `-- surprise.py
+	|-- documentation/
+	|   |-- docs/
+	|   |-- documentation.pdf
+	|   |-- milestone1.pdf
+	|   `-- milestone2.pdf
+	|-- tests/
+	|   |-- __init__.py
+	|   |-- test_DeriveAlive.py
+	|   |-- test_optimize.py
+	|   |-- test_rootfinding.py
+	|   `-- test_spline.py
+	|-- LICENSE
+	|-- __init__.py
+	|-- README.md
+	|-- requirements.txt
+	|-- setup.cfg
+	`-- setup.py
 
 Basic modules and their functionality
 -------------------------------------
@@ -45,14 +45,13 @@ Basic modules and their functionality
 
 -  ``optimize``: This module utilizes our custom library for
    autodifferentiation to perform optimization. It includes 
-   ``DeriveAlive.Var`` class-specific methods for gradient descent. Users can define a custom function to optimize, where this function is :math:`\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}`
-   or :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`. If the function is :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`, it must take as input a list of :math:`m` variables. Our suggestion is to extract the variables from this list on the first line of the user-defined function, and then use them individually. For example, if :math:`f` is a function of three variables (i.e. a vector of scalars), then write the following: 
+   ``DeriveAlive.Var`` class-specific methods for gradient descent and BFGS. Users can define a custom function to optimize, where this function is :math:`\mathbb{R}^{1} \rightarrow \mathbb{R}^{1}` or :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`. If the function is :math:`\mathbb{R}^{m} \rightarrow \mathbb{R}^{1}`, it must take as input a list of :math:`m` variables. Our suggestion is to extract the variables from this list on the first line of the user-defined function, and then use them individually. For example, if :math:`f` is a function of three variables (i.e. a vector of scalars), then write the following: 
 
    .. code:block::python
-     :linenos:
-      def f(variables):
-          x, y, z = variables 
-          # Use x, y, z individually
+	 :linenos:
+	  def f(variables):
+		  x, y, z = variables 
+		  # Use x, y, z individually
 
    Furthermore, ``optimize`` allows for dataset compatability with regression optimization. A user can input a numpy matrix with :math:`m` rows and :math:`n` columns, where :math:`n >= 2` and :math:`m >= 1`. The first :math:`n - 1` columns denote the features of the data, and the final column represents the labels. The user must specify the function to optimize as "mse". Then, the function will find a local minimum of the mean squared error objective function. 
 
@@ -64,9 +63,7 @@ Basic modules and their functionality
    ``DeriveAlive.Var`` class-specific methods for Newton's method. It also allows the user to visualize static or animated results in 2D to 4D using ``plot_results``.
 
 -  ``spline``: This module utilizes our custom library for
-   autodifferentiation to draw quadratic splins of a given scalar function.
-   It includes  ``DeriveAlive.Var`` class-specific methods for quadratic
-   spline generation.
+   autodifferentiation to draw quadratic splines and return corresponding coefficients for quadratic functions of a given scalar function. It includes  ``DeriveAlive.Var`` class-specific methods for quadratic spline generation.
 
 Test Suite
 --------------------------------
@@ -100,97 +97,97 @@ We provide two ways for our package installation: PyPI and GitHub.
 -  Installation using PyPI
 
    | We also utilized the Python Package Index (PyPI) for distributing
-     our package. PyPI is the official third-party software repository
-     for Python and primarily hosts Python packages in the form of
-     archives called sdists (source distributions) or precompiled
-     wheels. The url to the project is
-     https://pypi.org/project/DeriveAlive/.
+	 our package. PyPI is the official third-party software repository
+	 for Python and primarily hosts Python packages in the form of
+	 archives called sdists (source distributions) or precompiled
+	 wheels. The url to the project is
+	 https://pypi.org/project/DeriveAlive/.
 
    -  Create a virtual environment and activate it
 
-      ::
+	  ::
 
-              # If you don't have virtualenv, install it
-              sudo easy_install virtualenv
-              # Create virtual environment
-              virtualenv env
-              # Activate your virtual environment
-              source env/bin/activate
+			  # If you don't have virtualenv, install it
+			  sudo easy_install virtualenv
+			  # Create virtual environment
+			  virtualenv env
+			  # Activate your virtual environment
+			  source env/bin/activate
 
    -  Install DeriveAlive using pip. In the terminal, type:
 
-      ::
+	  ::
 
-              pip install DeriveAlive
+			  pip install DeriveAlive
 
    -  Run module tests before beginning.
 
-      ::
+	  ::
 
-              # Navigate to https://pypi.org/project/DeriveAlive/#files
-              # Download tar.gz folder, unzip, and enter the folder
-              pytest tests
+			  # Navigate to https://pypi.org/project/DeriveAlive/#files
+			  # Download tar.gz folder, unzip, and enter the folder
+			  pytest tests
 
    -  Use DeriveAlive Python package # (see demo in Section 2.2)
 
-      ::
+	  ::
 
-              python
-              >>> import DeriveAlive.DeriveAlive as da
-              >>> import numpy as np
-              >>> x = da.Var([np.pi/2])
-              >>> x
-              Var([1.57079633], [1.])
-              ...
-              >>> quit()
+			  python
+			  >>> import DeriveAlive.DeriveAlive as da
+			  >>> import numpy as np
+			  >>> x = da.Var([np.pi/2])
+			  >>> x
+			  Var([1.57079633], [1.])
+			  ...
+			  >>> quit()
 
-              # deactivate virtual environment
-              deactivate
+			  # deactivate virtual environment
+			  deactivate
 
 -  Installation from GitHub
 
    -  Download the package from GitHub to your folder via these commands
-      in the terminal:
+	  in the terminal:
 
-      ::
+	  ::
 
-              mkdir test_cs207
-              cd test_cs207/
-              git clone https://github.com/cs207-group19/cs207-FinalProject.git
-              cd cs207-FinalProject/
+			  mkdir test_cs207
+			  cd test_cs207/
+			  git clone https://github.com/cs207-group19/cs207-FinalProject.git
+			  cd cs207-FinalProject/
 
    -  Create a virtual environment and activate it
 
-      ::
+	  ::
 
-              # If you don't have virtualenv, install it
-              sudo easy_install virtualenv
-              # Create virtual environment
-              virtualenv env
-              # Activate your virtual environment
-              source env/bin/activate
+			  # If you don't have virtualenv, install it
+			  sudo easy_install virtualenv
+			  # Create virtual environment
+			  virtualenv env
+			  # Activate your virtual environment
+			  source env/bin/activate
 
 
    -  Install required packages and run module tests in ``tests/``
 
-      ::
+	  ::
 
-              pip install -r requirements.txt
-              pytest tests
+			  pip install -r requirements.txt
+			  pytest tests
 
    -  Use DeriveAlive Python package (see demo in Section 2.2)
 
-      ::
+	  ::
 
-              python
-              >>> import DeriveAlive.DeriveAlive as da
-              >>> import numpy as np
-              >>> x = da.Var([np.pi/2])
-              >>> x
-              Var([1.57079633], [1.])
-              ...
-              >>> quit()
+			  python
+			  >>> import DeriveAlive.DeriveAlive as da
+			  >>> import numpy as np
+			  >>> x = da.Var([np.pi/2])
+			  >>> x
+			  Var([1.57079633], [1.])
+			  ...
+			  >>> quit()
 
-              # deactivate virtual environment
-              deactivate
+			  # deactivate virtual environment
+			  deactivate
 
