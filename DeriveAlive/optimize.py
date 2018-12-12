@@ -171,10 +171,171 @@ def GradientDescent(f, x, iters=10000, tol=1e-10, eta=0.01, data=[]):
 	return (minimum, var_path, g_path, f) if valid_data else (minimum, var_path, g_path)
 
 
+def _BFGSVector(f, var_list, iters=10, tol=1e-10):
+	'''Internal function that may get called from the API BFGS method.
+
+	See documentation of optimize.BFGS.
+	'''
+
+	# Number of variables
+	m = len(var_list)
+
+	# Initial step
+	g = f(var_list)
+	values_flat = np.reshape(np.array([x_i.val for x_i in var_list]), [-1])
+	var_path = [values_flat]
+	g_path = [g.val]
+
+	# Initialize inv_hessian guess
+	inv_hessian = np.eye(m)
+
+	for i in range(iters):
+		step = -1 * np.matmul(inv_hessian, g.der)
+		values_flat_update = values_flat + step
+
+		# if step size is below tolerance, no need to continue
+		cond = np.linalg.norm(step)
+		if cond < tol:
+			# print ("Reached tol in {} iterations".format(i + 1))
+			g = f(var_list)
+			var_path.append(values_flat_update)
+			g_path.append(g.val)
+			break
+
+		var_list_update = [da.Var(v_i, _get_unit_vec(m, i)) for i, v_i in enumerate(values_flat_update)]
+		y = f(var_list_update).der - f(var_list).der
+		identity = np.eye(m)
+		rho = 1 / np.matmul(np.transpose(y), step)
+
+		A = identity - np.matmul(np.vstack(step), rho * y.reshape(1, 2))
+		B = identity - np.matmul(rho * np.vstack(y), step.reshape(1, 2))
+		C = rho * np.matmul(np.vstack(step), step.reshape(1, 2))
+
+		delta_hessian = np.matmul(np.matmul(A, inv_hessian), B) + C
+
+		var_list = [da.Var(v_i, _get_unit_vec(m, i)) for i, v_i in enumerate(values_flat_update)]
+		g = f(var_list)
+		var_path.append(values_flat_update)
+		g_path.append(g.val)
+
+		values_flat = values_flat_update
+		inv_hessian = delta_hessian
+
+	else:
+		# print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		pass
+
+	minimum = da.Var(values_flat_update, g.der)
+	var_path = np.reshape(np.concatenate((var_path)), [-1, m])
+	g_path = np.concatenate(g_path)
+	return minimum, var_path, g_path
+
+
+def BFGS(f, x, iters=10, tol=1e-10):
+	""" Run the gradient descent algorithm to minimize a function f.
+		
+		Parameters
+		----------
+		f: callable (function)
+		   if :math:`f` is a vector to scalar function, it must take as argument a single list
+		   of variables (of type int, float, or ``DeriveAlive.Var``). If :math:`f` is a scalar
+		   to scalar function, the input can be of type int, float, or ``DeriveAlive.Var``, but 
+		   should not be a list.
+		
+		x: int, float, or ``DeriveAlive.Var`` object
+		   initial guess/starting point for minimum
+
+		iters: integer, optional (iters=10000)
+			   maximum number of iterations to run the algorithm.
+		
+		tol: float, optional (default=1e-10)
+			 this denotes the stopping criterion/tolerance for the algorithm. 
+			 The algorithm terminates if the next absolute step size is less than :math:`tol`. 
+			 In the multivariate case, the step size is determined by taking the L2 norm.
+			
+		Returns
+		-------
+		minimum: ``DeriveAlive.Var``
+				 contains the optimal scalar or vector solution and the derivative at that point.
+		
+		var_path: numpy.ndarray (min(iters, t), m)
+				  contains the path of the input variable(s) throughout the min(iters, t) steps,
+				  where iters is defined above and t is the number of steps needed to satisfy tol.
+		
+		g_path: numpy.ndarray (min(iters, t),)
+				contains the path of the objective function :math:`f` throughout the min(iters, t) steps.
+		
+		"""
+	if isinstance(x, list):
+		# Number of variables
+		m = len(x)
+
+		# Convert to da.Var type
+		if m > 1:
+			for i in range(len(x)):
+				if not isinstance(x[i], da.Var):
+					x[i] = da.Var(x[i], _get_unit_vec(m, i))
+			return _BFGSVector(f, x, iters=iters, tol=tol)
+		x = x[0]
+	if not isinstance(x, da.Var):
+		x = da.Var(x)
+
+	# Number of variables
+	m = 1
+
+	# Initial step
+	g = f(x)
+	var_path = [x.val]
+	g_path = [g.val]
+
+	# Initialize inv_hessian guess
+	inv_hessian = np.eye(m)
+
+	for i in range(iters):
+		# Take step in direction of steepest descent
+		step = da.Var((-1 * inv_hessian * g.der)[0], None)
+		x_update = x + step
+
+		# If step size is below tolerance, no need to continue
+		cond = -step if step < 0 else step
+		if cond < tol:
+			# print ("Reached tol in {} iterations".format(i + 1))
+			g = f(x_update)
+			var_path.append(x_update.val.flatten())
+			g_path.append(g.val.flatten())
+			break
+
+		y = f(x_update).der - f(x).der
+		identity = np.eye(m)
+		rho = 1 / (y * step.val)
+
+		A = identity - step.val * rho * y
+		B = identity - rho * y * step.val
+		C = rho * step.val * step.val
+
+		delta_hessian = A * inv_hessian * B + C
+
+		g = f(x_update)
+		var_path.append(x_update.val.flatten())
+		g_path.append(g.val.flatten())
+
+		x = x_update
+		inv_hessian = delta_hessian
+
+	else:
+		# print ("Reached {} iterations without satisfying tolerance.".format(iters))
+		pass
+
+	minimum = da.Var(x.val, g.der)
+	var_path = np.reshape(np.concatenate((var_path)), [-1])
+	g_path = np.concatenate(g_path)
+	return minimum, var_path, g_path
+
+
 def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_points=100, 
-				 threedim=False, fourdim=False, animate=False, speed=1):
+				 threedim=False, fourdim=False, animate=False, speed=1, bfgs=False):
 	""" Plot the results of GradientDescent. Use the return values (var_path, f_path) from
-	    GradientDescent when plotting your results to show the steps of the algorithm.
+		GradientDescent when plotting your results to show the steps of the algorithm.
 		
 		Parameters
 		----------
@@ -186,7 +347,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 		
 		var_path: numpy.ndarray (min(iters, t), m), where m is dimension of input and t is the
 				  number of iterations required to satisfy tolerance.
-		   		  The rows represent the consecutive steps of the algorithm towards a solution.
+				  The rows represent the consecutive steps of the algorithm towards a solution.
 
 		f_path: numpy.ndarray (min(iters, t), 1), where t is the number of iterations required to 
 				satisfy tolerance. The rows represent the consecutive values of the objective function
@@ -197,16 +358,16 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 				  i.e. f_string = 'f(x, y) = x^2 + y^2' will look nice in title of the plot.
 		
 		x_lims: length-2 iterable, optional (default=None)
-			 	this denotes the lower and upperbound values to be plotted on the x-axis. If not
-			 	specified, the function will plot over the range (-10, 10).
+				this denotes the lower and upperbound values to be plotted on the x-axis. If not
+				specified, the function will plot over the range (-10, 10).
 
 		y_lims: length-2 iterable, optional (default=None)
-			 	this denotes the lower and upperbound values to be plotted on the y-axis. If not
-			 	specified, the function will plot over the range (-10, 10).	
+				this denotes the lower and upperbound values to be plotted on the y-axis. If not
+				specified, the function will plot over the range (-10, 10).	
 
 		num_points: int, optional (default=100)
-			 	    this denotes the number of points to plot on the x-axis and y-axis intervals, 
-			 	    respectively.		 
+					this denotes the number of points to plot on the x-axis and y-axis intervals, 
+					respectively.		 
 		
 		threedim: bool, optional (default=False)
 				  whether to plot in three dimensions (user must specify a function f(x, y)).
@@ -218,7 +379,11 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 				 whether to animate plots in 2D and 3D.
 
 		speed: int, optional (default=500)
-		       number of milliseconds between each additional point in an animated plot.
+			   number of milliseconds between each additional point in an animated plot.
+
+		bfgs: bool, optional (default=False)
+			  whether the plot is depicting BFGS, in which case the plot title changes to say finding a
+			  stationary point (derivative = 0) rather than a minimum.
 			
 		Returns
 		-------
@@ -248,7 +413,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 		fig = plt.figure(figsize=(10, 6))
 		ax = fig.add_subplot(111, projection='3d')			
-		ax.set_title(r'Finding minimum of ${}$'.format(f_string))
+		ax.set_title(r'Finding {} of ${}$'.format('stationary point' if bfgs else 'minimum', f_string))
 
 		# Plot surface
 		X, Y = np.meshgrid(x_range, x_range)
@@ -267,16 +432,19 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			line, = ax.plot(xs, ys, fs, 'b-o', label='path')
 
 			def update(num, x, y, z, line):
-			    line.set_data(x[:num], y[:num])
-			    line.set_3d_properties(z[:num])
-			    if x_lims and y_lims:
-			    	line.axes.axis([x_min, x_max, y_min, y_max])
-			    return line,
+				line.set_data(x[:num], y[:num])
+				line.set_3d_properties(z[:num])
+				if x_lims and y_lims:
+					line.axes.axis([x_min, x_max, y_min, y_max])
+				return line,
 
 			anim = animation.FuncAnimation(fig, update, len(var_path), fargs=[xs, ys, f_path, line],
-			                              interval=speed, blit=True, repeat_delay=500, repeat=True)
+										  interval=speed, blit=True, repeat_delay=500, repeat=True)
 		else:
 			ax.plot(xs, ys, fs, 'b-o', label='path')
+			if x_lims and y_lims:
+				plt.xlim(x_min, x_max)
+				plt.ylim(y_min, y_max)
 
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.5))
 		plt.show()
@@ -305,7 +473,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 		ax.set_xlabel('x')
 		ax.set_ylabel('y')
 		ax.set_zlabel('z')
-		ax.set_title(r'Minimizing ${}$'.format(f_string))
+		ax.set_title(r'{} ${}$'.format('Finding stationary point of' if bfgs else 'Minimizing', f_string))
 
 		# Place legend
 		ax.legend(loc='upper left', bbox_to_anchor=(0, 0.85))
@@ -325,7 +493,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 
 		if animate and len(var_path) > 2:
 			fig, ax = plt.subplots()
-			ax.set_title(r'Finding minimum of ${}$'.format(f_string))
+			ax.set_title(r'Finding {} of ${}$'.format('stationary point' if bfgs else 'minimum', f_string))
 			ax.plot(x_range, f(x_range), 'k-', label=r'${}$'.format(f_string))
 			ax.plot(x0, f0, 'ro', label='start: {}'.format(x0))
 			ax.plot(xn, fn, 'go', label='end: {}'.format(xn))
@@ -333,13 +501,13 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			line, = ax.plot(var_path, f_path, 'b-o', label='path')
 
 			def update(num, x, y, line):
-			    line.set_data(x[:num], y[:num])
-			    if x_lims and y_lims:
-			    	line.axes.axis([x_min, x_max, y_min, y_max])
-			    return line,
+				line.set_data(x[:num], y[:num])
+				if x_lims and y_lims:
+					line.axes.axis([x_min, x_max, y_min, y_max])
+				return line,
 
 			anim = animation.FuncAnimation(fig, update, len(var_path), fargs=[var_path, f_path, line],
-			                              interval=200, blit=True, repeat_delay=500, repeat=True)
+										  interval=200, blit=True, repeat_delay=500, repeat=True)
 
 			ax.legend()
 			ax.set_xlabel('x')
@@ -347,7 +515,7 @@ def plot_results(f, var_path, f_path, f_string, x_lims=None, y_lims=None, num_po
 			plt.show()
 		else:
 			plt.figure()
-			plt.title(r'Finding minimum of ${}$'.format(f_string))
+			plt.title(r'Finding {} of ${}$'.format('stationary point' if bfgs else 'minimum', f_string))
 			plt.plot(x_range, f(x_range), 'k-', label=r'${}$'.format(f_string))
 			plt.plot(var_path, f_path, 'b-o', label='path')
 			plt.plot(x0, f0, 'ro', label='start: {}'.format(x0))
