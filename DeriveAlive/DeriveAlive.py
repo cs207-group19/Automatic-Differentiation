@@ -823,7 +823,6 @@ class Var(object):
 				raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
 		
 			val = np.power(self.val, n)
-
 			if len(self.der.shape):
 				self_val = np.expand_dims(self.val, 1) if len(self.der.shape) > len(self.val.shape) else self.val
 				der = n * np.multiply((self_val ** (n - 1)), self.der)
@@ -831,11 +830,30 @@ class Var(object):
 				der = None
 
 			return Var(val, der)
-		else:
-			raise ValueError("Cannot compute x^y when both x and y are Vars. Please reformat equation to use " \
-							 "rpow of scalar to power of vector, or use pow for a vector to a power of scalar.")
 
-		
+		# n is a Var
+		else:
+			for n_i in n.val:
+				if n_i % 1 != 0 and not all(values):
+					raise ValueError("Non-positive number raised to a fraction encountered in pow.")
+				elif n_i < 1 and 0 in self.val:					
+					raise ZeroDivisionError("Cannot compute derivative of 0^y for y < 1.")
+
+			val = np.power(self.val, n.val)
+			# Check for constant Vars of scalars or vectors
+			if len(n.der.shape) == 0 and len(self.der.shape):
+				der = None
+			elif len(self.der.shape) == 0 and len(n.der.shape):
+				der = None
+			elif len(self.der.shape) == 0 and len(n.der.shape) == 0:
+				der = None
+			else:
+				# Both self and n are Vars of valid variable(s), not constants
+				if len(self.val) > 1 and len(n.val) > 1 and len(self.val) != len(n.val):
+					raise ValueError("x and y cannot be of different dimensions > 1 in x^y.")
+				else:
+					der = val * ((n.val / self.val) * self.der + np.log(self.val) * n.der)
+			return Var(val, der)
 
 	def __rpow__(self, n):
 		""" 
