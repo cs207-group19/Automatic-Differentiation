@@ -18,7 +18,8 @@ class Var(object):
 
 	der : numpy.ndarray
 		  The corresponding derivative, gradient, or Jacobian of user defined
-		  functions(s).
+		  functions(s). Element (i, j) in the Jacobian contains the derivative of 
+		  element i of the Var with respect to input variable j.
 	 """
 	def __init__(self, values, der=[1]):
 		"""
@@ -27,9 +28,14 @@ class Var(object):
 		val : int, float, list, or np.array
 			  The value of user defined function(s) f evaluated at x.
 
-		der : int, float, list, or np.array
+		der : int, float, list, np.array, or str, optional (default=[1])
 			  The corresponding derivative, gradient, or Jacobian of user defined
-			  functions(s).
+			  functions(s). Element (i, j) in the Jacobian contains the derivative of 
+			  element i of the Var with respect to input variable j.
+			  If der is a string, it must be of the form 'x,y', where x is the number
+			  of input variables, and y is the position (0-indexed) of the current variable.
+			  For example, instead of defining z = Var(2, [0, 1, 0 ,0]), one could define
+			  z = Var(2, '4,1'). This makes scaling easier when there are many input variables.
 		
 		NOTES
 		=====
@@ -42,15 +48,15 @@ class Var(object):
 
 		EXAMPLES
 		=========
-		# input a constant
+		# Input a constant
 		>>> Var(3.0, None) 
 		Var([3.], None)
 
-		# input a scalar variable
+		# Input a scalar variable
 		>>> Var(3.0) 
 		Var([3.], [1])
 
-		# input a vector with two elements
+		# Input a vector with two elements
 		>>> x = Var(3.0, [1, 0])
 		>>> y = Var(3.0, [0, 1])
 		>>> z = Var([x, y])
@@ -61,6 +67,14 @@ class Var(object):
 		[[1 0]
 		 [0 1]]
 		"""
+		# Convert string input to unit vector
+		if isinstance(der, str):
+			assert ',' in der
+			length, pos = map(int, der.split(','))
+			assert pos < length
+			der = np.zeros((length))
+			der[pos] = 1
+
 		if isinstance(values, float) or isinstance(values, int):
 			values = [values]
 		if len(values) == 1:
@@ -127,17 +141,17 @@ class Var(object):
 		
 		Examples
 		========
-		# input a constant
+		# Input a constant
 		>>> x = Var(3.0, None) 
 		>>> print(x)
 		Var([3.], None)
 
-		# input a scalar
+		# Input a scalar
 		>>> x = Var(3.0) 
 		>>> print(x)
 		Var([3.], [1])
 
-		# input a vector with two elements
+		# Input a vector with two elements
 		>>> x = Var(3.0, [1, 0])
 		>>> y = Var(3.0, [0, 1])
 		>>> z = Var([x, y])
@@ -820,6 +834,8 @@ class Var(object):
 		else:
 			raise ValueError("Cannot compute x^y when both x and y are Vars. Please reformat equation to use " \
 							 "rpow of scalar to power of vector, or use pow for a vector to a power of scalar.")
+
+		
 
 	def __rpow__(self, n):
 		""" 
