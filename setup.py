@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
                  name="DeriveAlive",
-                 version="1.0.0",
+                 version="1.0.1",
                  author="Chen Shi, Stephen Slater, Yue Sun",
                  author_email="cshi@hsph.harvard.edu, stephenslater@college.harvard.edu, yuesun@g.harvard.edu",
                  description="An AutoDifferentiation package",
