@@ -511,8 +511,8 @@ def test_DeriveAlive_scalar_functions():
 	test_exp()
 
 
-def test_DeriveAlive_Vec():
-	'''Test constructor of Vec class to ensure proper variable initializations.'''	
+def test_DeriveAlive_vector_construction():
+	'''Test constructor of Var class to ensure proper variable initializations for vectors.'''	
 
 	def test_vector_input():
 		x = da.Var(2, [1, 0])
@@ -1767,7 +1767,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 
 # Without pytest, user can run these tests manually
 test_DeriveAlive_Var()
-test_DeriveAlive_Vec()
+test_DeriveAlive_vector_construction()
 test_DeriveAlive_scalar_functions()
 test_DeriveAlive_comparisons()
 test_DeriveAlive_vector_functions_1_to_n()
