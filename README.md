@@ -4,7 +4,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/cs-207-final-project-group-19/badge/?version=latest)](https://cs-207-final-project-group-19.readthedocs.io/en/latest/?badge=latest)
 
-(Cache may need to be reset, but the Coverall coverage is 100%, as evidenced by clicking the coverage badge or running pytest test_DeriveAlive.py from the tests/ folder)
+Note: if the coverage % seems outdated, one can clear browser cache, or click the badge which links to the coverage site, or run the command `pytest test_DeriveAlive.py` from the `tests/` folder.
 
 # cs207-FinalProject
 Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
@@ -14,4 +14,7 @@ Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
 
 ### Group members: Stephen Slater, Chen Shi, Yue Sun
 
+Welcome to DeriveAlive! This is a package for autodifferentiation. It includes several additional features making use of autodifferentiation, including root-finding, optimization (gradient descent, BFGS, and dataset compatability for optimizing mean squared error), and quadratic spline fitting. There is extensive documentation at the link below, and the project is publicly available for download via PyPI by running `pip install DeriveAlive`. Enjoy!
+
 #### Documentation: https://cs-207-final-project-group-19.readthedocs.io/en/latest/
+#### PyPI: https://pypi.org/project/DeriveAlive/#files

@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="References" href="references.html" />
-    <link rel="prev" title="Additional features" href="additional_features.html" /> 
+    <link rel="prev" title="Additional Features" href="additional_features.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,9 +84,8 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="software_organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additional_features.html">Additional Features</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Future</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#input-format-update">Input Format Update</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-extension">Module Extension</a></li>
 </ul>
 </li>
@@ -158,27 +157,13 @@
   <div class="section" id="future">
 <h1>Future<a class="headerlink" href="#future" title="Permalink to this headline">¶</a></h1>
 <p>Currently, our <code class="docutils literal"><span class="pre">DeriveAlive</span></code>  can handle scalar to scalar, scalar to vector, vector to scalar and vector to vector functions.  The further improvement for the software can be expected as follows:</p>
-<div class="section" id="input-format-update">
-<h2>Input Format Update<a class="headerlink" href="#input-format-update" title="Permalink to this headline">¶</a></h2>
-<p>Now our users have to define each input variable themselves when performing vector to vector or vector to scalar functions, e.g they would like to use <code class="docutils literal"><span class="pre">DeriveAlive</span></code> for <span class="math">\(f(x,y,z)\)</span>, they have to define:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">Var</span><span class="p">([</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>It is obvious that it wouldn’t be convenient for our users to do this when they have high dimension day (i.e. 100 dimensions, they have to input [1, 0, ….,0], …, 100 times!). In the future, we would like them to define in this way:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>&gt;&gt;&gt; x = da.Var([2],’3, 1’)
-&gt;&gt;&gt; y = da.Var([3],’3, 2’)
-&gt;&gt;&gt; z = da.Var([4],’3, 3’)
-</pre></div>
-</div>
-<p>where, the first element in the string is the dimension of the input vector (here 100), and the second element is the position of the ‘1’ in the initialized Jacobian matrix.</p>
-<p>This improvement will make our software more user-friendly and easier to work with.</p>
-</div>
 <div class="section" id="module-extension">
 <h2>Module Extension<a class="headerlink" href="#module-extension" title="Permalink to this headline">¶</a></h2>
-<p>Now our <code class="docutils literal"><span class="pre">DeriveAlive</span></code> can work perfectly with the forward mode, we are expecting the implement the reverse mode also. This improvement will allow our users to play with Neural Network models using backpropagation.</p>
-<p>We also want to extend the quadratic spline suite to a cubic spline suite or even higher order splines, which would utilize higher order derivatives to be implemented using autodifferentiation. And allow user to draw any custom plots with this module.</p>
+<ul class="simple">
+<li>Reverse mode. Now that our <code class="docutils literal"><span class="pre">DeriveAlive</span></code> can work perfectly with the forward mode, we are expecting to implement the reverse mode as well. This improvement will allow our users to play with custom Neural Network models using backpropagation.</li>
+<li>Hessian. By calculating and storing the second derivatives in a Hessian matrix, we can make use of more applications of automatic differentiation that use second derivatives, such as Newton optimization and cubic splines.</li>
+<li>Higher-order splines (cubic). We also want to extend the quadratic spline suite to a cubic spline suite or even higher order splines, which would utilize higher order derivatives to be implemented using autodifferentiation. We would also like to allow users to draw any custom plots with this module.</li>
+</ul>
 </div>
 </div>
 
@@ -193,7 +178,7 @@
         <a href="references.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="additional_features.html" class="btn btn-neutral" title="Additional features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="additional_features.html" class="btn btn-neutral" title="Additional Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

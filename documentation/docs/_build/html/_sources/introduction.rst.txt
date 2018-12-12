@@ -9,7 +9,7 @@ automatic differentiation in optimization, machine learning, and
 numerical methods (e.g., time integration, root-finding).
 
 This documentation introduces ``DeriveAlive``, a software
-library uses the concept of automatic differentiation to solve
+library that uses the concept of automatic differentiation to solve
 differentiation problems in scientific computing. Additional features 
 of a root finding suite, an optimization suite and a quadratic spline 
 suite are also listed in this documentation.
