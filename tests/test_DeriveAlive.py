@@ -483,6 +483,13 @@ def test_DeriveAlive_scalar_functions():
 		f2 = np.exp(2 * x)
 		assert f2 == da.Var(np.exp(2), 2 * np.exp(2))
 
+	def test_logistic():
+		# Expect valuee of 
+		x = da.Var(2)
+		f = x.logistic()
+		assert np.round(f.val, 8) == [0.88079708]
+		assert np.round(f.der, 8) == [0.10499359]
+
 	# Run tests within test_DeriveAlive_scalar_functions()
 	test_neg()
 	test_abs()
@@ -509,6 +516,7 @@ def test_DeriveAlive_scalar_functions():
 	test_sqrt()
 	test_log()
 	test_exp()
+	test_logistic()
 
 
 def test_DeriveAlive_vector_construction():
@@ -918,6 +926,15 @@ def test_DeriveAlive_vector_functions_m_to_1():
 		np.testing.assert_array_equal(np.round(f1.val,2), np.array([20.09]))
 		np.testing.assert_array_equal(np.round(f1.der,2), np.array([20.09, 20.09, 20.09]))
 
+	def test_logistic():
+		x = da.Var(1.5, [1, 0, 0])
+		y = da.Var(1.0, [0, 1, 0])
+		z = da.Var(2.0, [0, 0, 1])
+		f = x + y + z
+		f1 = f.logistic()
+		np.testing.assert_array_equal(np.round(f1.val, 3), np.array([0.989]))
+		np.testing.assert_array_equal(np.round(f1.der, 3), np.array([0.011, 0.011, 0.011]))
+
 
 	# Run tests within test_DeriveAlive_vector_functions_m_to_1()
 	test_neg()
@@ -945,6 +962,7 @@ def test_DeriveAlive_vector_functions_m_to_1():
 	test_sqrt()
 	test_log()
 	test_exp()
+	test_logistic()
 
 
 def test_DeriveAlive_vector_functions_1_to_n():
@@ -1296,6 +1314,14 @@ def test_DeriveAlive_vector_functions_1_to_n():
 		np.testing.assert_array_equal(np.round(f1.der, 2), np.array([[  806.86],
                                                                      [   54.60],
                                                                      [48618.50]]))
+	def test_logistic():
+		x = da.Var(3.0, [1])
+		f = da.Var([2 * x, x + 1, x ** 2])
+		f1 = f.logistic()
+		np.testing.assert_array_equal(np.round(f1.val, 3), np.array([0.998, 0.982, 1.000]))
+		np.testing.assert_array_equal(np.round(f1.der, 3), np.array([[0.005],
+																	 [0.018],
+																	 [0.001]]))
 
 	# Run tests within test_DeriveAlive_vector_functions_1_to_n()
 	test_neg()
@@ -1323,6 +1349,7 @@ def test_DeriveAlive_vector_functions_1_to_n():
 	test_sqrt()
 	test_log()
 	test_exp()
+	test_logistic()
 
 
 def test_DeriveAlive_vector_functions_m_to_n():
@@ -1735,6 +1762,16 @@ def test_DeriveAlive_vector_functions_m_to_n():
                                                                     [  0.  ,   7.39,   0.  ],
                                                                     [  0.  ,   0.  , 218.39]]))
 
+	def test_logistic():
+		x = da.Var(3.0, [1, 0, 0])
+		y = da.Var(1.0, [0, 1, 0])
+		z = da.Var(2.0, [0, 0, 1])
+		f = da.Var([2 * x, y + 1, z ** 2])
+		f1 = f.logistic()
+		np.testing.assert_array_equal(np.around(f1.val, 3), np.array([0.998, 0.881, 0.982]))
+		np.testing.assert_array_equal(np.around(f1.der, 3), np.array([[0.005, 0.000, 0.000],
+																	  [0.000, 0.105, 0.000],
+ 																	  [0.000, 0.000, 0.071]]))
 
 
 	# Run tests within test_DeriveAlive_vector_functions_m_to_n()
@@ -1763,6 +1800,7 @@ def test_DeriveAlive_vector_functions_m_to_n():
 	test_rpow()
 	test_log()
 	test_exp()
+	test_logistic()
 
 
 # Without pytest, user can run these tests manually
