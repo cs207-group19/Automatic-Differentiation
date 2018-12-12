@@ -92,21 +92,21 @@ class Var(object):
 				self.val = np.hstack((new_values))
 				self.der = np.vstack((new_derivatives))
 
-		# Convert values of -0.0 or <1e-12 to 0.0 in self.val
+		# Convert values of -0.0 to 0.0 in self.val
 		if len(self.val.shape):
 			shape = self.val.shape
 			val_vals = self.val.flatten()
 			for i, val_val in enumerate(val_vals):
-				if val_val == -0.0 or abs(val_val) < 1e-12:
+				if val_val == -0.0:
 					val_vals[i] = 0.0
 			self.val = np.reshape(val_vals, shape)
 
-		# Convert values of -0.0 or <1e-12 to 0.0 in self.der
+		# Convert values of -0.0 to 0.0 in self.der
 		if len(self.der.shape):
 			shape = self.der.shape
 			der_vals = self.der.flatten()
 			for i, der_val in enumerate(der_vals):
-				if der_val == -0.0 or abs(der_val) < 1e-12:
+				if der_val == -0.0:
 					der_vals[i] = 0.0
 			self.der = np.reshape(der_vals, shape)
 
@@ -144,10 +144,30 @@ class Var(object):
 	    [[1 0]
 	     [0 1]]
 	    """
+	    val_copy = np.copy(self.val)
+	    der_copy = np.copy(self.der)
+
+		# Convert values of -0.0 or <1e-12 to 0.0 in self.val
+		if len(val_copy.shape):
+			shape = val_copy.shape
+			val = val_copy.flatten()
+			for i, val_i in enumerate(val):
+				if val_i == -0.0 or abs(val_i) < 1e-12:
+					val[i] = 0.0
+			val = np.reshape(val, shape)
+
+		# Convert values of -0.0 or <1e-12 to 0.0 in self.der
+		if len(der_copy.shape):
+			shape = der_copy.shape
+			der = der_copy.flatten()
+			for i, der_i in enumerate(der):
+				if der_i == -0.0 or abs(der_i) < 1e-12:
+					der[i] = 0.0
+			der = np.reshape(der, shape)
 	    
-		if len(self.val) == 1:
-			return 'Var({}, {})'.format(self.val, self.der)
-		return 'Values:\n{},\nJacobian:\n{}'.format(self.val, self.der)
+		if len(val) == 1:
+			return 'Var({}, {})'.format(val, der)
+		return 'Values:\n{},\nJacobian:\n{}'.format(val, der)
 
 	def __add__(self, other):
 		""" 
