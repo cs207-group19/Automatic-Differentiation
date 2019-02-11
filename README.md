@@ -4,8 +4,6 @@
 
 [![Documentation Status](https://readthedocs.org/projects/cs-207-final-project-group-19/badge/?version=latest)](https://cs-207-final-project-group-19.readthedocs.io/en/latest/?badge=latest)
 
-Note: if the coverage % seems outdated, one can clear browser cache, or click the badge which links to the coverage site, or run the command `pytest test_DeriveAlive.py` from the `tests/` folder.
-
 # cs207-FinalProject
 Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
 
