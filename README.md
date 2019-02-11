@@ -4,15 +4,17 @@
 
 [![Documentation Status](https://readthedocs.org/projects/cs-207-final-project-group-19/badge/?version=latest)](https://cs-207-final-project-group-19.readthedocs.io/en/latest/?badge=latest)
 
-# cs207-FinalProject
-Repository for CS 207 Final Project (Autodifferentiation), Group 19, Fall 2018
+# Automatic-Differentiation
+A publicly available Python package for automatic differentiation (i.e. similar to TensorFlow, PyTorch) with built-in support for root finding (Newton's), optimization (BFGS, SGD, and dataset integration), quadratic splines, and animated visualization (2D, 3D, 4D).
 
-### Group 19
-### Group name: DeriveAlive
+The project is listed on PyPI and is available for download via:
 
-### Group members: Stephen Slater, Chen Shi, Yue Sun
-
-Welcome to DeriveAlive! This is a package for autodifferentiation. It includes several additional features making use of autodifferentiation, including root-finding, optimization (gradient descent, BFGS, and dataset compatability for optimizing mean squared error), and quadratic spline fitting. There is extensive documentation at the link below, and the project is publicly available for download via PyPI by running `pip install DeriveAlive`. Enjoy!
+`pip install DeriveAlive`
 
 #### Documentation: https://cs-207-final-project-group-19.readthedocs.io/en/latest/
-#### PyPI: https://pypi.org/project/DeriveAlive/#files
+#### PyPI: https://pypi.org/project/DeriveAlive/
+
+Authors: Stephen Slater, Chen Shi, Yue Sun
+
+
+
