@@ -15,7 +15,7 @@ setuptools.setup(
                  packages=setuptools.find_packages(),
                  install_requires =[
        'nose>=1.0.0',
-       'numpy==1.15.2',
+       'numpy==1.22.0',
        'packaging==18.0',
        'pyparsing==2.2.2',
        'scipy==1.1.0',
